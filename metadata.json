@@ -1,0 +1,6 @@
+{
+  "name": "VSP Nest Portal",
+  "description": "Premium multi-role booking, schedule management, staff operations, and financial auditing portal for VSP Nest.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

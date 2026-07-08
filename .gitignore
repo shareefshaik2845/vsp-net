@@ -1,0 +1,22 @@
+# Files and directories created by pub
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+build/
+
+# IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Environment and logs
+*.log
+.env*
+!.env.example

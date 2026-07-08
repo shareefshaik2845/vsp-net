@@ -1,0 +1,354 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../providers/state_provider.dart';
+import '../../../core/theme.dart';
+import '../../../domain/entities.dart';
+
+class ValleyCalendarView extends ConsumerStatefulWidget {
+  const ValleyCalendarView({super.key});
+
+  @override
+  ConsumerState<ValleyCalendarView> createState() => _ValleyCalendarViewState();
+}
+
+class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
+  Map<String, dynamic>? _calendarData;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCalendar();
+  }
+
+  Future<void> _loadCalendar() async {
+    try {
+      final repo = ref.read(customerRepositoryProvider);
+      // Load June & July 2026 data
+      final june = await repo.fetchMonthlyCalendar('1', 6, 2026);
+      final july = await repo.fetchMonthlyCalendar('1', 7, 2026);
+      setState(() => _calendarData = {'6': june, '7': july});
+    } catch (_) {
+      setState(() => _calendarData = {});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bookings = ref.watch(bookingsProvider);
+    final blocks = ref.watch(calendarBlocksProvider);
+
+    return Scaffold(
+      body: RefreshIndicator(
+        onRefresh: _loadCalendar,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Valley Reservation Matrix', style: ResortTheme.lightTheme.textTheme.displayMedium),
+              const SizedBox(height: 6),
+              Text(
+                'Verify dates immediately. Double-click or tap cells to inspect scheduled bookings.',
+                style: ResortTheme.lightTheme.textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 24),
+
+              _buildLegend(context),
+              const SizedBox(height: 32),
+
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth > 750) {
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(child: _buildMonthCard(context, 'June 2026', 1, 30, bookings, blocks, 6)),
+                        const SizedBox(width: 24),
+                        Expanded(child: _buildMonthCard(context, 'July 2026', 3, 31, bookings, blocks, 7)),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      children: [
+                        _buildMonthCard(context, 'June 2026', 1, 30, bookings, blocks, 6),
+                        const SizedBox(height: 24),
+                        _buildMonthCard(context, 'July 2026', 3, 31, bookings, blocks, 7),
+                      ],
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLegend(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: ResortTheme.stoneBg.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: ResortTheme.lightBone),
+      ),
+      child: Wrap(
+        spacing: 16,
+        runSpacing: 10,
+        children: [
+          _legendItem('Available Night', Colors.white, border: const BorderSide(color: ResortTheme.lightBone)),
+          _legendItem('Booked Direct', ResortTheme.mossGreen),
+          _legendItem('OTA Sync (Airbnb)', const Color(0xFF7A8B7B)),
+          _legendItem('Pending Payment', ResortTheme.goldAccent),
+          _legendItem('Blocked / Maint', const Color(0xFF706B5C)),
+        ],
+      ),
+    );
+  }
+
+  Widget _legendItem(String label, Color color, {BorderSide? border}) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 14,
+          height: 14,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+            border: border != null ? Border.all(color: border.color, width: border.width) : null,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(label, style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: ResortTheme.charcoal)),
+      ],
+    );
+  }
+
+  Widget _buildMonthCard(
+    BuildContext context, 
+    String monthName, 
+    int padDays, 
+    int totalDays, 
+    List<Booking> bookings, 
+    List<CalendarBlock> blocks,
+    int monthNum,
+  ) {
+    final monthKey = monthNum.toString();
+    final monthData = _calendarData?[monthKey] as Map<String, dynamic>?;
+    final apiAvailable = (monthData?['availableDates'] as List<dynamic>?)?.cast<String>() ?? [];
+    final apiBlocked = (monthData?['blockedDates'] as List<dynamic>?)?.cast<String>() ?? [];
+    final apiBooked = (monthData?['bookedDates'] as List<dynamic>?)?.cast<String>() ?? [];
+    final minStay = monthData?['minStay'] as int?;
+    final maxStay = monthData?['maxStay'] as int?;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(monthName, style: ResortTheme.lightTheme.textTheme.titleLarge),
+                if (minStay != null || maxStay != null)
+                  Text(
+                    'Min ${minStay ?? '-'} / Max ${maxStay ?? '-'} nights',
+                    style: GoogleFonts.inter(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.w500),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            const Divider(color: ResortTheme.lightBone),
+            const SizedBox(height: 12),
+            
+            GridRow(
+              children: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+                  .map((e) => Expanded(
+                        child: Center(
+                          child: Text(
+                            e,
+                            style: GoogleFonts.inter(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: ResortTheme.charcoal.withValues(alpha: 0.4),
+                            ),
+                          ),
+                        ),
+                      ))
+                  .toList(),
+            ),
+            const SizedBox(height: 12),
+
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 7,
+                mainAxisSpacing: 6,
+                crossAxisSpacing: 6,
+              ),
+              itemCount: padDays + totalDays,
+              itemBuilder: (context, idx) {
+                if (idx < padDays) {
+                  return Container();
+                }
+
+                final dayNum = idx - padDays + 1;
+                final dateStr = '${DateTime.now().year}-${monthNum.toString().padLeft(2, '0')}-${dayNum.toString().padLeft(2, '0')}';
+                
+                // Use API data when available, fall back to local
+                bool isBlocked = false;
+                bool isBooked = false;
+                Booking? matchingBooking;
+                CalendarBlock? matchingBlock;
+
+                if (_calendarData != null && apiAvailable.isNotEmpty) {
+                  isBlocked = apiBlocked.contains(dateStr);
+                  isBooked = apiBooked.contains(dateStr);
+                } else {
+                  final status = _getDayStatus(dateStr, bookings, blocks);
+                  isBlocked = status == CalendarDayStatus.blocked;
+                  isBooked = status == CalendarDayStatus.booked || status == CalendarDayStatus.ota || status == CalendarDayStatus.pending;
+                }
+
+                for (final bl in blocks) {
+                  if (dateStr.compareTo(bl.startDate) >= 0 && dateStr.compareTo(bl.endDate) < 0) {
+                    matchingBlock = bl;
+                    break;
+                  }
+                }
+                if (matchingBlock == null) {
+                  for (final b in bookings) {
+                    if (dateStr.compareTo(b.startDate) >= 0 && dateStr.compareTo(b.endDate) < 0 && b.status != BookingStatus.cancelled) {
+                      matchingBooking = b;
+                      break;
+                    }
+                  }
+                }
+
+                final info = _buildDayInfo(dateStr, matchingBooking, matchingBlock);
+                CalendarDayStatus status = isBlocked ? CalendarDayStatus.blocked : (isBooked ? CalendarDayStatus.booked : CalendarDayStatus.available);
+
+                Color cellColor = Colors.white;
+                Color textColor = ResortTheme.charcoal;
+                Border? border = Border.all(color: ResortTheme.lightBone.withValues(alpha: 0.5));
+                
+                switch (status) {
+                  case CalendarDayStatus.booked:
+                    cellColor = ResortTheme.mossGreen;
+                    textColor = Colors.white;
+                    border = null;
+                    break;
+                  case CalendarDayStatus.pending:
+                    cellColor = ResortTheme.goldAccent;
+                    textColor = ResortTheme.mossGreen;
+                    border = null;
+                    break;
+                  case CalendarDayStatus.ota:
+                    cellColor = const Color(0xFF7A8B7B);
+                    textColor = Colors.white;
+                    border = null;
+                    break;
+                  case CalendarDayStatus.blocked:
+                    cellColor = const Color(0xFF706B5C);
+                    textColor = const Color(0xFFF4F1EA);
+                    border = null;
+                    break;
+                  default:
+                    break;
+                }
+
+                return Tooltip(
+                  message: info,
+                  child: InkWell(
+                    onTap: () => _showDayDialog(context, dateStr, info),
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: cellColor,
+                        borderRadius: BorderRadius.circular(10),
+                        border: border,
+                        boxShadow: status != CalendarDayStatus.available
+                            ? [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 4, offset: const Offset(0, 2))]
+                            : null,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '$dayNum',
+                          style: GoogleFonts.spaceGrotesk(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: textColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  CalendarDayStatus _getDayStatus(String dateStr, List<Booking> bookings, List<CalendarBlock> blocks) {
+    for (final bl in blocks) {
+      if (dateStr.compareTo(bl.startDate) >= 0 && dateStr.compareTo(bl.endDate) < 0) {
+        return CalendarDayStatus.blocked;
+      }
+    }
+    for (final b in bookings) {
+      if (dateStr.compareTo(b.startDate) >= 0 && dateStr.compareTo(b.endDate) < 0) {
+        if (b.status == BookingStatus.cancelled) continue;
+        if (b.status == BookingStatus.pendingPayment) return CalendarDayStatus.pending;
+        return b.source == BookingSource.direct ? CalendarDayStatus.booked : CalendarDayStatus.ota;
+      }
+    }
+    return CalendarDayStatus.available;
+  }
+
+  String _buildDayInfo(String dateStr, Booking? booking, CalendarBlock? block) {
+    if (block != null) {
+      return 'Blocked for: ${block.reason.toUpperCase()}\nNotes: ${block.notes ?? "None"}\nBy: ${block.blockedBy}';
+    }
+    if (booking != null) {
+      return 'Booked: ${booking.guestName}\nStatus: ${booking.status.name.toUpperCase()}\nSource: ${booking.source.name.toUpperCase()}\nStay: ${booking.startDate} to ${booking.endDate}';
+    }
+    return 'Available Night';
+  }
+
+  void _showDayDialog(BuildContext context, String dateStr, String info) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          title: Text(dateStr, style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold, color: ResortTheme.mossGreen)),
+          content: Text(info, style: GoogleFonts.inter(fontSize: 13, height: 1.5)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Close', style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: ResortTheme.mossGreen)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class GridRow extends StatelessWidget {
+  final List<Widget> children;
+  const GridRow({super.key, required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: children);
+  }
+}
