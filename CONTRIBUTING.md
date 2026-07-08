@@ -134,49 +134,72 @@ git push -u origin feat/booking-cancel-ui
 # → After review, merge to main
 ```
 
-### Example 2: Role Permissions CRUD
-
-**Goal:** Super Admin can create/edit/delete roles and their permissions.
-
-| Step | Repo | Branch | Action |
-|---|---|---|---|
-| 1 | `vsp-net-api` | `feat/role-permissions-crud` | Add CRUD endpoints for role permissions |
-| 2 | `vsp-net-api` | — | PR merged to `main` |
-| 3 | `vsp-net` | `feat/role-permissions-ui` | Build role management pages + forms |
-| 4 | `vsp-net` | — | PR merged to `main` |
+### After both PRs are merged
 
 ```bash
-# === BACKEND (Step 1-2) ===
+# === BACKEND ===
 cd D:\VSP\vsp-net-api
-git checkout main && git pull origin main
-git checkout -b feat/role-permissions-crud
+git checkout main
+git pull origin main          # get latest merged code
+git branch -d feat/booking-cancel-reason   # delete local branch
+# Remote branch is auto-deleted via GitHub PR settings
 
-# New files:
-#   RolePermissionController.java
-#   RolePermissionService.java
-#   dto/PermissionCreateRequest.java
-#   dto/PermissionResponse.java
-# Edit: SecurityConfig.java → add endpoint rules
-
-git add -A
-git commit -m "feat: add CRUD endpoints for role permissions"
-git push -u origin feat/role-permissions-crud
-# → PR title: "feat: add CRUD endpoints for role permissions"
-# → Merge to main after review
-
-# === FRONTEND (Step 3-4, after backend PR is merged) ===
+# === FRONTEND ===
 cd D:\VSP\vsp-net
-git checkout main && git pull origin main
-git checkout -b feat/role-permissions-ui
+git checkout main
+git pull origin main          # get latest merged code
+git branch -d feat/booking-cancel-ui       # delete local branch
+```
 
-# Edit: super_admin_repository.dart → add permission CRUD methods
-# Edit: super_admin_view.dart → add permission management UI
-# Edit: role_management_view.dart → add permission editor
+---
+
+## Resolving Merge Conflicts
+
+Conflicts happen when two branches change the same file. Here's how to handle them.
+
+### During rebase (daily sync)
+
+```bash
+git fetch origin
+git rebase origin/main
+# If conflict:
+#   Git shows: CONFLICT in filename.dart
+#   Both versions are marked in the file:
+#     <<<<<<< HEAD       ← your changes
+#     =======           
+#     >>>>>>> origin/main ← incoming changes from main
+
+# 1. Open the file in your editor
+# 2. Keep what you need, delete what you don't, remove markers
+# 3. Save the file
 
 git add -A
-git commit -m "feat: add role permission editor UI for super admin"
-git push -u origin feat/role-permissions-ui
-# → PR title: "feat: add role permission editor UI for super admin"
-# → Description: "Depends on vsp-net-api#15"
-# → Merge to main after review
+git rebase --continue
+# Write a commit message or keep the default → save & exit
 ```
+
+### During merge (less common)
+
+```bash
+git merge origin/main
+# If conflict: same markers appear in the file
+
+# Fix the file, then:
+git add -A
+git commit
+```
+
+### Rules for resolving
+
+| Situation | What to do |
+|---|---|
+| Both added new code in different places | Accept both — markers won't appear |
+| Your branch renamed a widget, main didn't | Keep your version (you made the change) |
+| Main fixed a bug in the same line | Keep main's version (it's likely the fix) |
+| Not sure | Ask the person who wrote the conflicting code |
+
+### Prevent conflicts
+
+- **Sync daily**: `git fetch origin && git rebase origin/main` every morning
+- **Small PRs**: Less code = less chance of overlapping changes
+- **Communicate**: Tell the team when you're working on shared files
