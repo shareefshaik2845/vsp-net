@@ -164,7 +164,7 @@ class BookingsNotifier extends StateNotifier<List<Booking>> {
   }
 }
 
-final bookingsProvider = StateNotifierProvider<BookingsNotifier, List<Booking>>((ref) {
+final bookingsProvider = StateNotifierProvider.autoDispose<BookingsNotifier, List<Booking>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return BookingsNotifier(repo);
 });
@@ -199,7 +199,7 @@ class CalendarBlocksNotifier extends StateNotifier<List<CalendarBlock>> {
   }
 }
 
-final calendarBlocksProvider = StateNotifierProvider<CalendarBlocksNotifier, List<CalendarBlock>>((ref) {
+final calendarBlocksProvider = StateNotifierProvider.autoDispose<CalendarBlocksNotifier, List<CalendarBlock>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return CalendarBlocksNotifier(repo);
 });
@@ -246,7 +246,7 @@ class CouponsNotifier extends StateNotifier<List<Coupon>> {
   }
 }
 
-final couponsProvider = StateNotifierProvider<CouponsNotifier, List<Coupon>>((ref) {
+final couponsProvider = StateNotifierProvider.autoDispose<CouponsNotifier, List<Coupon>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return CouponsNotifier(repo);
 });
@@ -289,7 +289,7 @@ class RoomsNotifier extends StateNotifier<List<RoomStatus>> {
   }
 }
 
-final roomsProvider = StateNotifierProvider<RoomsNotifier, List<RoomStatus>>((ref) {
+final roomsProvider = StateNotifierProvider.autoDispose<RoomsNotifier, List<RoomStatus>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return RoomsNotifier(repo);
 });
@@ -336,7 +336,7 @@ class PricingRulesNotifier extends StateNotifier<List<PricingSeasonRule>> {
   }
 }
 
-final pricingRulesProvider = StateNotifierProvider<PricingRulesNotifier, List<PricingSeasonRule>>((ref) {
+final pricingRulesProvider = StateNotifierProvider.autoDispose<PricingRulesNotifier, List<PricingSeasonRule>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return PricingRulesNotifier(repo);
 });
@@ -389,7 +389,7 @@ class OtaChannelsNotifier extends StateNotifier<List<OtaSyncStatus>> {
   }
 }
 
-final otaSyncProvider = StateNotifierProvider<OtaChannelsNotifier, List<OtaSyncStatus>>((ref) {
+final otaSyncProvider = StateNotifierProvider.autoDispose<OtaChannelsNotifier, List<OtaSyncStatus>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return OtaChannelsNotifier(repo);
 });
@@ -440,7 +440,7 @@ class NotificationsNotifier extends StateNotifier<List<AppNotification>> {
   }
 }
 
-final notificationsProvider = StateNotifierProvider<NotificationsNotifier, List<AppNotification>>((ref) {
+final notificationsProvider = StateNotifierProvider.autoDispose<NotificationsNotifier, List<AppNotification>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return NotificationsNotifier(repo);
 });
@@ -661,7 +661,7 @@ class SavedPropertiesNotifier extends StateNotifier<List<PropertyDetails>> {
   }
 }
 
-final savedPropertiesProvider = StateNotifierProvider<SavedPropertiesNotifier, List<PropertyDetails>>((ref) {
+final savedPropertiesProvider = StateNotifierProvider.autoDispose<SavedPropertiesNotifier, List<PropertyDetails>>((ref) {
   return SavedPropertiesNotifier(ref.watch(customerRepositoryProvider));
 });
 
@@ -695,7 +695,7 @@ class SuperAdminBookingsNotifier extends StateNotifier<List<Booking>> {
 }
 
 final superAdminBookingsProvider =
-    StateNotifierProvider<SuperAdminBookingsNotifier, List<Booking>>((ref) {
+    StateNotifierProvider.autoDispose<SuperAdminBookingsNotifier, List<Booking>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminBookingsNotifier(repo);
 });
@@ -736,7 +736,7 @@ class SuperAdminUsersNotifier extends StateNotifier<List<UserAccount>> {
 }
 
 final superAdminUsersProvider =
-    StateNotifierProvider<SuperAdminUsersNotifier, List<UserAccount>>((ref) {
+    StateNotifierProvider.autoDispose<SuperAdminUsersNotifier, List<UserAccount>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminUsersNotifier(repo);
 });
@@ -771,7 +771,7 @@ class SuperAdminRolesNotifier extends StateNotifier<List<RoleDefinition>> {
 }
 
 final superAdminRolesProvider =
-    StateNotifierProvider<SuperAdminRolesNotifier, List<RoleDefinition>>((ref) {
+    StateNotifierProvider.autoDispose<SuperAdminRolesNotifier, List<RoleDefinition>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminRolesNotifier(repo);
 });
@@ -806,7 +806,7 @@ class SuperAdminApprovalsNotifier extends StateNotifier<List<Map<String, dynamic
 }
 
 final superAdminApprovalsProvider =
-    StateNotifierProvider<SuperAdminApprovalsNotifier, List<Map<String, dynamic>>>((ref) {
+    StateNotifierProvider.autoDispose<SuperAdminApprovalsNotifier, List<Map<String, dynamic>>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminApprovalsNotifier(repo);
 });
@@ -859,7 +859,7 @@ class SuperAdminNotificationsNotifier extends StateNotifier<List<AppNotification
 }
 
 final superAdminNotificationsProvider =
-    StateNotifierProvider<SuperAdminNotificationsNotifier, List<AppNotification>>((ref) {
+    StateNotifierProvider.autoDispose<SuperAdminNotificationsNotifier, List<AppNotification>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminNotificationsNotifier(repo);
 });
@@ -891,7 +891,7 @@ class SuperAdminSettingsNotifier extends StateNotifier<Map<String, dynamic>> {
 }
 
 final superAdminSettingsProvider =
-    StateNotifierProvider<SuperAdminSettingsNotifier, Map<String, dynamic>>((ref) {
+    StateNotifierProvider.autoDispose<SuperAdminSettingsNotifier, Map<String, dynamic>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminSettingsNotifier(repo);
 });
@@ -937,7 +937,7 @@ class SuperAdminAnalyticsNotifier extends StateNotifier<AsyncValue<SuperAdminAna
 }
 
 final superAdminAnalyticsProvider =
-    StateNotifierProvider<SuperAdminAnalyticsNotifier, AsyncValue<SuperAdminAnalyticsState>>((ref) {
+    StateNotifierProvider.autoDispose<SuperAdminAnalyticsNotifier, AsyncValue<SuperAdminAnalyticsState>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminAnalyticsNotifier(repo);
 });
@@ -973,7 +973,7 @@ class SuperAdminAuditLogsNotifier extends StateNotifier<List<Map<String, dynamic
 }
 
 final superAdminAuditLogsProvider =
-    StateNotifierProvider<SuperAdminAuditLogsNotifier, List<Map<String, dynamic>>>((ref) {
+    StateNotifierProvider.autoDispose<SuperAdminAuditLogsNotifier, List<Map<String, dynamic>>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminAuditLogsNotifier(repo);
 });
@@ -1014,7 +1014,7 @@ class CustomerBookingsNotifier extends StateNotifier<List<Booking>> {
 }
 
 final customerBookingsProvider =
-    StateNotifierProvider<CustomerBookingsNotifier, List<Booking>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerBookingsNotifier, List<Booking>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerBookingsNotifier(repo);
 });
@@ -1041,7 +1041,7 @@ class CustomerPropertiesNotifier extends StateNotifier<AsyncValue<List<Map<Strin
 }
 
 final customerPropertiesProvider =
-    StateNotifierProvider<CustomerPropertiesNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerPropertiesNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerPropertiesNotifier(repo);
 });
@@ -1066,7 +1066,7 @@ class CustomerCouponsNotifier extends StateNotifier<AsyncValue<List<Map<String, 
 }
 
 final customerCouponsProvider =
-    StateNotifierProvider<CustomerCouponsNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerCouponsNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerCouponsNotifier(repo);
 });
@@ -1106,7 +1106,7 @@ class CustomerFavoritesNotifier extends StateNotifier<List<Map<String, dynamic>>
 }
 
 final customerFavoritesProvider =
-    StateNotifierProvider<CustomerFavoritesNotifier, List<Map<String, dynamic>>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerFavoritesNotifier, List<Map<String, dynamic>>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerFavoritesNotifier(repo);
 });
@@ -1145,7 +1145,7 @@ class CustomerProfileNotifier extends StateNotifier<AsyncValue<Map<String, dynam
 }
 
 final customerProfileProvider =
-    StateNotifierProvider<CustomerProfileNotifier, AsyncValue<Map<String, dynamic>>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerProfileNotifier, AsyncValue<Map<String, dynamic>>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerProfileNotifier(repo);
 });
@@ -1174,7 +1174,7 @@ class CustomerPricingNotifier extends StateNotifier<Map<String, dynamic>> {
 }
 
 final customerPricingProvider =
-    StateNotifierProvider<CustomerPricingNotifier, Map<String, dynamic>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerPricingNotifier, Map<String, dynamic>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerPricingNotifier(repo);
 });
@@ -1200,7 +1200,7 @@ class CustomerStatsNotifier extends StateNotifier<AsyncValue<Map<String, dynamic
 }
 
 final customerStatsProvider =
-    StateNotifierProvider<CustomerStatsNotifier, AsyncValue<Map<String, dynamic>>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerStatsNotifier, AsyncValue<Map<String, dynamic>>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerStatsNotifier(repo);
 });
@@ -1237,7 +1237,7 @@ class CustomerNotificationsNotifier extends StateNotifier<List<AppNotification>>
 }
 
 final customerNotificationsProvider =
-    StateNotifierProvider<CustomerNotificationsNotifier, List<AppNotification>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerNotificationsNotifier, List<AppNotification>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerNotificationsNotifier(repo);
 });
@@ -1263,7 +1263,7 @@ class CustomerInvoicesNotifier extends StateNotifier<AsyncValue<List<Map<String,
 }
 
 final customerInvoicesProvider =
-    StateNotifierProvider<CustomerInvoicesNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerInvoicesNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerInvoicesNotifier(repo);
 });
@@ -1294,7 +1294,7 @@ class CustomerConciergeNotifier extends StateNotifier<AsyncValue<List<Map<String
 }
 
 final customerConciergeProvider =
-    StateNotifierProvider<CustomerConciergeNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerConciergeNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerConciergeNotifier(repo);
 });
@@ -1318,7 +1318,7 @@ class StaffRosterNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>
 }
 
 final staffRosterProvider =
-    StateNotifierProvider<StaffRosterNotifier, AsyncValue<Map<String, dynamic>>>((ref) {
+    StateNotifierProvider.autoDispose<StaffRosterNotifier, AsyncValue<Map<String, dynamic>>>((ref) {
   final repo = ref.watch(staffRepositoryProvider);
   return StaffRosterNotifier(repo);
 });
@@ -1362,7 +1362,7 @@ class StaffRoomsNotifier extends StateNotifier<AsyncValue<List<RoomStatus>>> {
 }
 
 final staffRoomsProvider =
-    StateNotifierProvider<StaffRoomsNotifier, AsyncValue<List<RoomStatus>>>((ref) {
+    StateNotifierProvider.autoDispose<StaffRoomsNotifier, AsyncValue<List<RoomStatus>>>((ref) {
   final repo = ref.watch(staffRepositoryProvider);
   return StaffRoomsNotifier(repo);
 });
@@ -1390,7 +1390,7 @@ class AccountantInvoicesNotifier extends StateNotifier<AsyncValue<List<Booking>>
 }
 
 final accountantInvoicesProvider =
-    StateNotifierProvider<AccountantInvoicesNotifier, AsyncValue<List<Booking>>>((ref) {
+    StateNotifierProvider.autoDispose<AccountantInvoicesNotifier, AsyncValue<List<Booking>>>((ref) {
   final repo = ref.watch(accountantRepositoryProvider);
   return AccountantInvoicesNotifier(repo);
 });
@@ -1422,7 +1422,7 @@ class AccountantRefundsNotifier extends StateNotifier<AsyncValue<List<Map<String
 }
 
 final accountantRefundsProvider =
-    StateNotifierProvider<AccountantRefundsNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
+    StateNotifierProvider.autoDispose<AccountantRefundsNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
   final repo = ref.watch(accountantRepositoryProvider);
   return AccountantRefundsNotifier(repo);
 });
@@ -1446,7 +1446,7 @@ class AccountantKpisNotifier extends StateNotifier<AsyncValue<Map<String, dynami
 }
 
 final accountantKpisProvider =
-    StateNotifierProvider<AccountantKpisNotifier, AsyncValue<Map<String, dynamic>>>((ref) {
+    StateNotifierProvider.autoDispose<AccountantKpisNotifier, AsyncValue<Map<String, dynamic>>>((ref) {
   final repo = ref.watch(accountantRepositoryProvider);
   return AccountantKpisNotifier(repo);
 });
@@ -1529,7 +1529,7 @@ class AdminDashboardNotifier extends StateNotifier<AsyncValue<AdminDashboardStat
 }
 
 final adminDashboardProvider =
-    StateNotifierProvider<AdminDashboardNotifier, AsyncValue<AdminDashboardState>>((ref) {
+    StateNotifierProvider.autoDispose<AdminDashboardNotifier, AsyncValue<AdminDashboardState>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return AdminDashboardNotifier(repo);
 });
