@@ -220,6 +220,18 @@ class AuthApiService {
     }
   }
 
+  Future<bool> forgotPassword(String email) async {
+    try {
+      final response = await _client.dio.post('/auth/forgot-password', data: {
+        'email': email,
+      });
+      final envelope = ApiEnvelope.fromResponse(response);
+      return envelope.success;
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<void> logout() async {
     try {
       await _client.dio.post('/auth/logout');

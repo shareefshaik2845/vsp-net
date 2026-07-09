@@ -2,120 +2,63 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../providers/state_provider.dart';
-import '../routing/app_router.dart';
-import '../routing/route_names.dart';
 import '../../core/theme.dart';
-import '../../domain/entities.dart';
-import '../widgets/vsp_nest_logo.dart';
-import '../../core/api_client.dart';
 import '../../core/snackbar_helper.dart';
 import '../../data/remote/auth_api_service.dart';
+import '../widgets/vsp_nest_logo.dart';
 
-UserRole? _mapBackendRole(String backendRole) {
-  switch (backendRole) {
-    case 'SUPER_ADMIN':
-      return UserRole.superAdmin;
-    case 'ADMIN':
-      return UserRole.admin;
-    case 'STAFF':
-      return UserRole.staff;
-    case 'ACCOUNTANT':
-      return UserRole.accountant;
-    case 'CUSTOMER':
-      return UserRole.customer;
-    default:
-      return null;
-  }
-}
-
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+class ForgotPasswordScreen extends ConsumerStatefulWidget {
+  const ForgotPasswordScreen({super.key});
 
   @override
-  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
+  final _emailController = TextEditingController();
   bool _isLoading = false;
+
   @override
   void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
-    final email = _usernameController.text.trim().toLowerCase();
-    final password = _passwordController.text;
+  Future<void> _handleReset() async {
+    final email = _emailController.text.trim().toLowerCase();
 
     if (email.isEmpty) {
-      SnackbarHelper.warning(context, 'Please enter an email address.');
+      SnackbarHelper.warning(context, 'Please enter your email address.');
       return;
     }
 
-    if (password.isEmpty) {
-      SnackbarHelper.warning(context, 'Please enter a password.');
-      return;
-    }
-
-    if (password.length < 6) {
-      SnackbarHelper.warning(context, 'Password must be at least 6 characters.');
+    if (!email.contains('@') || !email.contains('.')) {
+      SnackbarHelper.warning(context, 'Enter a valid email address.');
       return;
     }
 
     setState(() => _isLoading = true);
 
-    // Clear any stale tokens before login to avoid 403 from interceptor
-    await ApiClient.instance.clearTokens();
-
-    final result = await AuthApiService().login(email, password);
+    final success = await AuthApiService().forgotPassword(email);
 
     if (!mounted) return;
 
-    if (result == null) {
-      setState(() => _isLoading = false);
-      SnackbarHelper.error(context, 'Invalid email or password. Please try again.');
-      return;
+    setState(() => _isLoading = false);
+
+    if (success) {
+      SnackbarHelper.success(context, 'Password reset link sent to your email.');
+      Navigator.pop(context);
+    } else {
+      SnackbarHelper.error(context, 'Failed to send reset link. Please try again.');
     }
-
-    final targetRole = _mapBackendRole(result.user.role);
-    if (targetRole == null) {
-      setState(() => _isLoading = false);
-      SnackbarHelper.error(context, 'Unknown user role. Please contact support.');
-      return;
-    }
-
-    ref.read(activeRoleProvider.notifier).state = targetRole;
-    ref.read(authenticatedRoleProvider.notifier).state = targetRole;
-
-    if (targetRole == UserRole.customer) {
-      ref.read(activeTabProvider.notifier).state = 'villa';
-      ref.read(customerProfileProvider.notifier).setProfile({
-        'name': result.user.name,
-        'email': result.user.email,
-        'phone': result.user.phone ?? '',
-        'id': result.user.id,
-        'avatar': result.user.profileImageUrl ?? '',
-      });
-    }
-
-    ref.read(isLoggedInProvider.notifier).state = true;
-
-    if (!mounted) return;
-    Navigator.pushReplacementNamed(context, AppRouter.routeForRole(targetRole));
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isWide = size.width >= 800;
 
-    Widget formCard = ClipRRect(
+    final formCard = ClipRRect(
       borderRadius: BorderRadius.circular(32),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
@@ -139,7 +82,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Sanctuary Portal',
+                'Reset Password',
                 style: GoogleFonts.playfairDisplay(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -148,18 +91,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               const SizedBox(height: 6),
               Text(
-                'Sign in to access the sanctuary portal.',
+                'Enter your email to receive a password reset link.',
                 style: GoogleFonts.inter(
                   fontSize: 12,
                   color: Colors.white.withValues(alpha: 0.6),
                   height: 1.4,
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
 
-              // Username & Password fields
               Text(
-                'CREDENTIALS',
+                'EMAIL ADDRESS',
                 style: GoogleFonts.spaceGrotesk(
                   fontSize: 9,
                   fontWeight: FontWeight.bold,
@@ -167,10 +109,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   letterSpacing: 1.0,
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
+
               TextField(
-                controller: _usernameController,
-                readOnly: false,
+                controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 style: GoogleFonts.inter(fontSize: 12, color: Colors.white.withValues(alpha: 0.9)),
                 decoration: InputDecoration(
@@ -194,38 +136,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
               ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                readOnly: false,
-                style: GoogleFonts.inter(fontSize: 12, color: Colors.white.withValues(alpha: 0.9)),
-                decoration: InputDecoration(
-                  hintText: 'Enter password',
-                  hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
-                  prefixIcon: const Icon(Icons.lock_outline, size: 16, color: ResortTheme.goldAccent),
-                  filled: true,
-                  fillColor: Colors.white.withValues(alpha: 0.04),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: ResortTheme.goldAccent),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                ),
-              ),
-              const SizedBox(height: 20),
 
-              // Access button with Gold Gradient
+              const SizedBox(height: 28),
+
               InkWell(
-                onTap: _isLoading ? null : _handleLogin,
+                onTap: _isLoading ? null : _handleReset,
                 borderRadius: BorderRadius.circular(16),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
@@ -253,7 +168,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                         )
                       : Text(
-                          'Access Sanctuary Portal',
+                          'Send Reset Link',
                           style: GoogleFonts.inter(
                             color: const Color(0xFF2C3627),
                             fontWeight: FontWeight.bold,
@@ -263,46 +178,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                 ),
               ),
-              const SizedBox(height: 16),
 
-              Row(
-                children: [
-                  Expanded(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, RouteNames.forgotPassword);
-                      },
-                      child: Text(
-                        'Forgot Password?',
-                        style: GoogleFonts.inter(
-                          fontSize: 11,
-                          color: ResortTheme.goldAccent.withValues(alpha: 0.8),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+              const SizedBox(height: 12),
+
+              Center(
+                child: TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    'Back to Login',
+                    style: GoogleFonts.inter(
+                      fontSize: 11,
+                      color: ResortTheme.goldAccent.withValues(alpha: 0.8),
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, RouteNames.install);
-                      },
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: ResortTheme.goldAccent.withValues(alpha: 0.4)),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                      ),
-                      child: Text(
-                        'Request a Live Demo',
-                        style: GoogleFonts.inter(
-                          fontSize: 11,
-                          color: ResortTheme.goldAccent.withValues(alpha: 0.8),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
@@ -319,7 +209,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ),
         child: Stack(
           children: [
-            // Ambient light glow backdrops
             Positioned(
               top: -100,
               left: -100,
@@ -354,8 +243,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
             ),
-
-            // Main content
             Center(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -363,7 +250,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Premium Logo Header
                     const VspNestBrandHeader(
                       isVertical: true,
                       logoSize: 72,
@@ -372,23 +258,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       isDarkBackground: true,
                       useSingleLine: true,
                     ),
-                    const SizedBox(height: 6),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        'A U T H E N T I C   S A N C T U A R I E S',
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 9.5,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 2.5,
-                          color: ResortTheme.goldAccent,
-                        ),
-                      ),
-                    ),
                     const SizedBox(height: 36),
-
                     formCard,
-
                   ],
                 ),
               ),

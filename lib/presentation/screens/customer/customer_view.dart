@@ -1424,6 +1424,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
 
   Widget _buildResortShowcase(PropertyDetails property) {
     final images = property.gallery;
+    final heroImageUrl = images.isNotEmpty ? images[0] : property.image;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1436,7 +1437,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(32),
                 border: Border.all(color: ResortTheme.lightBone),
-                image: DecorationImage(image: NetworkImage(images[0]), fit: BoxFit.cover),
+                image: DecorationImage(image: NetworkImage(heroImageUrl), fit: BoxFit.cover),
               ),
               child: Container(
                 decoration: BoxDecoration(
@@ -1524,28 +1525,32 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
         ),
         const SizedBox(height: 16),
         // Gallery row
-        Row(
-          children: images.map((url) => Expanded(
-            child: Container(
-              height: 100,
-              margin: const EdgeInsets.only(right: 16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: ResortTheme.lightBone.withValues(alpha: 0.4)),
-                image: DecorationImage(image: NetworkImage(url), fit: BoxFit.cover),
-              ),
+        if (images.isNotEmpty)
+          Row(
+            children: [
+              for (final url in images.take(3))
+                Expanded(
+                  child: Container(
+                    height: 100,
+                    margin: const EdgeInsets.only(right: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: ResortTheme.lightBone.withValues(alpha: 0.4)),
+                      image: DecorationImage(image: NetworkImage(url), fit: BoxFit.cover),
+                    ),
+                  ),
+                ),
+            ],
+          )
+        else
+          Container(
+            height: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: ResortTheme.lightBone.withValues(alpha: 0.4)),
+              image: DecorationImage(image: NetworkImage(property.image), fit: BoxFit.cover),
             ),
-          )).toList()..removeLast()..add(Expanded(
-            child: Container(
-              height: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: ResortTheme.lightBone.withValues(alpha: 0.4)),
-                image: DecorationImage(image: NetworkImage(images.last), fit: BoxFit.cover),
-              ),
-            ),
-          )),
-        ),
+          ),
         const SizedBox(height: 24),
         // Details Box
         Container(
@@ -1659,7 +1664,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
     final bathrooms = detail['bathrooms'] as int?;
     final checkIn = detail['checkInTime'] as String?;
     final checkOut = detail['checkOutTime'] as String?;
-    final houseRules = detail['houseRules'] as List<dynamic>?;
+    final houseRules = _normalizeHouseRules(detail['houseRules']);
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -1687,7 +1692,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                 _statChip(Icons.logout, 'Check-out: $checkOut'),
             ],
           ),
-          if (houseRules != null && houseRules.isNotEmpty) ...[
+          if (houseRules.isNotEmpty) ...[
             const SizedBox(height: 16),
             const Divider(color: Color(0xFFE6E2D3)),
             const SizedBox(height: 16),
@@ -1707,6 +1712,25 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
         ],
       ),
     );
+  }
+
+  List<String> _normalizeHouseRules(dynamic rawRules) {
+    if (rawRules == null) return [];
+    if (rawRules is Iterable) {
+      return rawRules
+          .whereType<String>()
+          .map((rule) => rule.trim())
+          .where((rule) => rule.isNotEmpty)
+          .toList();
+    }
+    if (rawRules is String) {
+      return rawRules
+          .split(RegExp(r'\r?\n'))
+          .map((rule) => rule.trim())
+          .where((rule) => rule.isNotEmpty)
+          .toList();
+    }
+    return [];
   }
 
   Widget _statChip(IconData icon, String label) {
@@ -1756,6 +1780,9 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
           const SizedBox(height: 16),
           ...reviews.take(5).map((r) {
             final review = r as Map<String, dynamic>;
+            final authorRaw = review['author'];
+            final author = authorRaw != null ? authorRaw.toString().trim() : '';
+            final authorInitial = author.isNotEmpty ? author[0].toUpperCase() : 'G';
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: Row(
@@ -1765,7 +1792,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                     radius: 18,
                     backgroundColor: ResortTheme.stoneBg,
                     child: Text(
-                      (review['author'] as String? ?? 'G')[0].toUpperCase(),
+                      authorInitial,
                       style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: ResortTheme.mossGreen),
                     ),
                   ),
