@@ -79,8 +79,8 @@ class RemoteAuthResult {
 
   factory RemoteAuthResult.fromJson(Map<String, dynamic> json) {
     return RemoteAuthResult(
-      accessToken: json['accessToken'] as String,
-      refreshToken: json['refreshToken'] as String,
+      accessToken: json['accessToken'] as String? ?? '',
+      refreshToken: json['refreshToken'] as String? ?? '',
       user: RemoteUserInfo.fromJson(json['user'] as Map<String, dynamic>),
     );
   }
@@ -111,9 +111,8 @@ class AuthApiService {
         refreshToken: result.refreshToken,
       );
       return result;
-    } on DioException catch (_) {
-      return null;
-    } catch (_) {
+    } catch (e) {
+      print('AuthApiService.login error: $e');
       return null;
     }
   }
@@ -155,9 +154,8 @@ class AuthApiService {
         refreshToken: result.refreshToken,
       );
       return result;
-    } on DioException catch (_) {
-      return null;
-    } catch (_) {
+    } catch (e) {
+      print('AuthApiService.register error: $e');
       return null;
     }
   }
@@ -188,8 +186,10 @@ class AuthApiService {
       );
       return result;
     } on DioException catch (_) {
+      print('AuthApiService.setup DioException');
       return null;
-    } catch (_) {
+    } catch (e) {
+      print('AuthApiService.setup error: $e');
       return null;
     }
   }
@@ -213,9 +213,8 @@ class AuthApiService {
         refreshToken: result.refreshToken,
       );
       return result;
-    } on DioException catch (_) {
-      return null;
-    } catch (_) {
+    } catch (e) {
+      print('AuthApiService.refreshToken error: $e');
       return null;
     }
   }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities.dart';
 import '../../domain/repositories.dart';
@@ -66,6 +67,7 @@ class BookingsNotifier extends StateNotifier<List<Booking>> {
     try {
       state = await _repository.fetchBookings();
     } catch (e) {
+      debugPrint('loadBookings error: $e');
       state = [];
     }
   }
@@ -175,6 +177,7 @@ class CalendarBlocksNotifier extends StateNotifier<List<CalendarBlock>> {
     try {
       state = await _repository.fetchCalendarBlocks();
     } catch (e) {
+      debugPrint('loadBlocks error: $e');
       state = [];
     }
   }
@@ -206,6 +209,7 @@ class CouponsNotifier extends StateNotifier<List<Coupon>> {
     try {
       state = await _repository.fetchCoupons();
     } catch (e) {
+      debugPrint('loadCoupons error: $e');
       state = [];
     }
   }
@@ -249,6 +253,7 @@ class RoomsNotifier extends StateNotifier<List<RoomStatus>> {
     try {
       state = await _repository.fetchRoomStatuses();
     } catch (e) {
+      debugPrint('loadRooms error: $e');
       state = [];
     }
   }
@@ -288,6 +293,7 @@ class PricingRulesNotifier extends StateNotifier<List<PricingSeasonRule>> {
     try {
       state = await _repository.fetchPricingRules();
     } catch (e) {
+      debugPrint('loadRules error: $e');
       state = [];
     }
   }
@@ -331,6 +337,7 @@ class OtaChannelsNotifier extends StateNotifier<List<OtaSyncStatus>> {
     try {
       state = await _repository.fetchOtaSyncStatuses();
     } catch (e) {
+      debugPrint('loadChannels error: $e');
       state = [];
     }
   }
@@ -380,6 +387,7 @@ class NotificationsNotifier extends StateNotifier<List<AppNotification>> {
     try {
       state = await _repository.fetchNotifications();
     } catch (e) {
+      debugPrint('loadNotifications error: $e');
       state = [];
     }
   }
@@ -540,7 +548,9 @@ class ResortsNotifier extends StateNotifier<List<PropertyDetails>> {
     try {
       final props = await _loadProperties();
       state = props.map((json) => _propertyFromJson(json)).toList();
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('ResortsNotifier._init error: $e');
+    }
   }
 
   void addResort(PropertyDetails resort) {
@@ -591,7 +601,9 @@ class SavedPropertiesNotifier extends StateNotifier<List<PropertyDetails>> {
         image: json['image'] as String? ?? '',
         gallery: [],
       )).toList();
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('SavedPropertiesNotifier._loadRemote error: $e');
+    }
   }
 
   void toggleSave(PropertyDetails property) {
@@ -607,7 +619,9 @@ class SavedPropertiesNotifier extends StateNotifier<List<PropertyDetails>> {
         await _remoteRepo.addFavorite(property.id);
         await _loadRemote();
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('SavedPropertiesNotifier._remoteToggle error: $e');
+    }
   }
 
   bool isSaved(PropertyDetails property) {
@@ -639,6 +653,7 @@ class SuperAdminBookingsNotifier extends StateNotifier<List<Booking>> {
     try {
       state = await _repository.fetchAllBookings();
     } catch (e) {
+      debugPrint('SuperAdminBookingsNotifier.loadBookings error: $e');
       state = [];
     }
   }
@@ -676,6 +691,7 @@ class SuperAdminUsersNotifier extends StateNotifier<List<UserAccount>> {
         lastLoginAt: json['lastLoginAt'] as String?,
       )).toList();
     } catch (e) {
+      debugPrint('SuperAdminUsersNotifier.loadUsers error: $e');
       state = [];
     }
   }
@@ -699,6 +715,7 @@ class SuperAdminRolesNotifier extends StateNotifier<List<RoleDefinition>> {
     try {
       state = await _repository.fetchRoles();
     } catch (e) {
+      debugPrint('SuperAdminRolesNotifier.loadRoles error: $e');
       state = [];
     }
   }
@@ -730,6 +747,7 @@ class SuperAdminApprovalsNotifier extends StateNotifier<List<Map<String, dynamic
     try {
       state = await _repository.fetchApprovals();
     } catch (e) {
+      debugPrint('SuperAdminApprovalsNotifier.loadApprovals error: $e');
       state = [];
     }
   }
@@ -761,6 +779,7 @@ class SuperAdminNotificationsNotifier extends StateNotifier<List<AppNotification
     try {
       state = await _repository.fetchNotifications();
     } catch (e) {
+      debugPrint('SuperAdminNotificationsNotifier.loadNotifications error: $e');
       state = [];
     }
   }
@@ -810,6 +829,7 @@ class SuperAdminSettingsNotifier extends StateNotifier<Map<String, dynamic>> {
     try {
       state = await _repository.fetchGlobalSettings();
     } catch (e) {
+      debugPrint('SuperAdminSettingsNotifier.loadSettings error: $e');
       state = {};
     }
   }
@@ -890,6 +910,7 @@ class SuperAdminAuditLogsNotifier extends StateNotifier<List<Map<String, dynamic
     try {
       state = await _repository.fetchAuditLogs(userId: userId, action: action, from: from, to: to, page: page, pageSize: pageSize);
     } catch (e) {
+      debugPrint('SuperAdminAuditLogsNotifier.loadAuditLogs error: $e');
       state = [];
     }
   }
@@ -998,6 +1019,7 @@ class CustomerFavoritesNotifier extends StateNotifier<List<Map<String, dynamic>>
     try {
       state = await _repository.fetchFavorites();
     } catch (e) {
+      debugPrint('CustomerFavoritesNotifier.loadFavorites error: $e');
       state = [];
     }
   }
@@ -1072,7 +1094,9 @@ class CustomerPricingNotifier extends StateNotifier<Map<String, dynamic>> {
         'taxRate': tax['data']?['taxRate'] ?? tax['taxRate'] ?? 18,
         'depositRate': deposit['data']?['depositRate'] ?? deposit['depositRate'] ?? 30,
       };
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('CustomerPricingNotifier.loadPricing error: $e');
+    }
   }
 }
 
@@ -1116,7 +1140,8 @@ class CustomerNotificationsNotifier extends StateNotifier<List<AppNotification>>
   Future<void> load() async {
     try {
       state = await _repository.fetchNotifications();
-    } catch (_) {
+    } catch (e) {
+      debugPrint('CustomerNotificationsNotifier.load error: $e');
       state = [];
     }
   }
