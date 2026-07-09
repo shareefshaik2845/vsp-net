@@ -667,7 +667,11 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
           ],
         ),
       ),
-    );
+    ).then((_) {
+      nameController.dispose();
+      emailController.dispose();
+      passwordController.dispose();
+    });
   }
 
   void _showDeleteUserConfirm(BuildContext context, UserAccount user) {
@@ -883,7 +887,11 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
           ],
         ),
       ),
-    );
+    ).then((_) {
+      nameController.dispose();
+      emailController.dispose();
+      passwordController.dispose();
+    });
   }
 
   Widget _buildGlobalConstraints() {
@@ -1017,7 +1025,6 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                       min: 5,
                       max: 28,
                       onChanged: (val) {
-                        ref.read(taxRateProvider.notifier).state = val;
                         ref.read(superAdminSettingsProvider.notifier).updateSettings({...settings, 'taxRate': val});
                       },
                     ),
@@ -1031,7 +1038,6 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                       min: 10,
                       max: 100,
                       onChanged: (val) {
-                        ref.read(depositRateProvider.notifier).state = val;
                         ref.read(superAdminSettingsProvider.notifier).updateSettings({...settings, 'depositRate': val});
                       },
                     ),
@@ -1971,7 +1977,20 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
           },
         );
       },
-    );
+    ).then((_) {
+      nameController.dispose();
+      taglineController.dispose();
+      descController.dispose();
+      locationController.dispose();
+      cityController.dispose();
+      stateController.dispose();
+      basePriceController.dispose();
+      weekendPriceController.dispose();
+      extraGuestController.dispose();
+      cleaningFeeController.dispose();
+      amenityLabelController.dispose();
+      ruleController.dispose();
+    });
   }
 
   Widget _buildMultilineField(

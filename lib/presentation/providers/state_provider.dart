@@ -45,12 +45,12 @@ final activeTabProvider = StateProvider<String>((ref) => 'villa');
 
 
 
-final taxRateProvider = StateProvider<int>((ref) {
+final taxRateProvider = Provider<int>((ref) {
   final pricing = ref.watch(customerPricingProvider);
   return (pricing['taxRate'] as int?) ?? 18;
 });
 
-final depositRateProvider = StateProvider<int>((ref) {
+final depositRateProvider = Provider<int>((ref) {
   final pricing = ref.watch(customerPricingProvider);
   return (pricing['depositRate'] as int?) ?? 30;
 });

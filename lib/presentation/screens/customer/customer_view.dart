@@ -206,6 +206,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
         _selectedResort.id,
       );
       final isValid = result['isValid'] as bool? ?? false;
+      if (!mounted) return;
       if (isValid) {
         final discount = (result['discountAmount'] as num?)?.toDouble() ?? 0;
         setState(() {
@@ -221,6 +222,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
         });
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         _couponDiscount = 0.0;
         _couponError = 'Failed to validate coupon. Please try again.';
@@ -1216,7 +1218,6 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
   }
 
   void _showConciergeForm(BuildContext context) {
-    final typeController = TextEditingController();
     final descController = TextEditingController();
     String selectedType = 'TRANSPORT';
 
@@ -1250,12 +1251,13 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                 ],
               ),
               actions: [
-                TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+                TextButton(onPressed: () { descController.dispose(); Navigator.pop(ctx); }, child: const Text('Cancel')),
                 ElevatedButton(
                   onPressed: () async {
                     if (descController.text.trim().isEmpty) return;
                     await ref.read(customerConciergeProvider.notifier).createRequest(selectedType, descController.text.trim());
                     if (ctx.mounted) Navigator.pop(ctx);
+                    descController.dispose();
                     SnackbarHelper.success(context, 'Concierge request submitted!');
                   },
                   style: ElevatedButton.styleFrom(backgroundColor: ResortTheme.mossGreen),
