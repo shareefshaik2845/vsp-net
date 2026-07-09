@@ -65,9 +65,23 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
 
   @override
   Widget build(BuildContext context) {
-    final bookings = ref.watch(bookingsProvider);
+    final invoicesAsync = ref.watch(accountantInvoicesProvider);
+    final kpisAsync = ref.watch(accountantKpisProvider);
+    final refundsAsync = ref.watch(accountantRefundsProvider);
     final propertyAsync = ref.watch(propertyProvider);
     final activeResort = propertyAsync.valueOrNull;
+
+    // Trigger reload when property changes
+    ref.listen(propertyProvider, (prev, next) {
+      final resort = next.valueOrNull;
+      if (resort != null) {
+        ref.read(accountantInvoicesProvider.notifier).loadInvoices(propertyId: resort.id);
+        ref.read(accountantKpisProvider.notifier).loadKpis(resort.id);
+        ref.read(accountantRefundsProvider.notifier).loadRefunds(resort.id);
+      }
+    });
+
+    final bookings = invoicesAsync.valueOrNull ?? [];
 
     // Filtered list of invoices
     final filteredInvoices = bookings.where((b) {
@@ -90,15 +104,24 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
       return matchSearch && matchPayment;
     }).toList();
 
-    // Summary calculations
-    final double totalInvoicedSum = bookings.fold(0.0, (sum, b) => sum + b.totalAmount);
-    final double totalCollectedSum = bookings.fold(0.0, (sum, b) => sum + b.advancePaidAmount);
-    final double totalBalanceSells = bookings.fold(0.0, (sum, b) => sum + b.balanceAmount);
+    // KPIs from API response or computed fallback
+    final kpis = kpisAsync.valueOrNull ?? {};
+    final totalInvoicedSum = ((kpis['totalInvoiced'] as num?)?.toDouble() ?? 0) +
+        (bookings.isEmpty ? 0 : bookings.fold(0.0, (sum, b) => sum + b.totalAmount));
+    final totalCollectedSum = ((kpis['totalCollected'] as num?)?.toDouble() ?? 0) +
+        (bookings.isEmpty ? 0 : bookings.fold(0.0, (sum, b) => sum + b.advancePaidAmount));
+    final totalBalanceSells = totalInvoicedSum - totalCollectedSum;
     
-    // Refunds queue
-    final refundQueue = bookings
-        .where((b) => b.status == BookingStatus.cancelled && b.paymentStatus != PaymentStatus.refunded)
-        .toList();
+    // Refunds from dedicated API or computed fallback
+    final refundData = refundsAsync.valueOrNull ?? [];
+    final refundQueue = refundData.isNotEmpty
+        ? refundData
+            .map((r) => bookings.where((b) => b.id == r['bookingId'] || b.id == r['id']))
+            .expand((e) => e)
+            .toList()
+        : bookings
+            .where((b) => b.status == BookingStatus.cancelled && b.paymentStatus != PaymentStatus.refunded)
+            .toList();
 
     return Scaffold(
       backgroundColor: ResortTheme.stoneBg,

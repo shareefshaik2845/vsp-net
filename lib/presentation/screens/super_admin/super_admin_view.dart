@@ -309,31 +309,8 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
     }
   }
 
-  UserAccount _userFromJson(Map<String, dynamic> json) {
-    final roleStr = (json['role'] as String? ?? '').toLowerCase();
-    return UserAccount(
-      id: json['id']?.toString() ?? '',
-      name: json['name'] as String? ?? '',
-      email: json['email'] as String? ?? '',
-      passwordHash: '',
-      role: UserRole.values.firstWhere(
-        (e) => e.name.toLowerCase() == roleStr,
-        orElse: () => UserRole.customer,
-      ),
-      status: json['status'] == 'inactive'
-          ? UserStatus.inactive
-          : UserStatus.active,
-      createdAt: json['createdAt'] as String? ?? '',
-      createdBy: json['createdBy'] as String?,
-      lastLoginAt: json['lastLoginAt'] as String?,
-    );
-  }
-
   Widget _buildUserManagement() {
-    final List<UserAccount> users = ref
-        .watch(superAdminUsersProvider)
-        .map((m) => _userFromJson(m))
-        .toList();
+    final List<UserAccount> users = ref.watch(superAdminUsersProvider);
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(

@@ -652,7 +652,7 @@ final superAdminBookingsProvider =
 
 // ── Super Admin Users (from /super-admin/users) ──
 
-class SuperAdminUsersNotifier extends StateNotifier<List<Map<String, dynamic>>> {
+class SuperAdminUsersNotifier extends StateNotifier<List<UserAccount>> {
   final ISuperAdminRepository _repository;
   SuperAdminUsersNotifier(this._repository) : super([]) {
     loadUsers();
@@ -660,7 +660,21 @@ class SuperAdminUsersNotifier extends StateNotifier<List<Map<String, dynamic>>> 
 
   Future<void> loadUsers() async {
     try {
-      state = await _repository.fetchUsers(pageSize: 9999);
+      final raw = await _repository.fetchUsers(pageSize: 9999);
+      state = raw.map((json) => UserAccount(
+        id: json['id']?.toString() ?? '',
+        name: json['name'] as String? ?? '',
+        email: json['email'] as String? ?? '',
+        passwordHash: '',
+        role: UserRole.values.firstWhere(
+          (e) => e.name.toLowerCase() == (json['role'] as String? ?? '').toLowerCase(),
+          orElse: () => UserRole.customer,
+        ),
+        status: json['status'] == 'inactive' ? UserStatus.inactive : UserStatus.active,
+        createdAt: json['createdAt'] as String? ?? '',
+        createdBy: json['createdBy'] as String?,
+        lastLoginAt: json['lastLoginAt'] as String?,
+      )).toList();
     } catch (e) {
       state = [];
     }
@@ -668,7 +682,7 @@ class SuperAdminUsersNotifier extends StateNotifier<List<Map<String, dynamic>>> 
 }
 
 final superAdminUsersProvider =
-    StateNotifierProvider<SuperAdminUsersNotifier, List<Map<String, dynamic>>>((ref) {
+    StateNotifierProvider<SuperAdminUsersNotifier, List<UserAccount>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminUsersNotifier(repo);
 });
@@ -1241,7 +1255,9 @@ final staffRoomsProvider =
 
 class AccountantInvoicesNotifier extends StateNotifier<AsyncValue<List<Booking>>> {
   final IAccountantRepository _repository;
-  AccountantInvoicesNotifier(this._repository) : super(const AsyncValue.loading());
+  AccountantInvoicesNotifier(this._repository) : super(const AsyncValue.loading()) {
+    loadInvoices();
+  }
 
   Future<void> loadInvoices({String? propertyId, String? paymentStatus, String? search}) async {
     try {
@@ -1262,7 +1278,9 @@ final accountantInvoicesProvider =
 
 class AccountantRefundsNotifier extends StateNotifier<AsyncValue<List<Map<String, dynamic>>>> {
   final IAccountantRepository _repository;
-  AccountantRefundsNotifier(this._repository) : super(const AsyncValue.loading());
+  AccountantRefundsNotifier(this._repository) : super(const AsyncValue.loading()) {
+    loadRefunds('');
+  }
 
   Future<void> loadRefunds(String propertyId) async {
     try {
@@ -1289,7 +1307,9 @@ final accountantRefundsProvider =
 
 class AccountantKpisNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
   final IAccountantRepository _repository;
-  AccountantKpisNotifier(this._repository) : super(const AsyncValue.loading());
+  AccountantKpisNotifier(this._repository) : super(const AsyncValue.loading()) {
+    loadKpis('');
+  }
 
   Future<void> loadKpis(String propertyId) async {
     try {

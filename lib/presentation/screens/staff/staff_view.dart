@@ -183,11 +183,11 @@ class _StaffViewState extends ConsumerState<StaffView> {
                       hks = HousekeepingStatus.clean;
                     }
 
-                    ref.read(roomsProvider.notifier).updateHousekeeping(
+                    ref.read(staffRoomsProvider.notifier).updateStatus(
                           room.id,
-                          hks,
+                          _editStatus,
+                          assignedStaff: _staffController.text.trim().isEmpty ? null : _staffController.text,
                           notes: _notesController.text.trim().isEmpty ? null : _notesController.text,
-                          staff: _staffController.text.trim().isEmpty ? null : _staffController.text,
                         );
 
                     if (hks == HousekeepingStatus.clean) {
@@ -223,10 +223,20 @@ class _StaffViewState extends ConsumerState<StaffView> {
 
   @override
   Widget build(BuildContext context) {
-    final rooms = ref.watch(roomsProvider);
+    final staffRoomsAsync = ref.watch(staffRoomsProvider);
     final bookings = ref.watch(bookingsProvider);
     final propertyAsync = ref.watch(propertyProvider);
     final activeResort = propertyAsync.valueOrNull;
+
+    // Trigger staff room load when property changes
+    ref.listen(propertyProvider, (prev, next) {
+      final resort = next.valueOrNull;
+      if (resort != null) {
+        ref.read(staffRoomsProvider.notifier).loadRooms(resort.id);
+      }
+    });
+
+    final rooms = staffRoomsAsync.valueOrNull ?? [];
 
     final arrivalsToday = bookings.where((b) => b.startDate == _todayStr && b.status != BookingStatus.cancelled).toList();
     final departuresToday = bookings.where((b) => b.endDate == _todayStr && b.status != BookingStatus.cancelled).toList();
