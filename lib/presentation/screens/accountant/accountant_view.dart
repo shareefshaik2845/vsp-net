@@ -77,13 +77,9 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(accountantInvoicesProvider, (_, AsyncValue<List<Booking>> next) {
-      if (next.hasError && context.mounted) {
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text('Failed to load invoices: ${next.error}'), backgroundColor: Colors.red.shade700, behavior: SnackBarBehavior.floating));
-      }
-    });
+    ref.listen(accountantInvoicesProvider, (_, __) => _lastError(ref, context, ref.read(accountantInvoicesProvider.notifier)));
+    ref.listen(accountantKpisProvider, (_, __) => _lastError(ref, context, ref.read(accountantKpisProvider.notifier)));
+    ref.listen(accountantRefundsProvider, (_, __) => _lastError(ref, context, ref.read(accountantRefundsProvider.notifier)));
     final invoicesAsync = ref.watch(accountantInvoicesProvider);
     final kpisAsync = ref.watch(accountantKpisProvider);
     final refundsAsync = ref.watch(accountantRefundsProvider);

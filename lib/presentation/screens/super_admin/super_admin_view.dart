@@ -39,7 +39,30 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void _lastError(WidgetRef ref, BuildContext context, dynamic notifier) {
+    try {
+      final error = notifier.lastError as String?;
+      if (error != null && error.isNotEmpty && context.mounted) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text(error), backgroundColor: Colors.red.shade700, behavior: SnackBarBehavior.floating));
+        notifier.lastError = null;
+      }
+    } catch (_) {}
+  }
+
+  @override
   Widget build(BuildContext context) {
+    ref.listen(superAdminUsersProvider, (_, __) => _lastError(ref, context, ref.read(superAdminUsersProvider.notifier)));
+    ref.listen(superAdminRolesProvider, (_, __) => _lastError(ref, context, ref.read(superAdminRolesProvider.notifier)));
+    ref.listen(superAdminApprovalsProvider, (_, __) => _lastError(ref, context, ref.read(superAdminApprovalsProvider.notifier)));
+    ref.listen(superAdminSettingsProvider, (_, __) => _lastError(ref, context, ref.read(superAdminSettingsProvider.notifier)));
+    ref.listen(superAdminAnalyticsProvider, (_, __) => _lastError(ref, context, ref.read(superAdminAnalyticsProvider.notifier)));
+    ref.listen(superAdminAuditLogsProvider, (_, __) => _lastError(ref, context, ref.read(superAdminAuditLogsProvider.notifier)));
     final bookings = ref.watch(superAdminBookingsProvider);
     final propertyAsync = ref.watch(propertyProvider);
     final activeResort = propertyAsync.valueOrNull;
