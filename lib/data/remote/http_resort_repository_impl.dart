@@ -123,7 +123,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
     final total = (json['totalAmount'] as num?)?.toDouble() ?? 0;
     final discount = (json['discountAmount'] as num?)?.toDouble() ?? 0;
     return Booking(
-      id: json['id'].toString(),
+      id: (json['id'] as String?) ?? '',
       resortName: json['propertyName'] as String? ?? '',
       guestName: json['guestName'] as String? ?? '',
       guestEmail: json['guestEmail'] as String? ?? '',
@@ -214,7 +214,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
 
   CalendarBlock _blockFromJson(Map<String, dynamic> json) {
     return CalendarBlock(
-      id: json['id'].toString(),
+      id: (json['id'] as String?) ?? '',
       startDate: json['startDate'] as String? ?? '',
       endDate: json['endDate'] as String? ?? '',
       reason: _blockTypeFromBackend(json['blockType'] as String?),
@@ -250,7 +250,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
 
   Coupon _couponFromJson(Map<String, dynamic> json) {
     return Coupon(
-      id: json['id'].toString(),
+      id: (json['id'] as String?) ?? '',
       code: json['code'] as String? ?? '',
       type: (json['discountType'] as String? ?? 'PERCENTAGE').toLowerCase(),
       value: (json['discountValue'] as num?)?.toDouble() ?? 0,
@@ -368,7 +368,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
 
   PricingSeasonRule _ruleFromJson(Map<String, dynamic> json) {
     return PricingSeasonRule(
-      id: json['id'].toString(),
+      id: (json['id'] as String?) ?? '',
       name: json['name'] as String? ?? '',
       startDate: json['startDate'] as String? ?? '',
       endDate: json['endDate'] as String? ?? '',
@@ -443,7 +443,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
   OtaSyncStatus _otaFromJson(Map<String, dynamic> json) {
     final platform = json['platform'] as String? ?? '';
     return OtaSyncStatus(
-      id: json['id'].toString(),
+      id: (json['id'] as String?) ?? '',
       channelName: platform,
       logo: _platformLogo[platform] ?? platform,
       lastSyncTime: json['lastSyncAt'] as String? ?? '',
@@ -477,7 +477,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
 
   AppNotification _notificationFromJson(Map<String, dynamic> json) {
     return AppNotification(
-      id: json['id'].toString(),
+      id: (json['id'] as String?) ?? '',
       title: json['title'] as String? ?? '',
       message: json['message'] as String? ?? '',
       timestamp: json['createdAt'] as String? ?? DateTime.now().toIso8601String(),

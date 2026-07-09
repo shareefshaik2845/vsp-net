@@ -274,7 +274,7 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
 
   AppNotification _notificationFromJson(Map<String, dynamic> json) {
     return AppNotification(
-      id: json['id'].toString(),
+      id: (json['id'] as String?) ?? '',
       title: json['title'] as String? ?? '',
       message: json['message'] as String? ?? '',
       timestamp: json['createdAt'] as String? ?? DateTime.now().toIso8601String(),
@@ -387,7 +387,7 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
     final total = (json['totalAmount'] as num?)?.toDouble() ?? 0;
     final discount = (json['discountAmount'] as num?)?.toDouble() ?? 0;
     return Booking(
-      id: json['id'].toString(),
+      id: (json['id'] as String?) ?? '',
       resortName: json['propertyName'] as String? ?? '',
       guestName: json['guestName'] as String? ?? '',
       guestEmail: json['guestEmail'] as String? ?? '',

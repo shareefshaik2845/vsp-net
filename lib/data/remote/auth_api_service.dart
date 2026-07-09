@@ -53,7 +53,7 @@ class RemoteUserInfo {
             .toList()
         : <RemoteRolePermission>[];
     return RemoteUserInfo(
-      id: json['id'].toString(),
+      id: (json['id'] as String?) ?? '',
       name: json['name'] as String? ?? '',
       email: json['email'] as String? ?? '',
       phone: json['phone'] as String?,

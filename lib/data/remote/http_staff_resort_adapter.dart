@@ -43,7 +43,7 @@ class HttpStaffResortAdapter implements IResortRepository {
       final total = (json['totalAmount'] as num?)?.toDouble() ?? 0;
       final status = _parseBookingStatus(json['status'] as String?);
       return Booking(
-        id: json['id'].toString(),
+        id: (json['id'] as String?) ?? '',
         resortName: json['propertyName'] as String? ?? '',
         guestName: json['guestName'] as String? ?? '',
         guestEmail: json['guestEmail'] as String? ?? '',
