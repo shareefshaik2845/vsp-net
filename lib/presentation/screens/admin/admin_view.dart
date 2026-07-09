@@ -371,11 +371,13 @@ class _AdminViewState extends ConsumerState<AdminView> {
             break;
           }
         }
-      } catch (_) {}
+      } catch (e) {
+        debugPrint('Error parsing booking date $e');
+      }
     }
 
     final maxRev = weeklyRevenue.reduce((a, b) => a > b ? a : b);
-    if (maxRev == 0) return [0.1, 0.2, 0.3, 0.5, 0.7, 0.6];
+    if (maxRev == 0) return [0, 0, 0, 0, 0, 0];
     return weeklyRevenue.map((r) => r / maxRev).toList();
   }
 

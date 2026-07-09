@@ -1806,7 +1806,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(review['author'] as String? ?? 'Guest', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: ResortTheme.charcoal)),
+                            Text(review['author'] as String? ?? '', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: ResortTheme.charcoal)),
                             if (review['rating'] != null)
                               Row(
                                 children: [
