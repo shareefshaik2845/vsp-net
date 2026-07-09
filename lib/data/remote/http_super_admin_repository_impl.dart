@@ -25,20 +25,20 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
   @override
   Future<Map<String, dynamic>> fetchAnalyticsRevenue() async {
     final response = await _dio.get('/super-admin/analytics/revenue');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
   Future<List<Map<String, dynamic>>> fetchBookingSources() async {
     final response = await _dio.get('/super-admin/analytics/booking-sources');
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
   @override
   Future<List<Map<String, dynamic>>> fetchResortRevenueTable() async {
     final response = await _dio.get('/super-admin/analytics/resort-revenue-table');
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
@@ -47,7 +47,7 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
   @override
   Future<Map<String, dynamic>> fetchGlobalSettings() async {
     final response = await _dio.get('/super-admin/settings');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
@@ -63,7 +63,7 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
   @override
   Future<Map<String, dynamic>> fetchSchema() async {
     final response = await _dio.get('/super-admin/system/schema');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   // ==================== Image Uploads ====================
@@ -75,7 +75,7 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
       if (caption != null) 'caption': caption,
     });
     final response = await _dio.post('/super-admin/properties/upload-image', data: formData);
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
@@ -85,7 +85,7 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
       'files': files,
     });
     final response = await _dio.post('/super-admin/properties/upload-gallery', data: formData);
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
@@ -94,14 +94,14 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
   @override
   Future<List<Map<String, dynamic>>> fetchProperties() async {
     final response = await _dio.get('/super-admin/properties');
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
   @override
   Future<Map<String, dynamic>> fetchPropertyDetail(String id) async {
     final response = await _dio.get('/super-admin/properties/$id');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
@@ -136,14 +136,14 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
     if (status != null) params['status'] = status;
     if (search != null) params['search'] = search;
     final response = await _dio.get('/super-admin/users', queryParameters: params.isNotEmpty ? params : null);
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
   @override
   Future<Map<String, dynamic>> fetchUserDetail(String id) async {
     final response = await _dio.get('/super-admin/users/$id');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
@@ -168,14 +168,14 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
   @override
   Future<List<Map<String, dynamic>>> fetchApprovals() async {
     final response = await _dio.get('/super-admin/approvals');
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
   @override
   Future<List<Map<String, dynamic>>> fetchPendingApprovals() async {
     final response = await _dio.get('/super-admin/approvals/pending');
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
@@ -208,7 +208,7 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
 
   static RoleDefinition _roleFromJson(Map<String, dynamic> json) {
     final perms = (json['permissions'] as List<dynamic>?)
-            ?.map((p) => _rolePermissionFromJson(p as Map<String, dynamic>))
+            ?.map((p) => _rolePermissionFromJson(p))
             .toList() ??
         [];
     return RoleDefinition(
@@ -222,14 +222,14 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
   @override
   Future<List<RoleDefinition>> fetchRoles() async {
     final response = await _dio.get('/super-admin/roles');
-    final data = _unwrap(response) as List<dynamic>;
-    return data.map((e) => _roleFromJson(e as Map<String, dynamic>)).toList();
+    final data = unwrapList(_unwrap(response));
+    return data.map((e) => _roleFromJson(e)).toList();
   }
 
   @override
   Future<RoleDefinition> fetchRoleDetail(String id) async {
     final response = await _dio.get('/super-admin/roles/$id');
-    return _roleFromJson(_unwrap(response) as Map<String, dynamic>);
+    return _roleFromJson(unwrapMap(_unwrap(response)));
   }
 
   @override
@@ -266,7 +266,7 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
     if (pageSize != null) params['pageSize'] = pageSize;
     final response = await _dio.get('/super-admin/audit-logs',
         queryParameters: params.isNotEmpty ? params : null);
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
@@ -286,8 +286,8 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
   @override
   Future<List<AppNotification>> fetchNotifications() async {
     final response = await _dio.get('/super-admin/notifications');
-    final data = _unwrap(response) as List<dynamic>;
-    return data.map((e) => _notificationFromJson(e as Map<String, dynamic>)).toList();
+    final data = unwrapList(_unwrap(response));
+    return data.map((e) => _notificationFromJson(e)).toList();
   }
 
   @override
@@ -418,7 +418,7 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
   @override
   Future<List<Booking>> fetchAllBookings() async {
     final response = await _dio.get('/super-admin/bookings');
-    final data = _unwrap(response) as List<dynamic>;
-    return data.map((e) => _bookingFromJson(e as Map<String, dynamic>)).toList();
+    final data = unwrapList(_unwrap(response));
+    return data.map((e) => _bookingFromJson(e)).toList();
   }
 }

@@ -26,32 +26,32 @@ class HttpCustomerRepositoryImpl implements ICustomerRepository {
     if (city != null) params['city'] = city;
     if (category != null) params['category'] = category;
     final response = await _dio.get('/customer/properties', queryParameters: params.isNotEmpty ? params : null);
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
   @override
   Future<Map<String, dynamic>> fetchPropertyDetail(String id) async {
     final response = await _dio.get('/customer/properties/$id');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
   Future<Map<String, dynamic>> fetchTaxRate() async {
     final response = await _dio.get('/customer/pricing/tax-rate');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
   Future<Map<String, dynamic>> fetchDepositRate() async {
     final response = await _dio.get('/customer/pricing/deposit-rate');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
   Future<List<Map<String, dynamic>>> fetchSeasonalRules(String propertyId) async {
     final response = await _dio.get('/customer/pricing/seasonal-rules', queryParameters: {'propertyId': propertyId});
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
@@ -62,13 +62,13 @@ class HttpCustomerRepositoryImpl implements ICustomerRepository {
       'subtotal': subtotal,
       'propertyId': propertyId,
     });
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
   Future<List<Map<String, dynamic>>> fetchAvailableCoupons() async {
     final response = await _dio.get('/customer/coupons');
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
@@ -77,8 +77,8 @@ class HttpCustomerRepositoryImpl implements ICustomerRepository {
     final params = <String, dynamic>{'page': page, 'pageSize': pageSize};
     if (status != null) params['status'] = status;
     final response = await _dio.get('/customer/bookings', queryParameters: params);
-    final data = _unwrap(response) as List<dynamic>;
-    return data.map((json) => _bookingFromJson(json as Map<String, dynamic>)).toList();
+    final data = unwrapList(_unwrap(response));
+    return data.map((json) => _bookingFromJson(json)).toList();
   }
 
   Booking _bookingFromJson(Map<String, dynamic> json) {
@@ -138,19 +138,19 @@ class HttpCustomerRepositoryImpl implements ICustomerRepository {
   @override
   Future<Map<String, dynamic>> fetchBookingDetail(String id) async {
     final response = await _dio.get('/customer/bookings/$id');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
   Future<Map<String, dynamic>> createBooking(Map<String, dynamic> booking) async {
     final response = await _dio.post('/customer/bookings', data: booking);
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
   Future<Map<String, dynamic>> cancelBooking(String id, String reason) async {
     final response = await _dio.post('/customer/bookings/$id/cancel', data: {'reason': reason});
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
@@ -159,13 +159,13 @@ class HttpCustomerRepositoryImpl implements ICustomerRepository {
     final paymentMethod = payment['paymentMethod'] as String? ?? 'credit_card';
     final response = await _dio.post('/customer/bookings/$bookingId/payment',
         queryParameters: {'paymentMethod': paymentMethod});
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
   Future<List<Map<String, dynamic>>> fetchFavorites() async {
     final response = await _dio.get('/customer/favorites');
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
@@ -182,13 +182,13 @@ class HttpCustomerRepositoryImpl implements ICustomerRepository {
   @override
   Future<Map<String, dynamic>> fetchProfile() async {
     final response = await _dio.get('/customer/profile');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
   Future<Map<String, dynamic>> updateProfile(Map<String, dynamic> profile) async {
     final response = await _dio.put('/customer/profile', data: profile);
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
@@ -202,7 +202,7 @@ class HttpCustomerRepositoryImpl implements ICustomerRepository {
   @override
   Future<Map<String, dynamic>> fetchStats() async {
     final response = await _dio.get('/customer/stats');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
@@ -212,7 +212,7 @@ class HttpCustomerRepositoryImpl implements ICustomerRepository {
       'from': from,
       'to': to,
     });
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
@@ -223,7 +223,7 @@ class HttpCustomerRepositoryImpl implements ICustomerRepository {
       'from': from,
       'to': to,
     });
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
@@ -233,27 +233,27 @@ class HttpCustomerRepositoryImpl implements ICustomerRepository {
       'month': month,
       'year': year,
     });
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
   Future<Map<String, dynamic>> fetchPaymentForBooking(String bookingId) async {
     final response = await _dio.get('/customer/bookings/$bookingId/payment');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
   Future<List<Map<String, dynamic>>> fetchConciergeRequests() async {
     final response = await _dio.get('/customer/concierge');
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
   @override
   Future<List<AppNotification>> fetchNotifications() async {
     final response = await _dio.get('/customer/notifications');
-    final data = _unwrap(response) as List<dynamic>;
-    return data.map((json) => _notifFromJson(json as Map<String, dynamic>)).toList();
+    final data = unwrapList(_unwrap(response));
+    return data.map((json) => _notifFromJson(json)).toList();
   }
 
   AppNotification _notifFromJson(Map<String, dynamic> json) {
@@ -277,14 +277,14 @@ class HttpCustomerRepositoryImpl implements ICustomerRepository {
     final params = <String, dynamic>{'page': page, 'pageSize': pageSize};
     if (status != null) params['status'] = status;
     final response = await _dio.get('/customer/invoices', queryParameters: params);
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
   @override
   Future<Map<String, dynamic>> fetchInvoiceDetail(String id) async {
     final response = await _dio.get('/customer/invoices/$id');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override

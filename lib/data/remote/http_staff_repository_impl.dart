@@ -21,7 +21,7 @@ class HttpStaffRepositoryImpl implements IStaffRepository {
   @override
   Future<List<Map<String, dynamic>>> fetchProperties() async {
     final response = await _dio.get('/staff/properties');
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
@@ -35,7 +35,7 @@ class HttpStaffRepositoryImpl implements IStaffRepository {
     final response = await _dio.get('/staff/roster', queryParameters: {
       'date': date,
     });
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
@@ -43,8 +43,8 @@ class HttpStaffRepositoryImpl implements IStaffRepository {
     final response = await _dio.get('/staff/rooms/housekeeping', queryParameters: {
       'propertyId': propertyId,
     });
-    final data = _unwrap(response) as List<dynamic>;
-    return data.map((json) => _roomFromJson(json as Map<String, dynamic>)).toList();
+    final data = unwrapList(_unwrap(response));
+    return data.map((json) => _roomFromJson(json)).toList();
   }
 
   RoomStatus _roomFromJson(Map<String, dynamic> json) {
@@ -77,8 +77,8 @@ class HttpStaffRepositoryImpl implements IStaffRepository {
   @override
   Future<List<AppNotification>> fetchNotifications() async {
     final response = await _dio.get('/staff/notifications');
-    final data = _unwrap(response) as List<dynamic>;
-    return data.map((json) => _notifFromJson(json as Map<String, dynamic>)).toList();
+    final data = unwrapList(_unwrap(response));
+    return data.map((json) => _notifFromJson(json)).toList();
   }
 
   AppNotification _notifFromJson(Map<String, dynamic> json) {
@@ -106,7 +106,7 @@ class HttpStaffRepositoryImpl implements IStaffRepository {
   @override
   Future<Map<String, dynamic>> fetchDashboard() async {
     final response = await _dio.get('/staff/dashboard');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
@@ -115,7 +115,7 @@ class HttpStaffRepositoryImpl implements IStaffRepository {
     if (status != null) params['status'] = status;
     if (date != null) params['date'] = date;
     final response = await _dio.get('/staff/tasks', queryParameters: params);
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
@@ -132,6 +132,6 @@ class HttpStaffRepositoryImpl implements IStaffRepository {
     final response = await _dio.get('/staff/tasks/summary', queryParameters: {
       'propertyId': propertyId,
     });
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 }

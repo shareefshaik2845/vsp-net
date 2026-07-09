@@ -80,6 +80,16 @@ class ApiEnvelope {
   }
 }
 
+List<Map<String, dynamic>> unwrapList(dynamic data) {
+  if (data is List) return data.cast<Map<String, dynamic>>();
+  throw ApiException('Expected a list, got ${data.runtimeType}');
+}
+
+Map<String, dynamic> unwrapMap(dynamic data) {
+  if (data is Map) return Map<String, dynamic>.from(data);
+  throw ApiException('Expected a map, got ${data.runtimeType}');
+}
+
 /// Thrown when a backend call fails (non-2xx, or `success: false`).
 class ApiException implements Exception {
   final String message;

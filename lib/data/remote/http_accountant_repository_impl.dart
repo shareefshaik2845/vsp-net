@@ -18,11 +18,20 @@ class HttpAccountantRepositoryImpl implements IAccountantRepository {
     return envelope.data;
   }
 
+  List<Map<String, dynamic>> _asListMap(dynamic data) {
+    if (data is List) return data.cast<Map<String, dynamic>>();
+    throw ApiException('Expected a list, got ${data.runtimeType}');
+  }
+
+  Map<String, dynamic> _asMap(dynamic data) {
+    if (data is Map) return Map<String, dynamic>.from(data);
+    throw ApiException('Expected a map, got ${data.runtimeType}');
+  }
+
   @override
   Future<List<Map<String, dynamic>>> fetchProperties() async {
     final response = await _dio.get('/accountant/properties');
-    final data = _unwrap(response) as List<dynamic>;
-    return data.cast<Map<String, dynamic>>();
+    return _asListMap(_unwrap(response));
   }
 
   @override
@@ -35,20 +44,19 @@ class HttpAccountantRepositoryImpl implements IAccountantRepository {
     final response = await _dio.get('/accountant/dashboard/kpis', queryParameters: {
       if (propertyId.isNotEmpty) 'propertyId': propertyId,
     });
-    return _unwrap(response) as Map<String, dynamic>;
+    return _asMap(_unwrap(response));
   }
 
   @override
   Future<List<Map<String, dynamic>>> fetchRefunds(String propertyId) async {
     final response = await _dio.get('/accountant/refunds');
-    final data = _unwrap(response) as List<dynamic>;
-    return data.cast<Map<String, dynamic>>();
+    return _asListMap(_unwrap(response));
   }
 
   @override
   Future<Map<String, dynamic>> processRefund(String id) async {
     final response = await _dio.put('/accountant/refunds/$id/process');
-    return _unwrap(response) as Map<String, dynamic>;
+    return _asMap(_unwrap(response));
   }
 
   @override
@@ -57,8 +65,7 @@ class HttpAccountantRepositoryImpl implements IAccountantRepository {
     if (paymentStatus != null) params['status'] = paymentStatus;
     if (search != null) params['search'] = search;
     final response = await _dio.get('/accountant/invoices', queryParameters: params);
-    final data = _unwrap(response) as List<dynamic>;
-    return data.map((json) => _bookingFromJson(json as Map<String, dynamic>)).toList();
+    return _asListMap(_unwrap(response)).map((json) => _bookingFromJson(json)).toList();
   }
 
   Booking _bookingFromJson(Map<String, dynamic> json) {
@@ -118,7 +125,7 @@ class HttpAccountantRepositoryImpl implements IAccountantRepository {
   @override
   Future<Map<String, dynamic>> fetchInvoiceDetail(String id) async {
     final response = await _dio.get('/accountant/invoices/$id');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
@@ -142,8 +149,7 @@ class HttpAccountantRepositoryImpl implements IAccountantRepository {
   @override
   Future<List<AppNotification>> fetchNotifications() async {
     final response = await _dio.get('/accountant/notifications');
-    final data = _unwrap(response) as List<dynamic>;
-    return data.map((json) => _notifFromJson(json as Map<String, dynamic>)).toList();
+    return _asListMap(_unwrap(response)).map((json) => _notifFromJson(json)).toList();
   }
 
   AppNotification _notifFromJson(Map<String, dynamic> json) {
@@ -171,7 +177,7 @@ class HttpAccountantRepositoryImpl implements IAccountantRepository {
   @override
   Future<Map<String, dynamic>> fetchDashboard() async {
     final response = await _dio.get('/accountant/dashboard');
-    return _unwrap(response) as Map<String, dynamic>;
+    return _asMap(_unwrap(response));
   }
 
   @override
@@ -181,14 +187,13 @@ class HttpAccountantRepositoryImpl implements IAccountantRepository {
     if (refundStatus != null) params['refundStatus'] = refundStatus;
     if (search != null) params['search'] = search;
     final response = await _dio.get('/accountant/bookings', queryParameters: params);
-    final data = _unwrap(response) as List<dynamic>;
-    return data.cast<Map<String, dynamic>>();
+    return _asListMap(_unwrap(response));
   }
 
   @override
   Future<Map<String, dynamic>> fetchAccountantBookingDetail(String id) async {
     final response = await _dio.get('/accountant/bookings/$id');
-    return _unwrap(response) as Map<String, dynamic>;
+    return _asMap(_unwrap(response));
   }
 
   @override
