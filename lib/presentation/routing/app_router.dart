@@ -3,6 +3,7 @@ import '../../domain/entities.dart';
 import '../screens/splash_screen.dart';
 import '../screens/install_screen.dart';
 import '../screens/login_screen.dart';
+import '../screens/forgot_password_screen.dart';
 import '../screens/portal_shell_screen.dart';
 import 'route_names.dart';
 
@@ -30,6 +31,8 @@ class AppRouter {
         return _buildRoute(const VspNestSplashScreen(), settings);
       case RouteNames.install:
         return _buildRoute(const InstallationScreen(), settings);
+      case RouteNames.forgotPassword:
+        return _buildRoute(const ForgotPasswordScreen(), settings);
       case RouteNames.login:
         return _buildRoute(const LoginScreen(), settings);
       case RouteNames.admin:

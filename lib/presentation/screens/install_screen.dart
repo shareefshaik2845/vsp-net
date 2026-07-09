@@ -68,7 +68,7 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
 
     if (result == null) {
       setState(() => _isLoading = false);
-      SnackbarHelper.error(context, 'Setup failed. A super admin may already exist.');
+      SnackbarHelper.error(context, 'Setup failed. Please try again.');
       return;
     }
 
@@ -234,6 +234,16 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
                       ResortTheme.goldAccent.withValues(alpha: 0.0),
                     ],
                   ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 48,
+              left: 16,
+              child: SafeArea(
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back_ios_new, color: ResortTheme.goldAccent.withValues(alpha: 0.8), size: 20),
+                  onPressed: () => Navigator.pop(context),
                 ),
               ),
             ),

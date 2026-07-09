@@ -9,4 +9,5 @@ class RouteNames {
   static const String accountant = '/accountant';
   static const String superAdmin = '/super-admin';
   static const String customer = '/customer';
+  static const String forgotPassword = '/forgot-password';
 }
