@@ -60,8 +60,31 @@ class _AdminViewState extends ConsumerState<AdminView> {
     super.dispose();
   }
 
+  void _lastError(WidgetRef ref, BuildContext context, dynamic notifier) {
+    try {
+      final error = notifier.lastError as String?;
+      if (error != null && error.isNotEmpty && context.mounted) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(error),
+              backgroundColor: Colors.red.shade700,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        notifier.lastError = null;
+      }
+    } catch (_) {}
+  }
+
   @override
   Widget build(BuildContext context) {
+    ref.listen(bookingsProvider, (_, __) => _lastError(ref, context, ref.read(bookingsProvider.notifier)));
+    ref.listen(calendarBlocksProvider, (_, __) => _lastError(ref, context, ref.read(calendarBlocksProvider.notifier)));
+    ref.listen(couponsProvider, (_, __) => _lastError(ref, context, ref.read(couponsProvider.notifier)));
+    ref.listen(pricingRulesProvider, (_, __) => _lastError(ref, context, ref.read(pricingRulesProvider.notifier)));
+    ref.listen(otaSyncProvider, (_, __) => _lastError(ref, context, ref.read(otaSyncProvider.notifier)));
     final bookings = ref.watch(bookingsProvider);
     final blocks = ref.watch(calendarBlocksProvider);
     final coupons = ref.watch(couponsProvider);

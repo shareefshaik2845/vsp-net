@@ -31,6 +31,18 @@ class _StaffViewState extends ConsumerState<StaffView> {
     super.dispose();
   }
 
+  void _lastError(WidgetRef ref, BuildContext context, dynamic notifier) {
+    try {
+      final error = notifier.lastError as String?;
+      if (error != null && error.isNotEmpty && context.mounted) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text(error), backgroundColor: Colors.red.shade700, behavior: SnackBarBehavior.floating));
+        notifier.lastError = null;
+      }
+    } catch (_) {}
+  }
+
   String _formatTime(String isoStr) {
     try {
       final dt = DateTime.parse(isoStr);
@@ -223,6 +235,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(bookingsProvider, (_, __) => _lastError(ref, context, ref.read(bookingsProvider.notifier)));
     final staffRoomsAsync = ref.watch(staffRoomsProvider);
     final bookings = ref.watch(bookingsProvider);
     final propertyAsync = ref.watch(propertyProvider);

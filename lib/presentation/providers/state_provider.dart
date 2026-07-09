@@ -59,14 +59,17 @@ final depositRateProvider = Provider<int>((ref) {
 // Bookings Notifier
 class BookingsNotifier extends StateNotifier<List<Booking>> {
   final IResortRepository _repository;
+  String? lastError;
   BookingsNotifier(this._repository) : super([]) {
     loadBookings();
   }
 
   Future<void> loadBookings() async {
+    lastError = null;
     try {
       state = await _repository.fetchBookings();
     } catch (e) {
+      lastError = 'Failed to load bookings';
       debugPrint('loadBookings error: $e');
       state = [];
     }
@@ -169,14 +172,17 @@ final bookingsProvider = StateNotifierProvider<BookingsNotifier, List<Booking>>(
 // Calendar Blocks Notifier
 class CalendarBlocksNotifier extends StateNotifier<List<CalendarBlock>> {
   final IResortRepository _repository;
+  String? lastError;
   CalendarBlocksNotifier(this._repository) : super([]) {
     loadBlocks();
   }
 
   Future<void> loadBlocks() async {
+    lastError = null;
     try {
       state = await _repository.fetchCalendarBlocks();
     } catch (e) {
+      lastError = 'Failed to load blocks';
       debugPrint('loadBlocks error: $e');
       state = [];
     }
@@ -201,14 +207,17 @@ final calendarBlocksProvider = StateNotifierProvider<CalendarBlocksNotifier, Lis
 // Coupons Notifier
 class CouponsNotifier extends StateNotifier<List<Coupon>> {
   final IResortRepository _repository;
+  String? lastError;
   CouponsNotifier(this._repository) : super([]) {
     loadCoupons();
   }
 
   Future<void> loadCoupons() async {
+    lastError = null;
     try {
       state = await _repository.fetchCoupons();
     } catch (e) {
+      lastError = 'Failed to load coupons';
       debugPrint('loadCoupons error: $e');
       state = [];
     }
@@ -245,14 +254,17 @@ final couponsProvider = StateNotifierProvider<CouponsNotifier, List<Coupon>>((re
 // Rooms Status Notifier
 class RoomsNotifier extends StateNotifier<List<RoomStatus>> {
   final IResortRepository _repository;
+  String? lastError;
   RoomsNotifier(this._repository) : super([]) {
     loadRooms();
   }
 
   Future<void> loadRooms() async {
+    lastError = null;
     try {
       state = await _repository.fetchRoomStatuses();
     } catch (e) {
+      lastError = 'Failed to load rooms';
       debugPrint('loadRooms error: $e');
       state = [];
     }
@@ -285,14 +297,17 @@ final roomsProvider = StateNotifierProvider<RoomsNotifier, List<RoomStatus>>((re
 // Pricing Rules Notifier
 class PricingRulesNotifier extends StateNotifier<List<PricingSeasonRule>> {
   final IResortRepository _repository;
+  String? lastError;
   PricingRulesNotifier(this._repository) : super([]) {
     loadRules();
   }
 
   Future<void> loadRules() async {
+    lastError = null;
     try {
       state = await _repository.fetchPricingRules();
     } catch (e) {
+      lastError = 'Failed to load pricing rules';
       debugPrint('loadRules error: $e');
       state = [];
     }
@@ -329,14 +344,17 @@ final pricingRulesProvider = StateNotifierProvider<PricingRulesNotifier, List<Pr
 // OTA Notifier
 class OtaChannelsNotifier extends StateNotifier<List<OtaSyncStatus>> {
   final IResortRepository _repository;
+  String? lastError;
   OtaChannelsNotifier(this._repository) : super([]) {
     loadChannels();
   }
 
   Future<void> loadChannels() async {
+    lastError = null;
     try {
       state = await _repository.fetchOtaSyncStatuses();
     } catch (e) {
+      lastError = 'Failed to load OTA channels';
       debugPrint('loadChannels error: $e');
       state = [];
     }
@@ -379,14 +397,17 @@ final otaSyncProvider = StateNotifierProvider<OtaChannelsNotifier, List<OtaSyncS
 // Notifications Notifier
 class NotificationsNotifier extends StateNotifier<List<AppNotification>> {
   final IResortRepository _repository;
+  String? lastError;
   NotificationsNotifier(this._repository) : super([]) {
     loadNotifications();
   }
 
   Future<void> loadNotifications() async {
+    lastError = null;
     try {
       state = await _repository.fetchNotifications();
     } catch (e) {
+      lastError = 'Failed to load notifications';
       debugPrint('loadNotifications error: $e');
       state = [];
     }
@@ -540,15 +561,18 @@ class QuoteDetails {
 
 class ResortsNotifier extends StateNotifier<List<PropertyDetails>> {
   final Future<List<Map<String, dynamic>>> Function() _loadProperties;
+  String? lastError;
   ResortsNotifier(this._loadProperties) : super([]) {
     _init();
   }
 
   Future<void> _init() async {
+    lastError = null;
     try {
       final props = await _loadProperties();
       state = props.map((json) => _propertyFromJson(json)).toList();
     } catch (e) {
+      lastError = 'Failed to load properties';
       debugPrint('ResortsNotifier._init error: $e');
     }
   }
@@ -577,11 +601,13 @@ final resortsListProvider = StateNotifierProvider<ResortsNotifier, List<Property
 
 class SavedPropertiesNotifier extends StateNotifier<List<PropertyDetails>> {
   final ICustomerRepository _remoteRepo;
+  String? lastError;
   SavedPropertiesNotifier(this._remoteRepo) : super([]) {
     _loadRemote();
   }
 
   Future<void> _loadRemote() async {
+    lastError = null;
     try {
       final favs = await _remoteRepo.fetchFavorites();
       state = favs.map((json) => PropertyDetails(
@@ -602,6 +628,7 @@ class SavedPropertiesNotifier extends StateNotifier<List<PropertyDetails>> {
         gallery: [],
       )).toList();
     } catch (e) {
+      lastError = 'Failed to load favorites';
       debugPrint('SavedPropertiesNotifier._loadRemote error: $e');
     }
   }
@@ -611,6 +638,7 @@ class SavedPropertiesNotifier extends StateNotifier<List<PropertyDetails>> {
   }
 
   Future<void> _remoteToggle(PropertyDetails property) async {
+    lastError = null;
     try {
       if (state.any((p) => p.id == property.id)) {
         await _remoteRepo.removeFavorite(property.id);
@@ -620,6 +648,7 @@ class SavedPropertiesNotifier extends StateNotifier<List<PropertyDetails>> {
         await _loadRemote();
       }
     } catch (e) {
+      lastError = 'Failed to toggle favorite';
       debugPrint('SavedPropertiesNotifier._remoteToggle error: $e');
     }
   }
@@ -645,14 +674,17 @@ final superAdminRepositoryProvider = Provider<ISuperAdminRepository>((ref) {
 
 class SuperAdminBookingsNotifier extends StateNotifier<List<Booking>> {
   final ISuperAdminRepository _repository;
+  String? lastError;
   SuperAdminBookingsNotifier(this._repository) : super([]) {
     loadBookings();
   }
 
   Future<void> loadBookings() async {
+    lastError = null;
     try {
       state = await _repository.fetchAllBookings();
     } catch (e) {
+      lastError = 'Failed to load bookings';
       debugPrint('SuperAdminBookingsNotifier.loadBookings error: $e');
       state = [];
     }
@@ -669,11 +701,13 @@ final superAdminBookingsProvider =
 
 class SuperAdminUsersNotifier extends StateNotifier<List<UserAccount>> {
   final ISuperAdminRepository _repository;
+  String? lastError;
   SuperAdminUsersNotifier(this._repository) : super([]) {
     loadUsers();
   }
 
   Future<void> loadUsers() async {
+    lastError = null;
     try {
       final raw = await _repository.fetchUsers(pageSize: 9999);
       state = raw.map((json) => UserAccount(
@@ -691,6 +725,7 @@ class SuperAdminUsersNotifier extends StateNotifier<List<UserAccount>> {
         lastLoginAt: json['lastLoginAt'] as String?,
       )).toList();
     } catch (e) {
+      lastError = 'Failed to load users';
       debugPrint('SuperAdminUsersNotifier.loadUsers error: $e');
       state = [];
     }
@@ -707,14 +742,17 @@ final superAdminUsersProvider =
 
 class SuperAdminRolesNotifier extends StateNotifier<List<RoleDefinition>> {
   final ISuperAdminRepository _repository;
+  String? lastError;
   SuperAdminRolesNotifier(this._repository) : super([]) {
     loadRoles();
   }
 
   Future<void> loadRoles() async {
+    lastError = null;
     try {
       state = await _repository.fetchRoles();
     } catch (e) {
+      lastError = 'Failed to load roles';
       debugPrint('SuperAdminRolesNotifier.loadRoles error: $e');
       state = [];
     }
@@ -739,14 +777,17 @@ final superAdminRolesProvider =
 
 class SuperAdminApprovalsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   final ISuperAdminRepository _repository;
+  String? lastError;
   SuperAdminApprovalsNotifier(this._repository) : super([]) {
     loadApprovals();
   }
 
   Future<void> loadApprovals() async {
+    lastError = null;
     try {
       state = await _repository.fetchApprovals();
     } catch (e) {
+      lastError = 'Failed to load approvals';
       debugPrint('SuperAdminApprovalsNotifier.loadApprovals error: $e');
       state = [];
     }
@@ -771,14 +812,17 @@ final superAdminApprovalsProvider =
 
 class SuperAdminNotificationsNotifier extends StateNotifier<List<AppNotification>> {
   final ISuperAdminRepository _repository;
+  String? lastError;
   SuperAdminNotificationsNotifier(this._repository) : super([]) {
     loadNotifications();
   }
 
   Future<void> loadNotifications() async {
+    lastError = null;
     try {
       state = await _repository.fetchNotifications();
     } catch (e) {
+      lastError = 'Failed to load notifications';
       debugPrint('SuperAdminNotificationsNotifier.loadNotifications error: $e');
       state = [];
     }
@@ -821,14 +865,17 @@ final superAdminNotificationsProvider =
 
 class SuperAdminSettingsNotifier extends StateNotifier<Map<String, dynamic>> {
   final ISuperAdminRepository _repository;
+  String? lastError;
   SuperAdminSettingsNotifier(this._repository) : super({}) {
     loadSettings();
   }
 
   Future<void> loadSettings() async {
+    lastError = null;
     try {
       state = await _repository.fetchGlobalSettings();
     } catch (e) {
+      lastError = 'Failed to load settings';
       debugPrint('SuperAdminSettingsNotifier.loadSettings error: $e');
       state = {};
     }
@@ -902,14 +949,17 @@ final superAdminSchemaProvider = FutureProvider<List<Map<String, dynamic>>>((ref
 
 class SuperAdminAuditLogsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   final ISuperAdminRepository _repository;
+  String? lastError;
   SuperAdminAuditLogsNotifier(this._repository) : super([]) {
     loadAuditLogs();
   }
 
   Future<void> loadAuditLogs({String? userId, String? action, String? from, String? to, int? page, int? pageSize}) async {
+    lastError = null;
     try {
       state = await _repository.fetchAuditLogs(userId: userId, action: action, from: from, to: to, page: page, pageSize: pageSize);
     } catch (e) {
+      lastError = 'Failed to load audit logs';
       debugPrint('SuperAdminAuditLogsNotifier.loadAuditLogs error: $e');
       state = [];
     }
@@ -1011,14 +1061,17 @@ final customerCouponsProvider =
 
 class CustomerFavoritesNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   final ICustomerRepository _repository;
+  String? lastError;
   CustomerFavoritesNotifier(this._repository) : super([]) {
     loadFavorites();
   }
 
   Future<void> loadFavorites() async {
+    lastError = null;
     try {
       state = await _repository.fetchFavorites();
     } catch (e) {
+      lastError = 'Failed to load favorites';
       debugPrint('CustomerFavoritesNotifier.loadFavorites error: $e');
       state = [];
     }
@@ -1082,11 +1135,13 @@ final customerProfileProvider =
 
 class CustomerPricingNotifier extends StateNotifier<Map<String, dynamic>> {
   final ICustomerRepository _repository;
+  String? lastError;
   CustomerPricingNotifier(this._repository) : super({'taxRate': 18, 'depositRate': 30}) {
     loadPricing();
   }
 
   Future<void> loadPricing() async {
+    lastError = null;
     try {
       final tax = await _repository.fetchTaxRate();
       final deposit = await _repository.fetchDepositRate();
@@ -1095,6 +1150,7 @@ class CustomerPricingNotifier extends StateNotifier<Map<String, dynamic>> {
         'depositRate': deposit['data']?['depositRate'] ?? deposit['depositRate'] ?? 30,
       };
     } catch (e) {
+      lastError = 'Failed to load pricing';
       debugPrint('CustomerPricingNotifier.loadPricing error: $e');
     }
   }
@@ -1133,14 +1189,17 @@ final customerStatsProvider =
 
 class CustomerNotificationsNotifier extends StateNotifier<List<AppNotification>> {
   final ICustomerRepository _repository;
+  String? lastError;
   CustomerNotificationsNotifier(this._repository) : super([]) {
     load();
   }
 
   Future<void> load() async {
+    lastError = null;
     try {
       state = await _repository.fetchNotifications();
     } catch (e) {
+      lastError = 'Failed to load notifications';
       debugPrint('CustomerNotificationsNotifier.load error: $e');
       state = [];
     }
