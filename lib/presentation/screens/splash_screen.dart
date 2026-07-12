@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../core/api_client.dart';
 import '../../core/theme.dart';
+import '../../data/remote/auth_api_service.dart';
+import '../../domain/entities.dart';
+import '../providers/state_provider.dart';
+import '../routing/app_router.dart';
 import '../routing/route_names.dart';
 import '../widgets/vsp_nest_logo.dart';
 
@@ -30,11 +35,74 @@ class _VspNestSplashScreenState extends ConsumerState<VspNestSplashScreen> with 
 
     _controller.forward();
 
-    // Automatically transition after 2.5 seconds
-    Future.delayed(const Duration(milliseconds: 2500), () {
+    Future.delayed(const Duration(milliseconds: 2500), _restoreSession);
+  }
+
+  Future<void> _restoreSession() async {
+    if (!mounted) return;
+
+    final token = await ApiClient.instance.accessToken;
+    if (token == null || token.isEmpty) {
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, RouteNames.login);
-    });
+      return;
+    }
+
+    try {
+      final result = await AuthApiService().me();
+      if (!mounted) return;
+
+      if (result == null || !result.active) {
+        await ApiClient.instance.clearTokens();
+        Navigator.pushReplacementNamed(context, RouteNames.login);
+        return;
+      }
+
+      final targetRole = _mapBackendRole(result.role);
+      if (targetRole == null) {
+        await ApiClient.instance.clearTokens();
+        Navigator.pushReplacementNamed(context, RouteNames.login);
+        return;
+      }
+
+      ref.read(activeRoleProvider.notifier).state = targetRole;
+      ref.read(authenticatedRoleProvider.notifier).state = targetRole;
+      ref.read(isLoggedInProvider.notifier).state = true;
+
+      if (targetRole == UserRole.customer) {
+        ref.read(activeTabProvider.notifier).state = 'villa';
+        ref.read(customerProfileProvider.notifier).setProfile({
+          'name': result.name,
+          'email': result.email,
+          'phone': result.phone ?? '',
+          'id': result.id,
+          'avatar': result.profileImageUrl ?? '',
+        });
+      }
+
+      Navigator.pushReplacementNamed(context, AppRouter.routeForRole(targetRole));
+    } catch (_) {
+      await ApiClient.instance.clearTokens();
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, RouteNames.login);
+    }
+  }
+
+  UserRole? _mapBackendRole(String backendRole) {
+    switch (backendRole) {
+      case 'SUPER_ADMIN':
+        return UserRole.superAdmin;
+      case 'ADMIN':
+        return UserRole.admin;
+      case 'STAFF':
+        return UserRole.staff;
+      case 'ACCOUNTANT':
+        return UserRole.accountant;
+      case 'CUSTOMER':
+        return UserRole.customer;
+      default:
+        return null;
+    }
   }
 
   @override
