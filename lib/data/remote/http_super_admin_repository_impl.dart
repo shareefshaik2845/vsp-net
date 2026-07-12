@@ -265,16 +265,17 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
 
   @override
   Future<void> updateRole(RoleDefinition role) async {
-    await _dio.put('/super-admin/roles/${role.id}', data: {
-      'displayName': role.displayName,
-      'description': role.description,
+    final data = <String, dynamic>{
       'permissions': role.permissions
           .map((p) => {
                 'resource': _resourceToBackend[p.resource.name] ?? p.resource.name,
                 'actions': p.actions.map((a) => a.name).toList(),
               })
           .toList(),
-    });
+    };
+    if (role.displayName.isNotEmpty) data['displayName'] = role.displayName;
+    if (role.description.isNotEmpty) data['description'] = role.description;
+    await _dio.put('/super-admin/roles/${role.id}', data: data);
   }
 
   // ==================== Audit Logs ====================
