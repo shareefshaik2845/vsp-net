@@ -23,8 +23,8 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<PropertyDetails> fetchPropertyDetails() async {
     final response = await _dio.get('/admin/properties');
-    final data = _unwrap(response) as List<dynamic>;
-    final map = (data.isNotEmpty ? data.first : {}) as Map<String, dynamic>;
+    final data = unwrapList(_unwrap(response));
+    final map = (data.isNotEmpty ? data.first : {});
     return PropertyDetails(
       id: map['id'] as String? ?? '',
       name: map['name'] as String? ?? '',
@@ -123,7 +123,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
     final total = (json['totalAmount'] as num?)?.toDouble() ?? 0;
     final discount = (json['discountAmount'] as num?)?.toDouble() ?? 0;
     return Booking(
-      id: json['id'].toString(),
+      id: (json['id'] as String?) ?? '',
       resortName: json['propertyName'] as String? ?? '',
       guestName: json['guestName'] as String? ?? '',
       guestEmail: json['guestEmail'] as String? ?? '',
@@ -154,8 +154,8 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<List<Booking>> fetchBookings() async {
     final response = await _dio.get('/admin/bookings');
-    final data = _unwrap(response) as List<dynamic>;
-    return data.map((e) => _bookingFromJson(e as Map<String, dynamic>)).toList();
+    final data = unwrapList(_unwrap(response));
+    return data.map((e) => _bookingFromJson(e)).toList();
   }
 
   @override
@@ -214,7 +214,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
 
   CalendarBlock _blockFromJson(Map<String, dynamic> json) {
     return CalendarBlock(
-      id: json['id'].toString(),
+      id: (json['id'] as String?) ?? '',
       startDate: json['startDate'] as String? ?? '',
       endDate: json['endDate'] as String? ?? '',
       reason: _blockTypeFromBackend(json['blockType'] as String?),
@@ -226,8 +226,8 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<List<CalendarBlock>> fetchCalendarBlocks() async {
     final response = await _dio.get('/admin/calendar/blocks');
-    final data = _unwrap(response) as List<dynamic>;
-    return data.map((e) => _blockFromJson(e as Map<String, dynamic>)).toList();
+    final data = unwrapList(_unwrap(response));
+    return data.map((e) => _blockFromJson(e)).toList();
   }
 
   @override
@@ -250,7 +250,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
 
   Coupon _couponFromJson(Map<String, dynamic> json) {
     return Coupon(
-      id: json['id'].toString(),
+      id: (json['id'] as String?) ?? '',
       code: json['code'] as String? ?? '',
       type: (json['discountType'] as String? ?? 'PERCENTAGE').toLowerCase(),
       value: (json['discountValue'] as num?)?.toDouble() ?? 0,
@@ -266,14 +266,14 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<List<Coupon>> fetchCoupons() async {
     final response = await _dio.get('/admin/coupons');
-    final data = _unwrap(response) as List<dynamic>;
-    return data.map((e) => _couponFromJson(e as Map<String, dynamic>)).toList();
+    final data = unwrapList(_unwrap(response));
+    return data.map((e) => _couponFromJson(e)).toList();
   }
 
   @override
   Future<Map<String, dynamic>> fetchCouponDetail(String id) async {
     final response = await _dio.get('/admin/coupons/$id');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
@@ -321,8 +321,8 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<List<RoomStatus>> fetchRoomStatuses() async {
     final response = await _dio.get('/admin/rooms');
-    final data = _unwrap(response) as List<dynamic>;
-    return data.map((e) => _roomFromJson(e as Map<String, dynamic>)).toList();
+    final data = unwrapList(_unwrap(response));
+    return data.map((e) => _roomFromJson(e)).toList();
   }
 
   @override
@@ -368,7 +368,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
 
   PricingSeasonRule _ruleFromJson(Map<String, dynamic> json) {
     return PricingSeasonRule(
-      id: json['id'].toString(),
+      id: (json['id'] as String?) ?? '',
       name: json['name'] as String? ?? '',
       startDate: json['startDate'] as String? ?? '',
       endDate: json['endDate'] as String? ?? '',
@@ -382,8 +382,8 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<List<PricingSeasonRule>> fetchPricingRules() async {
     final response = await _dio.get('/admin/pricing/rules');
-    final data = _unwrap(response) as List<dynamic>;
-    return data.map((e) => _ruleFromJson(e as Map<String, dynamic>)).toList();
+    final data = unwrapList(_unwrap(response));
+    return data.map((e) => _ruleFromJson(e)).toList();
   }
 
   @override
@@ -443,7 +443,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
   OtaSyncStatus _otaFromJson(Map<String, dynamic> json) {
     final platform = json['platform'] as String? ?? '';
     return OtaSyncStatus(
-      id: json['id'].toString(),
+      id: (json['id'] as String?) ?? '',
       channelName: platform,
       logo: _platformLogo[platform] ?? platform,
       lastSyncTime: json['lastSyncAt'] as String? ?? '',
@@ -456,8 +456,8 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<List<OtaSyncStatus>> fetchOtaSyncStatuses() async {
     final response = await _dio.get('/admin/ota/channels');
-    final data = _unwrap(response) as List<dynamic>;
-    return data.map((e) => _otaFromJson(e as Map<String, dynamic>)).toList();
+    final data = unwrapList(_unwrap(response));
+    return data.map((e) => _otaFromJson(e)).toList();
   }
 
   @override
@@ -477,7 +477,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
 
   AppNotification _notificationFromJson(Map<String, dynamic> json) {
     return AppNotification(
-      id: json['id'].toString(),
+      id: (json['id'] as String?) ?? '',
       title: json['title'] as String? ?? '',
       message: json['message'] as String? ?? '',
       timestamp: json['createdAt'] as String? ?? DateTime.now().toIso8601String(),
@@ -489,8 +489,8 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<List<AppNotification>> fetchNotifications() async {
     final response = await _dio.get('/admin/notifications');
-    final data = _unwrap(response) as List<dynamic>;
-    return data.map((e) => _notificationFromJson(e as Map<String, dynamic>)).toList();
+    final data = unwrapList(_unwrap(response));
+    return data.map((e) => _notificationFromJson(e)).toList();
   }
 
   @override
@@ -521,14 +521,14 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<Map<String, dynamic>> fetchAnalyticsKpis() async {
     final response = await _dio.get('/admin/dashboard');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
   Future<List<Map<String, dynamic>>> fetchAnalyticsSalesChart() async {
     // Backend has no dedicated sales-chart endpoint; reuses dashboard data
     final response = await _dio.get('/admin/dashboard');
-    final data = _unwrap(response) as Map<String, dynamic>;
+    final data = unwrapMap(_unwrap(response));
     return (data['salesChart'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? [];
   }
 
@@ -536,7 +536,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
   Future<List<Map<String, dynamic>>> fetchAnalyticsMetricsInsights() async {
     // Backend has no dedicated metrics-insights endpoint; reuses dashboard data
     final response = await _dio.get('/admin/dashboard');
-    final data = _unwrap(response) as Map<String, dynamic>;
+    final data = unwrapMap(_unwrap(response));
     return (data['metricsInsights'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? [];
   }
 
@@ -545,7 +545,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<List<Map<String, dynamic>>> fetchPropertiesRaw() async {
     final response = await _dio.get('/admin/properties');
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
 
@@ -561,7 +561,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<Map<String, dynamic>> fetchBookingDetail(String id) async {
     final response = await _dio.get('/admin/bookings/$id');
-    return _unwrap(response) as Map<String, dynamic>;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
@@ -589,9 +589,9 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<Map<String, dynamic>> fetchBasePricing() async {
     final response = await _dio.get('/admin/pricing/rules');
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     if (data.isNotEmpty) {
-      final rule = data.first as Map<String, dynamic>;
+      final rule = data.first;
       return {
         'basePriceWeekday': rule['weekdayPrice'] ?? 0,
         'basePriceWeekend': rule['weekendPrice'] ?? 0,
@@ -603,7 +603,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<void> updateBasePricing(Map<String, dynamic> pricing) async {
     final response = await _dio.get('/admin/pricing/rules');
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     if (data.isEmpty) {
       await _dio.post('/admin/pricing/rules', data: {
         'name': 'Base Pricing',
@@ -612,7 +612,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
         'isActive': true,
       });
     } else {
-      final rule = data.first as Map<String, dynamic>;
+      final rule = data.first;
       await _dio.put('/admin/pricing/rules/${rule['id']}', data: {
         'weekdayPrice': pricing['basePriceWeekday'],
         'weekendPrice': pricing['basePriceWeekend'],
@@ -625,11 +625,11 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<void> toggleSeasonalRule(String id) async {
     final response = await _dio.get('/admin/pricing/rules');
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     final rule = data.firstWhere(
       (r) => r['id'].toString() == id,
       orElse: () => throw Exception('Rule not found'),
-    ) as Map<String, dynamic>;
+    );
     await _dio.put('/admin/pricing/rules/$id', data: {
       'isActive': !(rule['isActive'] as bool? ?? true),
     });
@@ -638,11 +638,11 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<void> toggleCoupon(String id) async {
     final response = await _dio.get('/admin/coupons');
-    final data = _unwrap(response) as List<dynamic>;
+    final data = unwrapList(_unwrap(response));
     final coupon = data.firstWhere(
       (c) => c['id'].toString() == id,
       orElse: () => throw Exception('Coupon not found'),
-    ) as Map<String, dynamic>;
+    );
     await _dio.put('/admin/coupons/$id', data: {
       'isActive': !(coupon['isActive'] as bool? ?? true),
     });

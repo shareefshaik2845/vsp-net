@@ -33,8 +33,21 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
     }
   }
 
+  void _lastError(WidgetRef ref, BuildContext context, dynamic notifier) {
+    try {
+      final error = notifier.lastError as String?;
+      if (error != null && error.isNotEmpty && context.mounted) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text(error), backgroundColor: Colors.red.shade700, behavior: SnackBarBehavior.floating));
+        notifier.lastError = null;
+      }
+    } catch (_) {}
+  }
+
   @override
   Widget build(BuildContext context) {
+    ref.listen(bookingsProvider, (_, __) => _lastError(ref, context, ref.read(bookingsProvider.notifier)));
     final bookings = ref.watch(bookingsProvider);
     final blocks = ref.watch(calendarBlocksProvider);
 

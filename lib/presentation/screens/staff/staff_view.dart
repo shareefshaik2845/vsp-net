@@ -31,6 +31,18 @@ class _StaffViewState extends ConsumerState<StaffView> {
     super.dispose();
   }
 
+  void _lastError(WidgetRef ref, BuildContext context, dynamic notifier) {
+    try {
+      final error = notifier.lastError as String?;
+      if (error != null && error.isNotEmpty && context.mounted) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text(error), backgroundColor: Colors.red.shade700, behavior: SnackBarBehavior.floating));
+        notifier.lastError = null;
+      }
+    } catch (_) {}
+  }
+
   String _formatTime(String isoStr) {
     try {
       final dt = DateTime.parse(isoStr);
@@ -183,11 +195,11 @@ class _StaffViewState extends ConsumerState<StaffView> {
                       hks = HousekeepingStatus.clean;
                     }
 
-                    ref.read(roomsProvider.notifier).updateHousekeeping(
+                    ref.read(staffRoomsProvider.notifier).updateStatus(
                           room.id,
-                          hks,
+                          _editStatus,
+                          assignedStaff: _staffController.text.trim().isEmpty ? null : _staffController.text,
                           notes: _notesController.text.trim().isEmpty ? null : _notesController.text,
-                          staff: _staffController.text.trim().isEmpty ? null : _staffController.text,
                         );
 
                     if (hks == HousekeepingStatus.clean) {
@@ -223,10 +235,21 @@ class _StaffViewState extends ConsumerState<StaffView> {
 
   @override
   Widget build(BuildContext context) {
-    final rooms = ref.watch(roomsProvider);
+    ref.listen(bookingsProvider, (_, __) => _lastError(ref, context, ref.read(bookingsProvider.notifier)));
+    final staffRoomsAsync = ref.watch(staffRoomsProvider);
     final bookings = ref.watch(bookingsProvider);
     final propertyAsync = ref.watch(propertyProvider);
     final activeResort = propertyAsync.valueOrNull;
+
+    // Trigger staff room load when property changes
+    ref.listen(propertyProvider, (prev, next) {
+      final resort = next.valueOrNull;
+      if (resort != null) {
+        ref.read(staffRoomsProvider.notifier).loadRooms(resort.id);
+      }
+    });
+
+    final rooms = staffRoomsAsync.valueOrNull ?? [];
 
     final arrivalsToday = bookings.where((b) => b.startDate == _todayStr && b.status != BookingStatus.cancelled).toList();
     final departuresToday = bookings.where((b) => b.endDate == _todayStr && b.status != BookingStatus.cancelled).toList();

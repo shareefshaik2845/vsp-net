@@ -60,8 +60,31 @@ class _AdminViewState extends ConsumerState<AdminView> {
     super.dispose();
   }
 
+  void _lastError(WidgetRef ref, BuildContext context, dynamic notifier) {
+    try {
+      final error = notifier.lastError as String?;
+      if (error != null && error.isNotEmpty && context.mounted) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(error),
+              backgroundColor: Colors.red.shade700,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        notifier.lastError = null;
+      }
+    } catch (_) {}
+  }
+
   @override
   Widget build(BuildContext context) {
+    ref.listen(bookingsProvider, (_, __) => _lastError(ref, context, ref.read(bookingsProvider.notifier)));
+    ref.listen(calendarBlocksProvider, (_, __) => _lastError(ref, context, ref.read(calendarBlocksProvider.notifier)));
+    ref.listen(couponsProvider, (_, __) => _lastError(ref, context, ref.read(couponsProvider.notifier)));
+    ref.listen(pricingRulesProvider, (_, __) => _lastError(ref, context, ref.read(pricingRulesProvider.notifier)));
+    ref.listen(otaSyncProvider, (_, __) => _lastError(ref, context, ref.read(otaSyncProvider.notifier)));
     final bookings = ref.watch(bookingsProvider);
     final blocks = ref.watch(calendarBlocksProvider);
     final coupons = ref.watch(couponsProvider);
@@ -352,6 +375,35 @@ class _AdminViewState extends ConsumerState<AdminView> {
   }
 
   // --- 1. ANALYTICS BOARD ---
+  List<double> _computeWeeklyRevenue(List<Booking> bookings, {int weeks = 6}) {
+    final now = DateTime.now();
+    final weekStarts = List.generate(weeks, (i) {
+      final day = now.subtract(Duration(days: now.weekday - 1 + (weeks - 1 - i) * 7));
+      return DateTime(day.year, day.month, day.day);
+    });
+
+    final weeklyRevenue = List<double>.filled(weeks, 0);
+    for (final b in bookings) {
+      try {
+        final start = DateTime.parse(b.startDate);
+        for (int i = 0; i < weeks; i++) {
+          final wStart = weekStarts[i];
+          final wEnd = wStart.add(const Duration(days: 7));
+          if (!start.isBefore(wStart) && start.isBefore(wEnd)) {
+            weeklyRevenue[i] += b.totalAmount;
+            break;
+          }
+        }
+      } catch (e) {
+        debugPrint('Error parsing booking date $e');
+      }
+    }
+
+    final maxRev = weeklyRevenue.reduce((a, b) => a > b ? a : b);
+    if (maxRev == 0) return [0, 0, 0, 0, 0, 0];
+    return weeklyRevenue.map((r) => r / maxRev).toList();
+  }
+
   Widget _buildAnalyticsBoard(
     List<Booking> bookings,
     List<CalendarBlock> blocks,
@@ -375,6 +427,7 @@ class _AdminViewState extends ConsumerState<AdminView> {
         final fallbackOccupancy = min(100, ((totalBookedDaysSum / totalDaysInScope) * 100).round());
         return _buildDashboardGrid(
           width: MediaQuery.of(context).size.width,
+          bookings: bookings,
           totalBookedRevenue: fallbackRevenue,
           totalAdvanceCollected: fallbackAdvance,
           calculatedOccupancy: fallbackOccupancy,
@@ -394,6 +447,7 @@ class _AdminViewState extends ConsumerState<AdminView> {
       data: (dash) {
         return _buildDashboardGrid(
           width: MediaQuery.of(context).size.width,
+          bookings: bookings,
           totalBookedRevenue: dash.revenueThisMonth,
           totalAdvanceCollected: dash.revenueToday,
           calculatedOccupancy: (dash.occupancyRate * 100).round(),
@@ -415,6 +469,7 @@ class _AdminViewState extends ConsumerState<AdminView> {
 
   Widget _buildDashboardGrid({
     required double width,
+    required List<Booking> bookings,
     required double totalBookedRevenue,
     required double totalAdvanceCollected,
     required int calculatedOccupancy,
@@ -488,9 +543,9 @@ class _AdminViewState extends ConsumerState<AdminView> {
             children: [
               Expanded(
                 flex: 8,
-                child: Column(
-                  children: [
-                    _buildSalesPerformanceChart(totalBookedRevenue, width < 600),
+                  child: Column(
+                    children: [
+                      _buildSalesPerformanceChart(bookings, width < 600),
                     const SizedBox(height: 20),
                     _buildUpcomingEvents(upcomingEvents),
                     const SizedBox(height: 20),
@@ -519,7 +574,7 @@ class _AdminViewState extends ConsumerState<AdminView> {
         else
           Column(
             children: [
-              _buildSalesPerformanceChart(totalBookedRevenue, width < 600),
+              _buildSalesPerformanceChart(bookings, width < 600),
               const SizedBox(height: 20),
               _buildUpcomingEvents(upcomingEvents),
               const SizedBox(height: 20),
@@ -615,7 +670,13 @@ class _AdminViewState extends ConsumerState<AdminView> {
     );
   }
 
-  Widget _buildSalesPerformanceChart(double totalBookedRevenue, bool isMobile) {
+  Widget _buildSalesPerformanceChart(List<Booking> bookings, bool isMobile) {
+    final points = _computeWeeklyRevenue(bookings);
+    final peakRev = bookings.fold(0.0, (sum, b) => sum + b.totalAmount);
+    final peakValue = points.reduce((a, b) => a > b ? a : b);
+    final peakIndex = points.indexOf(peakValue);
+    final peakWeekLabel = ['Wk 1 (Jun)', 'Wk 2 (Jun)', 'Wk 3 (Jun)', 'Wk 4 (Jun)', 'Wk 1 (Jul)', 'Wk 2 (Jul)'];
+    final peakLabel = peakIndex < peakWeekLabel.length ? peakWeekLabel[peakIndex] : 'Peak';
     return Container(
       padding: EdgeInsets.all(isMobile ? 16.0 : 24.0),
       decoration: BoxDecoration(
@@ -709,7 +770,7 @@ class _AdminViewState extends ConsumerState<AdminView> {
                 CustomPaint(
                   size: Size.infinite,
                   painter: SalesChartPainter(
-                    points: [0.1, 0.35, 0.55, 0.8, 0.95, 0.75],
+                    points: points,
                   ),
                 ),
                 Positioned(
@@ -728,7 +789,7 @@ class _AdminViewState extends ConsumerState<AdminView> {
                       ],
                     ),
                     child: Text(
-                      'Peak Week: ₹${(totalBookedRevenue * 0.45).toStringAsFixed(0)} INR',
+                      '$peakLabel: ₹${(peakRev * peakValue).toStringAsFixed(0)} INR',
                       style: GoogleFonts.spaceGrotesk(
                         color: Colors.white,
                         fontSize: 9,

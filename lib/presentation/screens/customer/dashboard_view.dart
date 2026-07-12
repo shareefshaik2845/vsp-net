@@ -28,6 +28,18 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
     super.dispose();
   }
 
+  void _lastError(WidgetRef ref, BuildContext context, dynamic notifier) {
+    try {
+      final error = notifier.lastError as String?;
+      if (error != null && error.isNotEmpty && context.mounted) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text(error), backgroundColor: Colors.red.shade700, behavior: SnackBarBehavior.floating));
+        notifier.lastError = null;
+      }
+    } catch (_) {}
+  }
+
   String _formatIndianCurrency(double value) {
     final String s = value.toStringAsFixed(0);
     if (s.length <= 3) return s;
@@ -292,6 +304,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(bookingsProvider, (_, __) => _lastError(ref, context, ref.read(bookingsProvider.notifier)));
     final bookings = ref.watch(bookingsProvider);
     final profileAsync = ref.watch(customerProfileProvider);
     final profile = profileAsync.valueOrNull ?? {};

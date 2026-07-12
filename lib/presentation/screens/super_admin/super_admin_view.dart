@@ -39,7 +39,30 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void _lastError(WidgetRef ref, BuildContext context, dynamic notifier) {
+    try {
+      final error = notifier.lastError as String?;
+      if (error != null && error.isNotEmpty && context.mounted) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text(error), backgroundColor: Colors.red.shade700, behavior: SnackBarBehavior.floating));
+        notifier.lastError = null;
+      }
+    } catch (_) {}
+  }
+
+  @override
   Widget build(BuildContext context) {
+    ref.listen(superAdminUsersProvider, (_, __) => _lastError(ref, context, ref.read(superAdminUsersProvider.notifier)));
+    ref.listen(superAdminRolesProvider, (_, __) => _lastError(ref, context, ref.read(superAdminRolesProvider.notifier)));
+    ref.listen(superAdminApprovalsProvider, (_, __) => _lastError(ref, context, ref.read(superAdminApprovalsProvider.notifier)));
+    ref.listen(superAdminSettingsProvider, (_, __) => _lastError(ref, context, ref.read(superAdminSettingsProvider.notifier)));
+    ref.listen(superAdminAnalyticsProvider, (_, __) => _lastError(ref, context, ref.read(superAdminAnalyticsProvider.notifier)));
+    ref.listen(superAdminAuditLogsProvider, (_, __) => _lastError(ref, context, ref.read(superAdminAuditLogsProvider.notifier)));
     final bookings = ref.watch(superAdminBookingsProvider);
     final propertyAsync = ref.watch(propertyProvider);
     final activeResort = propertyAsync.valueOrNull;
@@ -309,31 +332,8 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
     }
   }
 
-  UserAccount _userFromJson(Map<String, dynamic> json) {
-    final roleStr = (json['role'] as String? ?? '').toLowerCase();
-    return UserAccount(
-      id: json['id']?.toString() ?? '',
-      name: json['name'] as String? ?? '',
-      email: json['email'] as String? ?? '',
-      passwordHash: '',
-      role: UserRole.values.firstWhere(
-        (e) => e.name.toLowerCase() == roleStr,
-        orElse: () => UserRole.customer,
-      ),
-      status: json['status'] == 'inactive'
-          ? UserStatus.inactive
-          : UserStatus.active,
-      createdAt: json['createdAt'] as String? ?? '',
-      createdBy: json['createdBy'] as String?,
-      lastLoginAt: json['lastLoginAt'] as String?,
-    );
-  }
-
   Widget _buildUserManagement() {
-    final List<UserAccount> users = ref
-        .watch(superAdminUsersProvider)
-        .map((m) => _userFromJson(m))
-        .toList();
+    final List<UserAccount> users = ref.watch(superAdminUsersProvider);
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -690,7 +690,11 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
           ],
         ),
       ),
-    );
+    ).then((_) {
+      nameController.dispose();
+      emailController.dispose();
+      passwordController.dispose();
+    });
   }
 
   void _showDeleteUserConfirm(BuildContext context, UserAccount user) {
@@ -906,7 +910,11 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
           ],
         ),
       ),
-    );
+    ).then((_) {
+      nameController.dispose();
+      emailController.dispose();
+      passwordController.dispose();
+    });
   }
 
   Widget _buildGlobalConstraints() {
@@ -1040,7 +1048,6 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                       min: 5,
                       max: 28,
                       onChanged: (val) {
-                        ref.read(taxRateProvider.notifier).state = val;
                         ref.read(superAdminSettingsProvider.notifier).updateSettings({...settings, 'taxRate': val});
                       },
                     ),
@@ -1054,7 +1061,6 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                       min: 10,
                       max: 100,
                       onChanged: (val) {
-                        ref.read(depositRateProvider.notifier).state = val;
                         ref.read(superAdminSettingsProvider.notifier).updateSettings({...settings, 'depositRate': val});
                       },
                     ),
@@ -1994,7 +2000,20 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
           },
         );
       },
-    );
+    ).then((_) {
+      nameController.dispose();
+      taglineController.dispose();
+      descController.dispose();
+      locationController.dispose();
+      cityController.dispose();
+      stateController.dispose();
+      basePriceController.dispose();
+      weekendPriceController.dispose();
+      extraGuestController.dispose();
+      cleaningFeeController.dispose();
+      amenityLabelController.dispose();
+      ruleController.dispose();
+    });
   }
 
   Widget _buildMultilineField(
@@ -2474,6 +2493,9 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                                   fontSize: 11,
                                   color: ResortTheme.charcoal.withValues(alpha: 0.5))),
                         ),
+                        const SizedBox(),
+                        const SizedBox(),
+                        const SizedBox(),
                       ],
                     )
                   else

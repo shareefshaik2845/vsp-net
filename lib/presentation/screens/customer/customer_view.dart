@@ -124,6 +124,18 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
     super.dispose();
   }
 
+  void _lastError(WidgetRef ref, BuildContext context, dynamic notifier) {
+    try {
+      final error = notifier.lastError as String?;
+      if (error != null && error.isNotEmpty && context.mounted) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text(error), backgroundColor: Colors.red.shade700, behavior: SnackBarBehavior.floating));
+        notifier.lastError = null;
+      }
+    } catch (_) {}
+  }
+
   QuoteDetails _calculateQuote(PropertyDetails property, List<PricingSeasonRule> rules, {int taxRate = 18, int depositRate = 30}) {
     DateTime start;
     DateTime end;
@@ -206,6 +218,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
         _selectedResort.id,
       );
       final isValid = result['isValid'] as bool? ?? false;
+      if (!mounted) return;
       if (isValid) {
         final discount = (result['discountAmount'] as num?)?.toDouble() ?? 0;
         setState(() {
@@ -221,6 +234,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
         });
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         _couponDiscount = 0.0;
         _couponError = 'Failed to validate coupon. Please try again.';
@@ -1216,7 +1230,6 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
   }
 
   void _showConciergeForm(BuildContext context) {
-    final typeController = TextEditingController();
     final descController = TextEditingController();
     String selectedType = 'TRANSPORT';
 
@@ -1250,12 +1263,13 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                 ],
               ),
               actions: [
-                TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+                TextButton(onPressed: () { descController.dispose(); Navigator.pop(ctx); }, child: const Text('Cancel')),
                 ElevatedButton(
                   onPressed: () async {
                     if (descController.text.trim().isEmpty) return;
                     await ref.read(customerConciergeProvider.notifier).createRequest(selectedType, descController.text.trim());
                     if (ctx.mounted) Navigator.pop(ctx);
+                    descController.dispose();
                     SnackbarHelper.success(context, 'Concierge request submitted!');
                   },
                   style: ElevatedButton.styleFrom(backgroundColor: ResortTheme.mossGreen),
@@ -1345,6 +1359,16 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(customerBookingsProvider, (_, __) => _lastError(ref, context, ref.read(customerBookingsProvider.notifier)));
+    ref.listen(customerPropertiesProvider, (_, __) => _lastError(ref, context, ref.read(customerPropertiesProvider.notifier)));
+    ref.listen(customerCouponsProvider, (_, __) => _lastError(ref, context, ref.read(customerCouponsProvider.notifier)));
+    ref.listen(customerFavoritesProvider, (_, __) => _lastError(ref, context, ref.read(customerFavoritesProvider.notifier)));
+    ref.listen(customerProfileProvider, (_, __) => _lastError(ref, context, ref.read(customerProfileProvider.notifier)));
+    ref.listen(customerPricingProvider, (_, __) => _lastError(ref, context, ref.read(customerPricingProvider.notifier)));
+    ref.listen(customerStatsProvider, (_, __) => _lastError(ref, context, ref.read(customerStatsProvider.notifier)));
+    ref.listen(customerNotificationsProvider, (_, __) => _lastError(ref, context, ref.read(customerNotificationsProvider.notifier)));
+    ref.listen(customerInvoicesProvider, (_, __) => _lastError(ref, context, ref.read(customerInvoicesProvider.notifier)));
+    ref.listen(customerConciergeProvider, (_, __) => _lastError(ref, context, ref.read(customerConciergeProvider.notifier)));
     final propertyAsync = ref.watch(propertyProvider);
     final rules = ref.watch(pricingRulesProvider);
     final allResorts = ref.watch(resortsListProvider);
@@ -1804,7 +1828,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(review['author'] as String? ?? 'Guest', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: ResortTheme.charcoal)),
+                            Text(review['author'] as String? ?? '', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: ResortTheme.charcoal)),
                             if (review['rating'] != null)
                               Row(
                                 children: [

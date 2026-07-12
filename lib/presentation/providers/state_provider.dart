@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities.dart';
 import '../../domain/repositories.dart';
@@ -45,12 +46,12 @@ final activeTabProvider = StateProvider<String>((ref) => 'villa');
 
 
 
-final taxRateProvider = StateProvider<int>((ref) {
+final taxRateProvider = Provider<int>((ref) {
   final pricing = ref.watch(customerPricingProvider);
   return (pricing['taxRate'] as int?) ?? 18;
 });
 
-final depositRateProvider = StateProvider<int>((ref) {
+final depositRateProvider = Provider<int>((ref) {
   final pricing = ref.watch(customerPricingProvider);
   return (pricing['depositRate'] as int?) ?? 30;
 });
@@ -58,14 +59,18 @@ final depositRateProvider = StateProvider<int>((ref) {
 // Bookings Notifier
 class BookingsNotifier extends StateNotifier<List<Booking>> {
   final IResortRepository _repository;
+  String? lastError;
   BookingsNotifier(this._repository) : super([]) {
     loadBookings();
   }
 
   Future<void> loadBookings() async {
+    lastError = null;
     try {
       state = await _repository.fetchBookings();
     } catch (e) {
+      lastError = 'Failed to load bookings';
+      debugPrint('loadBookings error: $e');
       state = [];
     }
   }
@@ -159,7 +164,7 @@ class BookingsNotifier extends StateNotifier<List<Booking>> {
   }
 }
 
-final bookingsProvider = StateNotifierProvider<BookingsNotifier, List<Booking>>((ref) {
+final bookingsProvider = StateNotifierProvider.autoDispose<BookingsNotifier, List<Booking>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return BookingsNotifier(repo);
 });
@@ -167,14 +172,18 @@ final bookingsProvider = StateNotifierProvider<BookingsNotifier, List<Booking>>(
 // Calendar Blocks Notifier
 class CalendarBlocksNotifier extends StateNotifier<List<CalendarBlock>> {
   final IResortRepository _repository;
+  String? lastError;
   CalendarBlocksNotifier(this._repository) : super([]) {
     loadBlocks();
   }
 
   Future<void> loadBlocks() async {
+    lastError = null;
     try {
       state = await _repository.fetchCalendarBlocks();
     } catch (e) {
+      lastError = 'Failed to load blocks';
+      debugPrint('loadBlocks error: $e');
       state = [];
     }
   }
@@ -190,7 +199,7 @@ class CalendarBlocksNotifier extends StateNotifier<List<CalendarBlock>> {
   }
 }
 
-final calendarBlocksProvider = StateNotifierProvider<CalendarBlocksNotifier, List<CalendarBlock>>((ref) {
+final calendarBlocksProvider = StateNotifierProvider.autoDispose<CalendarBlocksNotifier, List<CalendarBlock>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return CalendarBlocksNotifier(repo);
 });
@@ -198,14 +207,18 @@ final calendarBlocksProvider = StateNotifierProvider<CalendarBlocksNotifier, Lis
 // Coupons Notifier
 class CouponsNotifier extends StateNotifier<List<Coupon>> {
   final IResortRepository _repository;
+  String? lastError;
   CouponsNotifier(this._repository) : super([]) {
     loadCoupons();
   }
 
   Future<void> loadCoupons() async {
+    lastError = null;
     try {
       state = await _repository.fetchCoupons();
     } catch (e) {
+      lastError = 'Failed to load coupons';
+      debugPrint('loadCoupons error: $e');
       state = [];
     }
   }
@@ -233,7 +246,7 @@ class CouponsNotifier extends StateNotifier<List<Coupon>> {
   }
 }
 
-final couponsProvider = StateNotifierProvider<CouponsNotifier, List<Coupon>>((ref) {
+final couponsProvider = StateNotifierProvider.autoDispose<CouponsNotifier, List<Coupon>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return CouponsNotifier(repo);
 });
@@ -241,14 +254,18 @@ final couponsProvider = StateNotifierProvider<CouponsNotifier, List<Coupon>>((re
 // Rooms Status Notifier
 class RoomsNotifier extends StateNotifier<List<RoomStatus>> {
   final IResortRepository _repository;
+  String? lastError;
   RoomsNotifier(this._repository) : super([]) {
     loadRooms();
   }
 
   Future<void> loadRooms() async {
+    lastError = null;
     try {
       state = await _repository.fetchRoomStatuses();
     } catch (e) {
+      lastError = 'Failed to load rooms';
+      debugPrint('loadRooms error: $e');
       state = [];
     }
   }
@@ -272,7 +289,7 @@ class RoomsNotifier extends StateNotifier<List<RoomStatus>> {
   }
 }
 
-final roomsProvider = StateNotifierProvider<RoomsNotifier, List<RoomStatus>>((ref) {
+final roomsProvider = StateNotifierProvider.autoDispose<RoomsNotifier, List<RoomStatus>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return RoomsNotifier(repo);
 });
@@ -280,14 +297,18 @@ final roomsProvider = StateNotifierProvider<RoomsNotifier, List<RoomStatus>>((re
 // Pricing Rules Notifier
 class PricingRulesNotifier extends StateNotifier<List<PricingSeasonRule>> {
   final IResortRepository _repository;
+  String? lastError;
   PricingRulesNotifier(this._repository) : super([]) {
     loadRules();
   }
 
   Future<void> loadRules() async {
+    lastError = null;
     try {
       state = await _repository.fetchPricingRules();
     } catch (e) {
+      lastError = 'Failed to load pricing rules';
+      debugPrint('loadRules error: $e');
       state = [];
     }
   }
@@ -315,7 +336,7 @@ class PricingRulesNotifier extends StateNotifier<List<PricingSeasonRule>> {
   }
 }
 
-final pricingRulesProvider = StateNotifierProvider<PricingRulesNotifier, List<PricingSeasonRule>>((ref) {
+final pricingRulesProvider = StateNotifierProvider.autoDispose<PricingRulesNotifier, List<PricingSeasonRule>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return PricingRulesNotifier(repo);
 });
@@ -323,14 +344,18 @@ final pricingRulesProvider = StateNotifierProvider<PricingRulesNotifier, List<Pr
 // OTA Notifier
 class OtaChannelsNotifier extends StateNotifier<List<OtaSyncStatus>> {
   final IResortRepository _repository;
+  String? lastError;
   OtaChannelsNotifier(this._repository) : super([]) {
     loadChannels();
   }
 
   Future<void> loadChannels() async {
+    lastError = null;
     try {
       state = await _repository.fetchOtaSyncStatuses();
     } catch (e) {
+      lastError = 'Failed to load OTA channels';
+      debugPrint('loadChannels error: $e');
       state = [];
     }
   }
@@ -364,7 +389,7 @@ class OtaChannelsNotifier extends StateNotifier<List<OtaSyncStatus>> {
   }
 }
 
-final otaSyncProvider = StateNotifierProvider<OtaChannelsNotifier, List<OtaSyncStatus>>((ref) {
+final otaSyncProvider = StateNotifierProvider.autoDispose<OtaChannelsNotifier, List<OtaSyncStatus>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return OtaChannelsNotifier(repo);
 });
@@ -372,14 +397,18 @@ final otaSyncProvider = StateNotifierProvider<OtaChannelsNotifier, List<OtaSyncS
 // Notifications Notifier
 class NotificationsNotifier extends StateNotifier<List<AppNotification>> {
   final IResortRepository _repository;
+  String? lastError;
   NotificationsNotifier(this._repository) : super([]) {
     loadNotifications();
   }
 
   Future<void> loadNotifications() async {
+    lastError = null;
     try {
       state = await _repository.fetchNotifications();
     } catch (e) {
+      lastError = 'Failed to load notifications';
+      debugPrint('loadNotifications error: $e');
       state = [];
     }
   }
@@ -411,7 +440,7 @@ class NotificationsNotifier extends StateNotifier<List<AppNotification>> {
   }
 }
 
-final notificationsProvider = StateNotifierProvider<NotificationsNotifier, List<AppNotification>>((ref) {
+final notificationsProvider = StateNotifierProvider.autoDispose<NotificationsNotifier, List<AppNotification>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return NotificationsNotifier(repo);
 });
@@ -446,15 +475,18 @@ PropertyDetails _propertyFromJson(Map<String, dynamic> json) {
 }
 
 class PropertyNotifier extends StateNotifier<AsyncValue<PropertyDetails>> {
+  String? lastError;
   final Future<PropertyDetails> Function() _loadProperty;
   PropertyNotifier(this._loadProperty) : super(const AsyncValue.loading()) {
     _init();
   }
 
   Future<void> _init() async {
+    lastError = null;
     try {
       state = AsyncValue.data(await _loadProperty());
     } catch (e, stack) {
+      lastError = 'Failed to load property details';
       state = AsyncValue.error(e, stack);
     }
   }
@@ -532,15 +564,20 @@ class QuoteDetails {
 
 class ResortsNotifier extends StateNotifier<List<PropertyDetails>> {
   final Future<List<Map<String, dynamic>>> Function() _loadProperties;
+  String? lastError;
   ResortsNotifier(this._loadProperties) : super([]) {
     _init();
   }
 
   Future<void> _init() async {
+    lastError = null;
     try {
       final props = await _loadProperties();
       state = props.map((json) => _propertyFromJson(json)).toList();
-    } catch (_) {}
+    } catch (e) {
+      lastError = 'Failed to load properties';
+      debugPrint('ResortsNotifier._init error: $e');
+    }
   }
 
   void addResort(PropertyDetails resort) {
@@ -567,11 +604,13 @@ final resortsListProvider = StateNotifierProvider<ResortsNotifier, List<Property
 
 class SavedPropertiesNotifier extends StateNotifier<List<PropertyDetails>> {
   final ICustomerRepository _remoteRepo;
+  String? lastError;
   SavedPropertiesNotifier(this._remoteRepo) : super([]) {
     _loadRemote();
   }
 
   Future<void> _loadRemote() async {
+    lastError = null;
     try {
       final favs = await _remoteRepo.fetchFavorites();
       state = favs.map((json) => PropertyDetails(
@@ -591,7 +630,10 @@ class SavedPropertiesNotifier extends StateNotifier<List<PropertyDetails>> {
         image: json['image'] as String? ?? '',
         gallery: [],
       )).toList();
-    } catch (_) {}
+    } catch (e) {
+      lastError = 'Failed to load favorites';
+      debugPrint('SavedPropertiesNotifier._loadRemote error: $e');
+    }
   }
 
   void toggleSave(PropertyDetails property) {
@@ -599,6 +641,7 @@ class SavedPropertiesNotifier extends StateNotifier<List<PropertyDetails>> {
   }
 
   Future<void> _remoteToggle(PropertyDetails property) async {
+    lastError = null;
     try {
       if (state.any((p) => p.id == property.id)) {
         await _remoteRepo.removeFavorite(property.id);
@@ -607,7 +650,10 @@ class SavedPropertiesNotifier extends StateNotifier<List<PropertyDetails>> {
         await _remoteRepo.addFavorite(property.id);
         await _loadRemote();
       }
-    } catch (_) {}
+    } catch (e) {
+      lastError = 'Failed to toggle favorite';
+      debugPrint('SavedPropertiesNotifier._remoteToggle error: $e');
+    }
   }
 
   bool isSaved(PropertyDetails property) {
@@ -615,7 +661,7 @@ class SavedPropertiesNotifier extends StateNotifier<List<PropertyDetails>> {
   }
 }
 
-final savedPropertiesProvider = StateNotifierProvider<SavedPropertiesNotifier, List<PropertyDetails>>((ref) {
+final savedPropertiesProvider = StateNotifierProvider.autoDispose<SavedPropertiesNotifier, List<PropertyDetails>>((ref) {
   return SavedPropertiesNotifier(ref.watch(customerRepositoryProvider));
 });
 
@@ -631,44 +677,66 @@ final superAdminRepositoryProvider = Provider<ISuperAdminRepository>((ref) {
 
 class SuperAdminBookingsNotifier extends StateNotifier<List<Booking>> {
   final ISuperAdminRepository _repository;
+  String? lastError;
   SuperAdminBookingsNotifier(this._repository) : super([]) {
     loadBookings();
   }
 
   Future<void> loadBookings() async {
+    lastError = null;
     try {
       state = await _repository.fetchAllBookings();
     } catch (e) {
+      lastError = 'Failed to load bookings';
+      debugPrint('SuperAdminBookingsNotifier.loadBookings error: $e');
       state = [];
     }
   }
 }
 
 final superAdminBookingsProvider =
-    StateNotifierProvider<SuperAdminBookingsNotifier, List<Booking>>((ref) {
+    StateNotifierProvider.autoDispose<SuperAdminBookingsNotifier, List<Booking>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminBookingsNotifier(repo);
 });
 
 // ── Super Admin Users (from /super-admin/users) ──
 
-class SuperAdminUsersNotifier extends StateNotifier<List<Map<String, dynamic>>> {
+class SuperAdminUsersNotifier extends StateNotifier<List<UserAccount>> {
   final ISuperAdminRepository _repository;
+  String? lastError;
   SuperAdminUsersNotifier(this._repository) : super([]) {
     loadUsers();
   }
 
   Future<void> loadUsers() async {
+    lastError = null;
     try {
-      state = await _repository.fetchUsers(pageSize: 9999);
+      final raw = await _repository.fetchUsers(pageSize: 9999);
+      state = raw.map((json) => UserAccount(
+        id: json['id']?.toString() ?? '',
+        name: json['name'] as String? ?? '',
+        email: json['email'] as String? ?? '',
+        passwordHash: '',
+        role: UserRole.values.firstWhere(
+          (e) => e.name.toLowerCase() == (json['role'] as String? ?? '').toLowerCase(),
+          orElse: () => UserRole.customer,
+        ),
+        status: json['status'] == 'inactive' ? UserStatus.inactive : UserStatus.active,
+        createdAt: json['createdAt'] as String? ?? '',
+        createdBy: json['createdBy'] as String?,
+        lastLoginAt: json['lastLoginAt'] as String?,
+      )).toList();
     } catch (e) {
+      lastError = 'Failed to load users';
+      debugPrint('SuperAdminUsersNotifier.loadUsers error: $e');
       state = [];
     }
   }
 }
 
 final superAdminUsersProvider =
-    StateNotifierProvider<SuperAdminUsersNotifier, List<Map<String, dynamic>>>((ref) {
+    StateNotifierProvider.autoDispose<SuperAdminUsersNotifier, List<UserAccount>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminUsersNotifier(repo);
 });
@@ -677,14 +745,18 @@ final superAdminUsersProvider =
 
 class SuperAdminRolesNotifier extends StateNotifier<List<RoleDefinition>> {
   final ISuperAdminRepository _repository;
+  String? lastError;
   SuperAdminRolesNotifier(this._repository) : super([]) {
     loadRoles();
   }
 
   Future<void> loadRoles() async {
+    lastError = null;
     try {
       state = await _repository.fetchRoles();
     } catch (e) {
+      lastError = 'Failed to load roles';
+      debugPrint('SuperAdminRolesNotifier.loadRoles error: $e');
       state = [];
     }
   }
@@ -699,7 +771,7 @@ class SuperAdminRolesNotifier extends StateNotifier<List<RoleDefinition>> {
 }
 
 final superAdminRolesProvider =
-    StateNotifierProvider<SuperAdminRolesNotifier, List<RoleDefinition>>((ref) {
+    StateNotifierProvider.autoDispose<SuperAdminRolesNotifier, List<RoleDefinition>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminRolesNotifier(repo);
 });
@@ -708,14 +780,18 @@ final superAdminRolesProvider =
 
 class SuperAdminApprovalsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   final ISuperAdminRepository _repository;
+  String? lastError;
   SuperAdminApprovalsNotifier(this._repository) : super([]) {
     loadApprovals();
   }
 
   Future<void> loadApprovals() async {
+    lastError = null;
     try {
       state = await _repository.fetchApprovals();
     } catch (e) {
+      lastError = 'Failed to load approvals';
+      debugPrint('SuperAdminApprovalsNotifier.loadApprovals error: $e');
       state = [];
     }
   }
@@ -730,7 +806,7 @@ class SuperAdminApprovalsNotifier extends StateNotifier<List<Map<String, dynamic
 }
 
 final superAdminApprovalsProvider =
-    StateNotifierProvider<SuperAdminApprovalsNotifier, List<Map<String, dynamic>>>((ref) {
+    StateNotifierProvider.autoDispose<SuperAdminApprovalsNotifier, List<Map<String, dynamic>>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminApprovalsNotifier(repo);
 });
@@ -739,14 +815,18 @@ final superAdminApprovalsProvider =
 
 class SuperAdminNotificationsNotifier extends StateNotifier<List<AppNotification>> {
   final ISuperAdminRepository _repository;
+  String? lastError;
   SuperAdminNotificationsNotifier(this._repository) : super([]) {
     loadNotifications();
   }
 
   Future<void> loadNotifications() async {
+    lastError = null;
     try {
       state = await _repository.fetchNotifications();
     } catch (e) {
+      lastError = 'Failed to load notifications';
+      debugPrint('SuperAdminNotificationsNotifier.loadNotifications error: $e');
       state = [];
     }
   }
@@ -779,7 +859,7 @@ class SuperAdminNotificationsNotifier extends StateNotifier<List<AppNotification
 }
 
 final superAdminNotificationsProvider =
-    StateNotifierProvider<SuperAdminNotificationsNotifier, List<AppNotification>>((ref) {
+    StateNotifierProvider.autoDispose<SuperAdminNotificationsNotifier, List<AppNotification>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminNotificationsNotifier(repo);
 });
@@ -788,14 +868,18 @@ final superAdminNotificationsProvider =
 
 class SuperAdminSettingsNotifier extends StateNotifier<Map<String, dynamic>> {
   final ISuperAdminRepository _repository;
+  String? lastError;
   SuperAdminSettingsNotifier(this._repository) : super({}) {
     loadSettings();
   }
 
   Future<void> loadSettings() async {
+    lastError = null;
     try {
       state = await _repository.fetchGlobalSettings();
     } catch (e) {
+      lastError = 'Failed to load settings';
+      debugPrint('SuperAdminSettingsNotifier.loadSettings error: $e');
       state = {};
     }
   }
@@ -807,7 +891,7 @@ class SuperAdminSettingsNotifier extends StateNotifier<Map<String, dynamic>> {
 }
 
 final superAdminSettingsProvider =
-    StateNotifierProvider<SuperAdminSettingsNotifier, Map<String, dynamic>>((ref) {
+    StateNotifierProvider.autoDispose<SuperAdminSettingsNotifier, Map<String, dynamic>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminSettingsNotifier(repo);
 });
@@ -826,12 +910,14 @@ class SuperAdminAnalyticsState {
 }
 
 class SuperAdminAnalyticsNotifier extends StateNotifier<AsyncValue<SuperAdminAnalyticsState>> {
+  String? lastError;
   final ISuperAdminRepository _repository;
   SuperAdminAnalyticsNotifier(this._repository) : super(const AsyncValue.loading()) {
     loadAnalytics();
   }
 
   Future<void> loadAnalytics() async {
+    lastError = null;
     try {
       final results = await Future.wait([
         _repository.fetchAnalyticsRevenue(),
@@ -844,13 +930,14 @@ class SuperAdminAnalyticsNotifier extends StateNotifier<AsyncValue<SuperAdminAna
         resortRevenueTable: results[2] as List<Map<String, dynamic>>,
       ));
     } catch (e, stack) {
+      lastError = 'Failed to load analytics';
       state = AsyncValue.error(e, stack);
     }
   }
 }
 
 final superAdminAnalyticsProvider =
-    StateNotifierProvider<SuperAdminAnalyticsNotifier, AsyncValue<SuperAdminAnalyticsState>>((ref) {
+    StateNotifierProvider.autoDispose<SuperAdminAnalyticsNotifier, AsyncValue<SuperAdminAnalyticsState>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminAnalyticsNotifier(repo);
 });
@@ -868,21 +955,25 @@ final superAdminSchemaProvider = FutureProvider<List<Map<String, dynamic>>>((ref
 
 class SuperAdminAuditLogsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   final ISuperAdminRepository _repository;
+  String? lastError;
   SuperAdminAuditLogsNotifier(this._repository) : super([]) {
     loadAuditLogs();
   }
 
   Future<void> loadAuditLogs({String? userId, String? action, String? from, String? to, int? page, int? pageSize}) async {
+    lastError = null;
     try {
       state = await _repository.fetchAuditLogs(userId: userId, action: action, from: from, to: to, page: page, pageSize: pageSize);
     } catch (e) {
+      lastError = 'Failed to load audit logs';
+      debugPrint('SuperAdminAuditLogsNotifier.loadAuditLogs error: $e');
       state = [];
     }
   }
 }
 
 final superAdminAuditLogsProvider =
-    StateNotifierProvider<SuperAdminAuditLogsNotifier, List<Map<String, dynamic>>>((ref) {
+    StateNotifierProvider.autoDispose<SuperAdminAuditLogsNotifier, List<Map<String, dynamic>>>((ref) {
   final repo = ref.watch(superAdminRepositoryProvider);
   return SuperAdminAuditLogsNotifier(repo);
 });
@@ -923,67 +1014,77 @@ class CustomerBookingsNotifier extends StateNotifier<List<Booking>> {
 }
 
 final customerBookingsProvider =
-    StateNotifierProvider<CustomerBookingsNotifier, List<Booking>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerBookingsNotifier, List<Booking>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerBookingsNotifier(repo);
 });
 
 class CustomerPropertiesNotifier extends StateNotifier<AsyncValue<List<Map<String, dynamic>>>> {
+  String? lastError;
   final ICustomerRepository _repository;
   CustomerPropertiesNotifier(this._repository) : super(const AsyncValue.loading()) {
     loadProperties();
   }
 
   Future<void> loadProperties({String? search, String? propertyState, String? city, String? category}) async {
+    lastError = null;
     try {
       final props = await _repository.fetchProperties(
         search: search, state: propertyState, city: city, category: category,
       );
       state = AsyncValue.data(props);
     } catch (e, stack) {
+      lastError = 'Failed to load properties';
       state = AsyncValue.error(e, stack);
     }
   }
 }
 
 final customerPropertiesProvider =
-    StateNotifierProvider<CustomerPropertiesNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerPropertiesNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerPropertiesNotifier(repo);
 });
 
 class CustomerCouponsNotifier extends StateNotifier<AsyncValue<List<Map<String, dynamic>>>> {
+  String? lastError;
   final ICustomerRepository _repository;
   CustomerCouponsNotifier(this._repository) : super(const AsyncValue.loading()) {
     loadCoupons();
   }
 
   Future<void> loadCoupons() async {
+    lastError = null;
     try {
       final coupons = await _repository.fetchAvailableCoupons();
       state = AsyncValue.data(coupons);
     } catch (e, stack) {
+      lastError = 'Failed to load coupons';
       state = AsyncValue.error(e, stack);
     }
   }
 }
 
 final customerCouponsProvider =
-    StateNotifierProvider<CustomerCouponsNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerCouponsNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerCouponsNotifier(repo);
 });
 
 class CustomerFavoritesNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   final ICustomerRepository _repository;
+  String? lastError;
   CustomerFavoritesNotifier(this._repository) : super([]) {
     loadFavorites();
   }
 
   Future<void> loadFavorites() async {
+    lastError = null;
     try {
       state = await _repository.fetchFavorites();
     } catch (e) {
+      lastError = 'Failed to load favorites';
+      debugPrint('CustomerFavoritesNotifier.loadFavorites error: $e');
       state = [];
     }
   }
@@ -1005,12 +1106,13 @@ class CustomerFavoritesNotifier extends StateNotifier<List<Map<String, dynamic>>
 }
 
 final customerFavoritesProvider =
-    StateNotifierProvider<CustomerFavoritesNotifier, List<Map<String, dynamic>>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerFavoritesNotifier, List<Map<String, dynamic>>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerFavoritesNotifier(repo);
 });
 
 class CustomerProfileNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
+  String? lastError;
   final ICustomerRepository _repository;
   CustomerProfileNotifier(this._repository) : super(const AsyncValue.loading()) {
     loadProfile();
@@ -1021,36 +1123,47 @@ class CustomerProfileNotifier extends StateNotifier<AsyncValue<Map<String, dynam
   }
 
   Future<void> loadProfile() async {
+    lastError = null;
     try {
-      state = AsyncValue.data(await _repository.fetchProfile());
+      final profile = await _repository.fetchProfile();
+      if (!mounted) return;
+      state = AsyncValue.data(profile);
     } catch (e, stack) {
+      if (!mounted) return;
+      lastError = 'Failed to load profile';
       state = AsyncValue.error(e, stack);
     }
   }
 
   Future<void> updateProfile(Map<String, dynamic> data) async {
+    lastError = null;
     try {
       final updated = await _repository.updateProfile(data);
+      if (!mounted) return;
       state = AsyncValue.data(updated);
     } catch (e, stack) {
+      if (!mounted) return;
+      lastError = 'Failed to update profile';
       state = AsyncValue.error(e, stack);
     }
   }
 }
 
 final customerProfileProvider =
-    StateNotifierProvider<CustomerProfileNotifier, AsyncValue<Map<String, dynamic>>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerProfileNotifier, AsyncValue<Map<String, dynamic>>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerProfileNotifier(repo);
 });
 
 class CustomerPricingNotifier extends StateNotifier<Map<String, dynamic>> {
   final ICustomerRepository _repository;
+  String? lastError;
   CustomerPricingNotifier(this._repository) : super({'taxRate': 18, 'depositRate': 30}) {
     loadPricing();
   }
 
   Future<void> loadPricing() async {
+    lastError = null;
     try {
       final tax = await _repository.fetchTaxRate();
       final deposit = await _repository.fetchDepositRate();
@@ -1058,12 +1171,15 @@ class CustomerPricingNotifier extends StateNotifier<Map<String, dynamic>> {
         'taxRate': tax['data']?['taxRate'] ?? tax['taxRate'] ?? 18,
         'depositRate': deposit['data']?['depositRate'] ?? deposit['depositRate'] ?? 30,
       };
-    } catch (_) {}
+    } catch (e) {
+      lastError = 'Failed to load pricing';
+      debugPrint('CustomerPricingNotifier.loadPricing error: $e');
+    }
   }
 }
 
 final customerPricingProvider =
-    StateNotifierProvider<CustomerPricingNotifier, Map<String, dynamic>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerPricingNotifier, Map<String, dynamic>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerPricingNotifier(repo);
 });
@@ -1071,22 +1187,25 @@ final customerPricingProvider =
 // ── Customer Stats ──
 
 class CustomerStatsNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
+  String? lastError;
   final ICustomerRepository _repository;
   CustomerStatsNotifier(this._repository) : super(const AsyncValue.loading()) {
     loadStats();
   }
 
   Future<void> loadStats() async {
+    lastError = null;
     try {
       state = AsyncValue.data(await _repository.fetchStats());
     } catch (e, stack) {
+      lastError = 'Failed to load stats';
       state = AsyncValue.error(e, stack);
     }
   }
 }
 
 final customerStatsProvider =
-    StateNotifierProvider<CustomerStatsNotifier, AsyncValue<Map<String, dynamic>>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerStatsNotifier, AsyncValue<Map<String, dynamic>>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerStatsNotifier(repo);
 });
@@ -1095,14 +1214,18 @@ final customerStatsProvider =
 
 class CustomerNotificationsNotifier extends StateNotifier<List<AppNotification>> {
   final ICustomerRepository _repository;
+  String? lastError;
   CustomerNotificationsNotifier(this._repository) : super([]) {
     load();
   }
 
   Future<void> load() async {
+    lastError = null;
     try {
       state = await _repository.fetchNotifications();
-    } catch (_) {
+    } catch (e) {
+      lastError = 'Failed to load notifications';
+      debugPrint('CustomerNotificationsNotifier.load error: $e');
       state = [];
     }
   }
@@ -1119,7 +1242,7 @@ class CustomerNotificationsNotifier extends StateNotifier<List<AppNotification>>
 }
 
 final customerNotificationsProvider =
-    StateNotifierProvider<CustomerNotificationsNotifier, List<AppNotification>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerNotificationsNotifier, List<AppNotification>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerNotificationsNotifier(repo);
 });
@@ -1127,22 +1250,25 @@ final customerNotificationsProvider =
 // ── Customer Invoices ──
 
 class CustomerInvoicesNotifier extends StateNotifier<AsyncValue<List<Map<String, dynamic>>>> {
+  String? lastError;
   final ICustomerRepository _repository;
   CustomerInvoicesNotifier(this._repository) : super(const AsyncValue.loading()) {
     load();
   }
 
   Future<void> load() async {
+    lastError = null;
     try {
       state = AsyncValue.data(await _repository.fetchInvoices());
     } catch (e, stack) {
+      lastError = 'Failed to load invoices';
       state = AsyncValue.error(e, stack);
     }
   }
 }
 
 final customerInvoicesProvider =
-    StateNotifierProvider<CustomerInvoicesNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerInvoicesNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerInvoicesNotifier(repo);
 });
@@ -1150,15 +1276,18 @@ final customerInvoicesProvider =
 // ── Customer Concierge ──
 
 class CustomerConciergeNotifier extends StateNotifier<AsyncValue<List<Map<String, dynamic>>>> {
+  String? lastError;
   final ICustomerRepository _repository;
   CustomerConciergeNotifier(this._repository) : super(const AsyncValue.loading()) {
     load();
   }
 
   Future<void> load() async {
+    lastError = null;
     try {
       state = AsyncValue.data(await _repository.fetchConciergeRequests());
     } catch (e, stack) {
+      lastError = 'Failed to load concierge requests';
       state = AsyncValue.error(e, stack);
     }
   }
@@ -1170,7 +1299,7 @@ class CustomerConciergeNotifier extends StateNotifier<AsyncValue<List<Map<String
 }
 
 final customerConciergeProvider =
-    StateNotifierProvider<CustomerConciergeNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
+    StateNotifierProvider.autoDispose<CustomerConciergeNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
   final repo = ref.watch(customerRepositoryProvider);
   return CustomerConciergeNotifier(repo);
 });
@@ -1178,32 +1307,38 @@ final customerConciergeProvider =
 // ── Staff Notifiers ──
 
 class StaffRosterNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
+  String? lastError;
   final IStaffRepository _repository;
   StaffRosterNotifier(this._repository) : super(const AsyncValue.loading());
 
   Future<void> loadRoster(String propertyId, String date) async {
+    lastError = null;
     try {
       state = AsyncValue.data(await _repository.fetchRoster(propertyId, date));
     } catch (e, stack) {
+      lastError = 'Failed to load roster';
       state = AsyncValue.error(e, stack);
     }
   }
 }
 
 final staffRosterProvider =
-    StateNotifierProvider<StaffRosterNotifier, AsyncValue<Map<String, dynamic>>>((ref) {
+    StateNotifierProvider.autoDispose<StaffRosterNotifier, AsyncValue<Map<String, dynamic>>>((ref) {
   final repo = ref.watch(staffRepositoryProvider);
   return StaffRosterNotifier(repo);
 });
 
 class StaffRoomsNotifier extends StateNotifier<AsyncValue<List<RoomStatus>>> {
+  String? lastError;
   final IStaffRepository _repository;
   StaffRoomsNotifier(this._repository) : super(const AsyncValue.loading());
 
   Future<void> loadRooms(String propertyId) async {
+    lastError = null;
     try {
       state = AsyncValue.data(await _repository.fetchHousekeepingRooms(propertyId));
     } catch (e, stack) {
+      lastError = 'Failed to load rooms';
       state = AsyncValue.error(e, stack);
     }
   }
@@ -1232,7 +1367,7 @@ class StaffRoomsNotifier extends StateNotifier<AsyncValue<List<RoomStatus>>> {
 }
 
 final staffRoomsProvider =
-    StateNotifierProvider<StaffRoomsNotifier, AsyncValue<List<RoomStatus>>>((ref) {
+    StateNotifierProvider.autoDispose<StaffRoomsNotifier, AsyncValue<List<RoomStatus>>>((ref) {
   final repo = ref.watch(staffRepositoryProvider);
   return StaffRoomsNotifier(repo);
 });
@@ -1240,34 +1375,44 @@ final staffRoomsProvider =
 // ── Accountant Notifiers ──
 
 class AccountantInvoicesNotifier extends StateNotifier<AsyncValue<List<Booking>>> {
+  String? lastError;
   final IAccountantRepository _repository;
-  AccountantInvoicesNotifier(this._repository) : super(const AsyncValue.loading());
+  AccountantInvoicesNotifier(this._repository) : super(const AsyncValue.loading()) {
+    loadInvoices();
+  }
 
   Future<void> loadInvoices({String? propertyId, String? paymentStatus, String? search}) async {
+    lastError = null;
     try {
       state = AsyncValue.data(await _repository.fetchInvoices(
         propertyId: propertyId, paymentStatus: paymentStatus, search: search,
       ));
     } catch (e, stack) {
+      lastError = 'Failed to load invoices';
       state = AsyncValue.error(e, stack);
     }
   }
 }
 
 final accountantInvoicesProvider =
-    StateNotifierProvider<AccountantInvoicesNotifier, AsyncValue<List<Booking>>>((ref) {
+    StateNotifierProvider.autoDispose<AccountantInvoicesNotifier, AsyncValue<List<Booking>>>((ref) {
   final repo = ref.watch(accountantRepositoryProvider);
   return AccountantInvoicesNotifier(repo);
 });
 
 class AccountantRefundsNotifier extends StateNotifier<AsyncValue<List<Map<String, dynamic>>>> {
+  String? lastError;
   final IAccountantRepository _repository;
-  AccountantRefundsNotifier(this._repository) : super(const AsyncValue.loading());
+  AccountantRefundsNotifier(this._repository) : super(const AsyncValue.loading()) {
+    loadRefunds('');
+  }
 
   Future<void> loadRefunds(String propertyId) async {
+    lastError = null;
     try {
       state = AsyncValue.data(await _repository.fetchRefunds(propertyId));
     } catch (e, stack) {
+      lastError = 'Failed to load refunds';
       state = AsyncValue.error(e, stack);
     }
   }
@@ -1282,26 +1427,31 @@ class AccountantRefundsNotifier extends StateNotifier<AsyncValue<List<Map<String
 }
 
 final accountantRefundsProvider =
-    StateNotifierProvider<AccountantRefundsNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
+    StateNotifierProvider.autoDispose<AccountantRefundsNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
   final repo = ref.watch(accountantRepositoryProvider);
   return AccountantRefundsNotifier(repo);
 });
 
 class AccountantKpisNotifier extends StateNotifier<AsyncValue<Map<String, dynamic>>> {
+  String? lastError;
   final IAccountantRepository _repository;
-  AccountantKpisNotifier(this._repository) : super(const AsyncValue.loading());
+  AccountantKpisNotifier(this._repository) : super(const AsyncValue.loading()) {
+    loadKpis('');
+  }
 
   Future<void> loadKpis(String propertyId) async {
+    lastError = null;
     try {
       state = AsyncValue.data(await _repository.fetchDashboardKpis(propertyId));
     } catch (e, stack) {
+      lastError = 'Failed to load KPIs';
       state = AsyncValue.error(e, stack);
     }
   }
 }
 
 final accountantKpisProvider =
-    StateNotifierProvider<AccountantKpisNotifier, AsyncValue<Map<String, dynamic>>>((ref) {
+    StateNotifierProvider.autoDispose<AccountantKpisNotifier, AsyncValue<Map<String, dynamic>>>((ref) {
   final repo = ref.watch(accountantRepositoryProvider);
   return AccountantKpisNotifier(repo);
 });
@@ -1365,23 +1515,26 @@ class AdminDashboardState {
 }
 
 class AdminDashboardNotifier extends StateNotifier<AsyncValue<AdminDashboardState>> {
+  String? lastError;
   final IResortRepository _repository;
   AdminDashboardNotifier(this._repository) : super(const AsyncValue.loading()) {
     loadDashboard();
   }
 
   Future<void> loadDashboard() async {
+    lastError = null;
     try {
       final data = await _repository.fetchAnalyticsKpis();
       state = AsyncValue.data(AdminDashboardState.fromJson(data));
     } catch (e, stack) {
+      lastError = 'Failed to load dashboard';
       state = AsyncValue.error(e, stack);
     }
   }
 }
 
 final adminDashboardProvider =
-    StateNotifierProvider<AdminDashboardNotifier, AsyncValue<AdminDashboardState>>((ref) {
+    StateNotifierProvider.autoDispose<AdminDashboardNotifier, AsyncValue<AdminDashboardState>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return AdminDashboardNotifier(repo);
 });
