@@ -7,7 +7,7 @@ import '../../../domain/entities.dart';
 
 class RoleManagementView extends ConsumerStatefulWidget {
   final List<RoleDefinition>? remoteRoles;
-  final void Function(RoleDefinition)? onRemoteSave;
+  final Future<void> Function(RoleDefinition)? onRemoteSave;
   const RoleManagementView({super.key, this.remoteRoles, this.onRemoteSave});
 
   @override
@@ -108,18 +108,24 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
     setState(() => _dirtyPermissions = current);
   }
 
-  void _saveChanges() {
+  Future<void> _saveChanges() async {
     if (_selectedRoleValue == null || _dirtyPermissions == null || _isSuperAdmin) return;
     final updated = RoleDefinition(
       id: _backendId(_selectedRoleValue!),
-      displayName: _labelFor(_selectedRoleValue!),
-      description: _descriptionFor(_selectedRoleValue!),
+      displayName: '',
+      description: '',
       permissions: _dirtyPermissions!,
     );
-    if (widget.onRemoteSave != null) {
-      widget.onRemoteSave!(updated);
+    try {
+      if (widget.onRemoteSave != null) {
+        await widget.onRemoteSave!(updated);
+      }
+      if (!context.mounted) return;
+      SnackbarHelper.success(context, '${_labelFor(_selectedRoleValue!)} permissions saved.');
+    } catch (e) {
+      if (!context.mounted) return;
+      SnackbarHelper.error(context, 'Failed to save permissions: $e');
     }
-    SnackbarHelper.success(context, '${_labelFor(_selectedRoleValue!)} permissions saved.');
   }
 
   bool _hasChanges() {
