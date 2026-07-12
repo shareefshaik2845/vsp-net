@@ -1125,8 +1125,11 @@ class CustomerProfileNotifier extends StateNotifier<AsyncValue<Map<String, dynam
   Future<void> loadProfile() async {
     lastError = null;
     try {
-      state = AsyncValue.data(await _repository.fetchProfile());
+      final profile = await _repository.fetchProfile();
+      if (!mounted) return;
+      state = AsyncValue.data(profile);
     } catch (e, stack) {
+      if (!mounted) return;
       lastError = 'Failed to load profile';
       state = AsyncValue.error(e, stack);
     }
@@ -1136,8 +1139,10 @@ class CustomerProfileNotifier extends StateNotifier<AsyncValue<Map<String, dynam
     lastError = null;
     try {
       final updated = await _repository.updateProfile(data);
+      if (!mounted) return;
       state = AsyncValue.data(updated);
     } catch (e, stack) {
+      if (!mounted) return;
       lastError = 'Failed to update profile';
       state = AsyncValue.error(e, stack);
     }

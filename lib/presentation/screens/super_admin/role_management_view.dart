@@ -15,48 +15,68 @@ class RoleManagementView extends ConsumerStatefulWidget {
 }
 
 class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
-  String? _selectedRoleId;
+  UserRole? _selectedRoleValue;
   List<RolePermission>? _dirtyPermissions;
 
-  List<RoleDefinition> get _roles {
-    if (widget.remoteRoles != null) return widget.remoteRoles!;
-    return [];
-  }
+  static const Map<UserRole, String> _roleLabels = {
+    UserRole.superAdmin: 'Super Administrator',
+    UserRole.admin: 'Administrator',
+    UserRole.staff: 'Staff',
+    UserRole.accountant: 'Accountant',
+    UserRole.customer: 'Customer',
+  };
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final roles = _roles;
-      if (roles.isNotEmpty) {
-        setState(() {
-          _selectedRoleId = roles[0].id;
-          _dirtyPermissions = List.from(roles[0].permissions.map((p) => RolePermission(resource: p.resource, actions: List.from(p.actions))));
-        });
-      }
-    });
-  }
+  static const Map<UserRole, String> _roleDescriptions = {
+    UserRole.superAdmin: 'Full system access',
+    UserRole.admin: 'System administration access',
+    UserRole.staff: 'Day-to-day operations',
+    UserRole.accountant: 'Financial and reports access',
+    UserRole.customer: 'Standard customer access',
+  };
 
-  void _selectRole(String? id) {
-    if (id == null) return;
-    final roles = _roles;
-    final role = roles.firstWhere((r) => r.id == id);
-    setState(() {
-      _selectedRoleId = id;
-      _dirtyPermissions = List.from(role.permissions.map((p) => RolePermission(resource: p.resource, actions: List.from(p.actions))));
-    });
-  }
+  List<RoleDefinition> get _roles => widget.remoteRoles ?? [];
 
-  RoleDefinition? get _selectedRole {
-    if (_selectedRoleId == null) return null;
+  String _backendId(UserRole role) => role.name.toUpperCase();
+
+  RoleDefinition? _findRole(UserRole role) {
+    final id = _backendId(role);
     try {
-      return _roles.firstWhere((r) => r.id == _selectedRoleId);
+      return _roles.firstWhere((r) => r.id.toUpperCase() == id);
     } catch (_) {
       return null;
     }
   }
 
-  bool get _isSuperAdmin => _selectedRoleId == 'superAdmin';
+  RoleDefinition? get _selectedRole {
+    if (_selectedRoleValue == null) return null;
+    return _findRole(_selectedRoleValue!);
+  }
+
+  bool get _isSuperAdmin => _selectedRoleValue == UserRole.superAdmin;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_selectedRoleValue == null) {
+        _selectRole(UserRole.superAdmin);
+      }
+    });
+  }
+
+  void _selectRole(UserRole role) {
+    final existing = _findRole(role);
+    final permissions = existing != null
+        ? existing.permissions.map((p) => RolePermission(resource: p.resource, actions: List<PermissionAction>.from(p.actions))).toList()
+        : <RolePermission>[];
+    setState(() {
+      _selectedRoleValue = role;
+      _dirtyPermissions = permissions;
+    });
+  }
+
+  String _labelFor(UserRole role) => _roleLabels[role] ?? role.name;
+  String _descriptionFor(UserRole role) => _roleDescriptions[role] ?? '';
 
   void _togglePermission(PermissionResource resource, PermissionAction action) {
     if (_isSuperAdmin || _dirtyPermissions == null) return;
@@ -81,21 +101,22 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
   }
 
   void _saveChanges() {
-    if (_selectedRole == null || _dirtyPermissions == null || _isSuperAdmin) return;
+    if (_selectedRoleValue == null || _dirtyPermissions == null || _isSuperAdmin) return;
     final updated = RoleDefinition(
-      id: _selectedRole!.id,
-      displayName: _selectedRole!.displayName,
-      description: _selectedRole!.description,
+      id: _backendId(_selectedRoleValue!),
+      displayName: _labelFor(_selectedRoleValue!),
+      description: _descriptionFor(_selectedRoleValue!),
       permissions: _dirtyPermissions!,
     );
     if (widget.onRemoteSave != null) {
       widget.onRemoteSave!(updated);
     }
-    SnackbarHelper.success(context, '${_selectedRole!.displayName} permissions saved.');
+    SnackbarHelper.success(context, '${_labelFor(_selectedRoleValue!)} permissions saved.');
   }
 
   bool _hasChanges() {
-    if (_selectedRole == null || _dirtyPermissions == null) return false;
+    if (_selectedRoleValue == null || _dirtyPermissions == null) return false;
+    if (_selectedRole == null) return _dirtyPermissions!.isNotEmpty;
     if (_selectedRole!.permissions.length != _dirtyPermissions!.length) return true;
     for (final p in _dirtyPermissions!) {
       final original = _selectedRole!.permissions.where((x) => x.resource == p.resource);
@@ -109,7 +130,6 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
 
   @override
   Widget build(BuildContext context) {
-    final roles = widget.remoteRoles ?? [];
     const allResources = PermissionResource.values;
     const allActions = PermissionAction.values;
 
@@ -158,37 +178,40 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
               border: Border.all(color: ResortTheme.lightBone),
             ),
             child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: _selectedRoleId,
+              child: DropdownButton<UserRole>(
+                value: _selectedRoleValue,
                 isExpanded: true,
                 hint: Text('Select a role', style: GoogleFonts.inter(fontSize: 13, color: ResortTheme.charcoal)),
                 style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: ResortTheme.charcoal),
-                items: roles.map((role) => DropdownMenuItem(
-                  value: role.id,
+                items: UserRole.values.map((role) => DropdownMenuItem(
+                  value: role,
                   child: Row(
                     children: [
-                      _roleIcon(role.id),
+                      _roleIcon(role.name),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(role.displayName, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
-                            Text(role.description, style: GoogleFonts.inter(fontSize: 9, color: ResortTheme.charcoal.withValues(alpha: 0.5)), overflow: TextOverflow.ellipsis),
+                            Text(_labelFor(role), style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
+                            if (_descriptionFor(role).isNotEmpty)
+                              Text(_descriptionFor(role), style: GoogleFonts.inter(fontSize: 9, color: ResortTheme.charcoal.withValues(alpha: 0.5)), overflow: TextOverflow.ellipsis),
                           ],
                         ),
                       ),
                     ],
                   ),
                 )).toList(),
-                onChanged: _selectRole,
+                onChanged: (role) {
+                  if (role != null) _selectRole(role);
+                },
               ),
             ),
           ),
 
           const SizedBox(height: 20),
 
-          if (_selectedRole == null)
+          if (_selectedRoleValue == null)
             const Center(child: Padding(
               padding: EdgeInsets.all(40),
               child: Text('Select a role above to configure permissions.'),
@@ -202,7 +225,7 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton.icon(
-                  onPressed: _hasChanges() ? () => _selectRole(_selectedRoleId) : null,
+                  onPressed: _hasChanges() ? () => _selectRole(_selectedRoleValue!) : null,
                   icon: const Icon(Icons.refresh, size: 16),
                   label: Text('Reset', style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 12)),
                   style: TextButton.styleFrom(foregroundColor: ResortTheme.charcoal.withValues(alpha: 0.6)),
@@ -230,7 +253,8 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
   }
 
   Widget _buildSuperAdminReadonly(List<PermissionResource> allResources, List<PermissionAction> allActions) {
-    final role = _selectedRole!;
+    final role = _selectedRole;
+    if (role == null) return const SizedBox.shrink();
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -250,7 +274,7 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      role.displayName,
+                      role.displayName.isNotEmpty ? role.displayName : _labelFor(_selectedRoleValue!),
                       style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: ResortTheme.charcoal),
                     ),
                     Text(

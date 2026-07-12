@@ -2493,6 +2493,9 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                                   fontSize: 11,
                                   color: ResortTheme.charcoal.withValues(alpha: 0.5))),
                         ),
+                        const SizedBox(),
+                        const SizedBox(),
+                        const SizedBox(),
                       ],
                     )
                   else
