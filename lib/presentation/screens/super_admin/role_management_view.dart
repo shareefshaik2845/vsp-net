@@ -36,7 +36,15 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
 
   List<RoleDefinition> get _roles => widget.remoteRoles ?? [];
 
-  String _backendId(UserRole role) => role.name.toUpperCase();
+  String _backendId(UserRole role) {
+    switch (role) {
+      case UserRole.superAdmin: return 'SUPER_ADMIN';
+      case UserRole.admin: return 'ADMIN';
+      case UserRole.staff: return 'STAFF';
+      case UserRole.accountant: return 'ACCOUNTANT';
+      case UserRole.customer: return 'CUSTOMER';
+    }
+  }
 
   RoleDefinition? _findRole(UserRole role) {
     final id = _backendId(role);

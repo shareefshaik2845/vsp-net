@@ -189,12 +189,43 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
 
   // ==================== RBAC ====================
 
+  static const Map<String, String> _resourceToBackend = {
+    'bookings': 'booking',
+    'calendar': 'calendar',
+    'coupons': 'coupon',
+    'pricing': 'pricing',
+    'rooms': 'rooms',
+    'ota': 'ota',
+    'notifications': 'notification',
+    'properties': 'property',
+    'users': 'user',
+    'roles': 'role',
+    'approvals': 'approval',
+    'reports': 'analytics',
+  };
+
+  static const Map<String, String> _backendToResource = {
+    'booking': 'bookings',
+    'calendar': 'calendar',
+    'coupon': 'coupons',
+    'pricing': 'pricing',
+    'rooms': 'rooms',
+    'ota': 'ota',
+    'notification': 'notifications',
+    'property': 'properties',
+    'user': 'users',
+    'role': 'roles',
+    'approval': 'approvals',
+    'analytics': 'reports',
+  };
+
   static RolePermission _rolePermissionFromJson(Map<String, dynamic> json) {
     final resourceStr = json['resource'] as String? ?? '';
+    final mapped = _backendToResource[resourceStr] ?? resourceStr;
     final actionsRaw = json['actions'] as List<dynamic>? ?? [];
     return RolePermission(
       resource: PermissionResource.values.firstWhere(
-        (e) => e.name == resourceStr,
+        (e) => e.name == mapped,
         orElse: () => PermissionResource.bookings,
       ),
       actions: actionsRaw
@@ -239,7 +270,7 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
       'description': role.description,
       'permissions': role.permissions
           .map((p) => {
-                'resource': p.resource.name,
+                'resource': _resourceToBackend[p.resource.name] ?? p.resource.name,
                 'actions': p.actions.map((a) => a.name).toList(),
               })
           .toList(),
