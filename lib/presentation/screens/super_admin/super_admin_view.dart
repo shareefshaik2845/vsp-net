@@ -291,8 +291,8 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
         final roles = ref.watch(superAdminRolesProvider);
         return RoleManagementView(
           remoteRoles: roles,
-          onRemoteSave: (role) {
-            ref.read(superAdminRolesProvider.notifier).updateRole(role);
+          onRemoteSave: (role) async {
+            await ref.read(superAdminRolesProvider.notifier).updateRole(role);
           },
         );
       case 'auditLogs':
