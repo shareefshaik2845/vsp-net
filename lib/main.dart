@@ -5,6 +5,7 @@ import 'core/ssl_pinning_stub.dart'
     if (dart.library.io) 'core/ssl_pinning.dart';
 import 'presentation/routing/app_router.dart';
 import 'presentation/routing/route_names.dart';
+import 'presentation/providers/theme_provider.dart';
 
 void main() {
   configureSslPinning();
@@ -15,14 +16,18 @@ void main() {
   );
 }
 
-class VspNestApp extends StatelessWidget {
+class VspNestApp extends ConsumerWidget {
   const VspNestApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = ref.watch(themeModeProvider);
+
     return MaterialApp(
       title: 'VSP Nest Portal',
-      theme: ResortTheme.lightTheme,
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
       debugShowCheckedModeBanner: false,
       initialRoute: RouteNames.splash,
       onGenerateRoute: AppRouter.generateRoute,

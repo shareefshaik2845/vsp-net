@@ -68,14 +68,10 @@ class _StaffViewState extends ConsumerState<StaffView> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+              shape: RoundedRectangleBorder(borderRadius: AppRadius.xxlBr),
               title: Text(
                 'Housekeeping Audit: ${room.name}',
-                style: GoogleFonts.playfairDisplay(
-                  fontWeight: FontWeight.bold,
-                  color: ResortTheme.mossGreen,
-                  fontSize: 18,
-                ),
+                style: AppTextStyles.titleMd,
               ),
               content: SingleChildScrollView(
                 child: Column(
@@ -87,7 +83,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
                       style: GoogleFonts.spaceGrotesk(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
-                        color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                        color: AppColors.charcoal.withValues(alpha: 0.5),
                         letterSpacing: 1.2,
                       ),
                     ),
@@ -95,8 +91,8 @@ class _StaffViewState extends ConsumerState<StaffView> {
                     Row(
                       children: ['clean', 'cleaning', 'dirty'].map((st) {
                         final isSelected = _editStatus == st;
-                        Color btnColor = isSelected ? ResortTheme.mossGreen : ResortTheme.stoneBg;
-                        Color txtColor = isSelected ? Colors.white : ResortTheme.charcoal;
+                        Color btnColor = isSelected ? AppColors.mossGreen : AppColors.stoneBg;
+                        Color txtColor = isSelected ? Colors.white : AppColors.charcoal;
                         return Expanded(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -113,7 +109,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
                                   color: btnColor,
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
-                                    color: isSelected ? Colors.transparent : ResortTheme.lightBone,
+                                    color: isSelected ? Colors.transparent : AppColors.lightBone,
                                   ),
                                 ),
                                 alignment: Alignment.center,
@@ -131,38 +127,38 @@ class _StaffViewState extends ConsumerState<StaffView> {
                         );
                       }).toList(),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.lg),
                     Text(
                       'ALLOCATED STAFF',
                       style: GoogleFonts.spaceGrotesk(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
-                        color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                        color: AppColors.charcoal.withValues(alpha: 0.5),
                         letterSpacing: 1.2,
                       ),
                     ),
                     const SizedBox(height: 6),
                     TextField(
                       controller: _staffController,
-                      style: GoogleFonts.inter(fontSize: 12),
+                      style: AppTextStyles.bodySm,
                       decoration: const InputDecoration(
                         hintText: 'Staff Member Name',
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.lg),
                     Text(
                       'PREPARATION LOGS & NOTES',
                       style: GoogleFonts.spaceGrotesk(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
-                        color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                        color: AppColors.charcoal.withValues(alpha: 0.5),
                         letterSpacing: 1.2,
                       ),
                     ),
                     const SizedBox(height: 6),
                     TextField(
                       controller: _notesController,
-                      style: GoogleFonts.inter(fontSize: 12),
+                      style: AppTextStyles.bodySm,
                       maxLines: 3,
                       decoration: const InputDecoration(
                         hintText: 'Towels laid, aromatherapy diffuser lit, private spa oils replenished...',
@@ -180,7 +176,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
                     'Back',
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.bold,
-                      color: ResortTheme.charcoal.withValues(alpha: 0.6),
+                      color: AppColors.charcoal.withValues(alpha: 0.6),
                     ),
                   ),
                 ),
@@ -214,7 +210,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
                     SnackbarHelper.success(context, 'Updated condition logs for ${room.name}.');
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: ResortTheme.mossGreen,
+                    backgroundColor: AppColors.mossGreen,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   ),
                   child: Text(
@@ -308,12 +304,12 @@ class _StaffViewState extends ConsumerState<StaffView> {
     }
 
     return Scaffold(
-      backgroundColor: ResortTheme.stoneBg,
+      backgroundColor: AppColors.stoneBg,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isMobile = constraints.maxWidth < 750;
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(AppSpacing.xxl),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -336,11 +332,11 @@ class _StaffViewState extends ConsumerState<StaffView> {
         : 'Resort Villa';
 
     return Container(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24.0),
-        border: Border.all(color: ResortTheme.lightBone, width: 1.0),
+        borderRadius: AppRadius.xxlBr,
+        border: Border.all(color: AppColors.lightBone, width: 1.0),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -361,15 +357,15 @@ class _StaffViewState extends ConsumerState<StaffView> {
                   children: [
                     Text(
                       '$resortName Concierge Desk',
-                      style: ResortTheme.lightTheme.textTheme.displayMedium?.copyWith(
+                      style: AppTextStyles.displayMedium.copyWith(
                         fontSize: isMobile ? 20 : 24,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'Coordinate same-day guest transits, housekeeping quality, and physical villa preps.',
-                      style: ResortTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-                        color: ResortTheme.charcoal.withValues(alpha: 0.6),
+                      style: AppTextStyles.bodyMd.copyWith(
+                        color: AppColors.charcoal.withValues(alpha: 0.6),
                         fontSize: isMobile ? 11 : 13,
                       ),
                     ),
@@ -383,7 +379,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
             ],
           ),
           if (isMobile && activeResort != null) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             _buildPropertySelector(activeResort, isMobile),
           ],
           const SizedBox(height: 20),
@@ -432,7 +428,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
           color: isActive ? const Color(0xFF3B2314) : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isActive ? Colors.transparent : ResortTheme.lightBone,
+            color: isActive ? Colors.transparent : AppColors.lightBone,
             width: 1.0,
           ),
           boxShadow: isActive
@@ -445,7 +441,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
             Icon(
               icon,
               size: 16,
-              color: isActive ? Colors.white : ResortTheme.charcoal.withValues(alpha: 0.6),
+              color: isActive ? Colors.white : AppColors.charcoal.withValues(alpha: 0.6),
             ),
             const SizedBox(width: 8),
             Flexible(
@@ -454,7 +450,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
                 style: GoogleFonts.inter(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
-                  color: isActive ? Colors.white : ResortTheme.charcoal.withValues(alpha: 0.8),
+                  color: isActive ? Colors.white : AppColors.charcoal.withValues(alpha: 0.8),
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -469,22 +465,22 @@ class _StaffViewState extends ConsumerState<StaffView> {
   Widget _buildPropertySelector(PropertyDetails currentProperty, bool isMobile) {
     return Container(
       width: isMobile ? double.infinity : null,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 4),
       decoration: BoxDecoration(
-        color: ResortTheme.mossGreen.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: ResortTheme.mossGreen.withValues(alpha: 0.3)),
+        color: AppColors.mossGreen.withValues(alpha: 0.1),
+        borderRadius: AppRadius.mdBr,
+        border: Border.all(color: AppColors.mossGreen.withValues(alpha: 0.3)),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<PropertyDetails>(
           isExpanded: isMobile,
           value: currentProperty,
-          icon: const Icon(Icons.arrow_drop_down, color: ResortTheme.mossGreen),
+          icon: const Icon(Icons.arrow_drop_down, color: AppColors.mossGreen),
           dropdownColor: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: AppRadius.lgBr,
           style: GoogleFonts.inter(
             fontWeight: FontWeight.bold,
-            color: ResortTheme.mossGreen,
+            color: AppColors.mossGreen,
             fontSize: 13,
           ),
           onChanged: (PropertyDetails? newProperty) {
@@ -541,11 +537,11 @@ class _StaffViewState extends ConsumerState<StaffView> {
 
   Widget _buildArrivalsColumn(List<Booking> list) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: ResortTheme.lightBone),
+        borderRadius: AppRadius.xxlBr,
+        border: Border.all(color: AppColors.lightBone),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -564,14 +560,14 @@ class _StaffViewState extends ConsumerState<StaffView> {
               Expanded(
                 child: Text(
                   "Today's Guest Arrivals (${list.length})",
-                  style: ResortTheme.lightTheme.textTheme.titleLarge?.copyWith(fontSize: 16),
+                  style: AppTextStyles.titleLg.copyWith(fontSize: 16),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          const Divider(color: ResortTheme.lightBone, height: 1),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.lg),
+          const Divider(color: AppColors.lightBone, height: 1),
+          const SizedBox(height: AppSpacing.lg),
           if (list.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 40.0),
@@ -592,7 +588,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
               itemBuilder: (context, index) {
                 final b = list[index];
                 return Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: AppSpacing.allLg,
                   decoration: BoxDecoration(
                     color: Colors.green.shade50.withValues(alpha: 0.2),
                     border: Border.all(color: Colors.green.shade100.withValues(alpha: 0.6)),
@@ -610,14 +606,14 @@ class _StaffViewState extends ConsumerState<StaffView> {
                               style: GoogleFonts.inter(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
-                                color: ResortTheme.charcoal,
+                                color: AppColors.charcoal,
                               ),
                             ),
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
-                              color: ResortTheme.charcoal,
+                              color: AppColors.charcoal,
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
@@ -636,7 +632,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
                         'Phone: ${b.guestPhone} • guestsCount: ${b.guestsCount}',
                         style: GoogleFonts.inter(
                           fontSize: 11,
-                          color: ResortTheme.charcoal.withValues(alpha: 0.6),
+                          color: AppColors.charcoal.withValues(alpha: 0.6),
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -644,7 +640,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
                         'Stays till: ${b.endDate} (${b.nightsCount} Nights)',
                         style: GoogleFonts.inter(
                           fontSize: 11,
-                          color: ResortTheme.charcoal.withValues(alpha: 0.6),
+                          color: AppColors.charcoal.withValues(alpha: 0.6),
                         ),
                       ),
                       if (b.housekeepingNotes != null && b.housekeepingNotes!.isNotEmpty) ...[
@@ -654,7 +650,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border.all(color: Colors.green.shade100.withValues(alpha: 0.6)),
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: AppRadius.mdBr,
                           ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -686,11 +682,11 @@ class _StaffViewState extends ConsumerState<StaffView> {
 
   Widget _buildDeparturesColumn(List<Booking> list) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: ResortTheme.lightBone),
+        borderRadius: AppRadius.xxlBr,
+        border: Border.all(color: AppColors.lightBone),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -709,14 +705,14 @@ class _StaffViewState extends ConsumerState<StaffView> {
               Expanded(
                 child: Text(
                   "Today's Key Departures (${list.length})",
-                  style: ResortTheme.lightTheme.textTheme.titleLarge?.copyWith(fontSize: 16),
+                  style: AppTextStyles.titleLg.copyWith(fontSize: 16),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          const Divider(color: ResortTheme.lightBone, height: 1),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.lg),
+          const Divider(color: AppColors.lightBone, height: 1),
+          const SizedBox(height: AppSpacing.lg),
           if (list.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 40.0),
@@ -737,7 +733,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
               itemBuilder: (context, index) {
                 final b = list[index];
                 return Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: AppSpacing.allLg,
                   decoration: BoxDecoration(
                     color: Colors.blue.shade50.withValues(alpha: 0.2),
                     border: Border.all(color: Colors.blue.shade100.withValues(alpha: 0.6)),
@@ -755,7 +751,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
                               style: GoogleFonts.inter(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
-                                color: ResortTheme.charcoal,
+                                color: AppColors.charcoal,
                               ),
                             ),
                           ),
@@ -781,7 +777,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
                         'Accounted total: ₹${b.totalAmount.toStringAsFixed(0)}',
                         style: GoogleFonts.inter(
                           fontSize: 11,
-                          color: ResortTheme.charcoal.withValues(alpha: 0.6),
+                          color: AppColors.charcoal.withValues(alpha: 0.6),
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -789,7 +785,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
                         'Checked-in period: ${b.startDate} to ${b.endDate}',
                         style: GoogleFonts.inter(
                           fontSize: 11,
-                          color: ResortTheme.charcoal.withValues(alpha: 0.6),
+                          color: AppColors.charcoal.withValues(alpha: 0.6),
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -798,7 +794,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: Colors.amber.shade50,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: AppRadius.mdBr,
                         ),
                         child: Text(
                           'Status: Verified cleaning protocols triggered.',
@@ -821,10 +817,10 @@ class _StaffViewState extends ConsumerState<StaffView> {
 
   Widget _buildActiveLodgersColumn(List<Booking> list) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
-        color: ResortTheme.charcoal,
-        borderRadius: BorderRadius.circular(24),
+        color: AppColors.charcoal,
+        borderRadius: AppRadius.xxlBr,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -835,18 +831,14 @@ class _StaffViewState extends ConsumerState<StaffView> {
               Expanded(
                 child: Text(
                   "Active In-house Guests (${list.length})",
-                  style: GoogleFonts.playfairDisplay(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppTextStyles.titleSm.copyWith(color: Colors.white),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.lg),
           const Divider(color: Colors.white12, height: 1),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.lg),
           if (list.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 40.0),
@@ -884,11 +876,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
                         ),
                         Text(
                           b.id,
-                          style: GoogleFonts.spaceGrotesk(
-                            fontSize: 9,
-                            fontWeight: FontWeight.bold,
-                            color: ResortTheme.goldAccent,
-                          ),
+                          style: AppTextStyles.labelSm.copyWith(color: AppColors.goldAccent),
                         ),
                       ],
                     ),
@@ -919,24 +907,24 @@ class _StaffViewState extends ConsumerState<StaffView> {
 
   Widget _buildHousekeepingView(List<RoomStatus> rooms, bool isMobile) {
     return Container(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.all(AppSpacing.xxl),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24.0),
-        border: Border.all(color: ResortTheme.lightBone, width: 1.0),
+        borderRadius: AppRadius.xxlBr,
+        border: Border.all(color: AppColors.lightBone, width: 1.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'In-Ground Suite Cleanings Board',
-            style: ResortTheme.lightTheme.textTheme.titleLarge,
+            style: AppTextStyles.titleLg,
           ),
           const SizedBox(height: 8),
           Text(
             'Mark housekeeping schedules, logs, and staff tasks to synchronize with checks.',
-            style: ResortTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-              color: ResortTheme.charcoal.withValues(alpha: 0.5),
+            style: AppTextStyles.bodyMd.copyWith(
+              color: AppColors.charcoal.withValues(alpha: 0.5),
             ),
           ),
           const SizedBox(height: 24),
@@ -950,7 +938,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: rooms.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 16),
+                  separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.lg),
                   itemBuilder: (context, index) => _buildRoomCard(rooms[index], isList: true),
                 );
               } else {
@@ -976,7 +964,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
 
   Widget _buildRoomCard(RoomStatus room, {bool isList = false}) {
     Color statusBg = Colors.white;
-    Color statusText = ResortTheme.charcoal;
+    Color statusText = AppColors.charcoal;
     switch (room.status) {
       case HousekeepingStatus.clean:
         statusBg = const Color(0xFFD1FAE5); // Emerald 100
@@ -1007,7 +995,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
                 style: GoogleFonts.inter(
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
-                  color: ResortTheme.charcoal,
+                  color: AppColors.charcoal,
                 ),
               ),
             ),
@@ -1016,7 +1004,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
                 color: statusBg,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: AppRadius.mdBr,
               ),
               child: Text(
                 room.status.name.toUpperCase(),
@@ -1036,7 +1024,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
           overflow: TextOverflow.ellipsis,
           style: GoogleFonts.inter(
             fontSize: 11,
-            color: ResortTheme.charcoal.withValues(alpha: 0.55),
+            color: AppColors.charcoal.withValues(alpha: 0.55),
             height: 1.3,
           ),
         ),
@@ -1046,18 +1034,18 @@ class _StaffViewState extends ConsumerState<StaffView> {
           style: GoogleFonts.inter(
             fontSize: 10,
             fontWeight: FontWeight.bold,
-            color: ResortTheme.charcoal.withValues(alpha: 0.5),
+            color: AppColors.charcoal.withValues(alpha: 0.5),
           ),
         ),
       ],
     );
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppSpacing.allLg,
       decoration: BoxDecoration(
-        color: ResortTheme.stoneBg.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ResortTheme.lightBone),
+        color: AppColors.stoneBg.withValues(alpha: 0.3),
+        borderRadius: AppRadius.lgBr,
+        border: Border.all(color: AppColors.lightBone),
       ),
       child: isList
           ? Column(
@@ -1066,7 +1054,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
               children: [
                 content,
                 const SizedBox(height: 12),
-                const Divider(color: ResortTheme.lightBone, height: 1),
+                const Divider(color: AppColors.lightBone, height: 1),
                 const SizedBox(height: 12),
                 _buildRoomCardFooter(room),
               ],
@@ -1077,7 +1065,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
               children: [
                 content,
                 const Spacer(),
-                const Divider(color: ResortTheme.lightBone, height: 1),
+                const Divider(color: AppColors.lightBone, height: 1),
                 const SizedBox(height: 8),
                 _buildRoomCardFooter(room),
               ],
@@ -1093,7 +1081,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
           'Updated: ${_formatTime(room.lastUpdated)}',
           style: GoogleFonts.spaceGrotesk(
             fontSize: 9,
-            color: ResortTheme.charcoal.withValues(alpha: 0.4),
+            color: AppColors.charcoal.withValues(alpha: 0.4),
           ),
         ),
         InkWell(
@@ -1102,7 +1090,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: Colors.white,
-              border: Border.all(color: ResortTheme.lightBone),
+              border: Border.all(color: AppColors.lightBone),
               borderRadius: BorderRadius.circular(6),
               boxShadow: [
                 BoxShadow(
@@ -1117,7 +1105,7 @@ class _StaffViewState extends ConsumerState<StaffView> {
               style: GoogleFonts.inter(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
-                color: ResortTheme.charcoal,
+                color: AppColors.charcoal,
               ),
             ),
           ),

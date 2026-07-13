@@ -115,7 +115,7 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
                 style: GoogleFonts.playfairDisplay(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: ResortTheme.goldAccent,
+                  color: AppColors.goldAccent,
                 ),
               ),
               const SizedBox(height: 6),
@@ -134,7 +134,7 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
                 style: GoogleFonts.spaceGrotesk(
                   fontSize: 9,
                   fontWeight: FontWeight.bold,
-                  color: ResortTheme.goldAccent.withValues(alpha: 0.6),
+                  color: AppColors.goldAccent.withValues(alpha: 0.6),
                   letterSpacing: 1.0,
                 ),
               ),
@@ -158,11 +158,11 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
                   width: double.infinity,
                   height: 50,
                   decoration: BoxDecoration(
-                    gradient: ResortTheme.goldGradient,
+                    gradient: AppGradients.gold,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: ResortTheme.goldAccent.withValues(alpha: 0.3),
+                        color: AppColors.goldAccent.withValues(alpha: 0.3),
                         blurRadius: 16,
                         offset: const Offset(0, 4),
                       ),
@@ -200,7 +200,7 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
-          gradient: ResortTheme.darkEmeraldGradient,
+          gradient: AppGradients.darkEmerald,
         ),
         child: Stack(
           children: [
@@ -214,8 +214,8 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      ResortTheme.goldAccent.withValues(alpha: 0.08),
-                      ResortTheme.goldAccent.withValues(alpha: 0.0),
+                      AppColors.goldAccent.withValues(alpha: 0.08),
+                      AppColors.goldAccent.withValues(alpha: 0.0),
                     ],
                   ),
                 ),
@@ -231,8 +231,8 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      ResortTheme.goldAccent.withValues(alpha: 0.05),
-                      ResortTheme.goldAccent.withValues(alpha: 0.0),
+                      AppColors.goldAccent.withValues(alpha: 0.05),
+                      AppColors.goldAccent.withValues(alpha: 0.0),
                     ],
                   ),
                 ),
@@ -243,7 +243,7 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
               left: 16,
               child: SafeArea(
                 child: IconButton(
-                  icon: Icon(Icons.arrow_back_ios_new, color: ResortTheme.goldAccent.withValues(alpha: 0.8), size: 20),
+                  icon: Icon(Icons.arrow_back_ios_new, color: AppColors.goldAccent.withValues(alpha: 0.8), size: 20),
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
@@ -272,7 +272,7 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
                           fontSize: 9.5,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 2.5,
-                          color: ResortTheme.goldAccent,
+                          color: AppColors.goldAccent,
                         ),
                       ),
                     ),
@@ -297,7 +297,7 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
-        prefixIcon: Icon(icon, size: 16, color: ResortTheme.goldAccent),
+        prefixIcon: Icon(icon, size: 16, color: AppColors.goldAccent),
         suffixIcon: obscure
             ? IconButton(
                 icon: Icon(
@@ -330,7 +330,7 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: ResortTheme.goldAccent),
+          borderSide: const BorderSide(color: AppColors.goldAccent),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       ),

@@ -72,11 +72,11 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Valley Reservation Matrix', style: ResortTheme.lightTheme.textTheme.displayMedium),
+              Text('Valley Reservation Matrix', style: AppTextStyles.displayMedium),
               const SizedBox(height: 6),
               Text(
                 'Verify dates immediately. Double-click or tap cells to inspect scheduled bookings.',
-                style: ResortTheme.lightTheme.textTheme.bodyMedium,
+                style: AppTextStyles.bodyMd,
               ),
               const SizedBox(height: 24),
 
@@ -121,20 +121,20 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
 
   Widget _buildLegend(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppSpacing.allLg,
       decoration: BoxDecoration(
-        color: ResortTheme.stoneBg.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: ResortTheme.lightBone),
+        color: AppColors.stoneBg.withValues(alpha: 0.3),
+        borderRadius: AppRadius.xlBr,
+        border: Border.all(color: AppColors.lightBone),
       ),
       child: Wrap(
         spacing: 16,
         runSpacing: 10,
         children: [
-          _legendItem('Available Night', Colors.white, border: const BorderSide(color: ResortTheme.lightBone)),
-          _legendItem('Booked Direct', ResortTheme.mossGreen),
+          _legendItem('Available Night', Colors.white, border: const BorderSide(color: AppColors.lightBone)),
+          _legendItem('Booked Direct', AppColors.mossGreen),
           _legendItem('OTA Sync (Airbnb)', const Color(0xFF7A8B7B)),
-          _legendItem('Pending Payment', ResortTheme.goldAccent),
+          _legendItem('Pending Payment', AppColors.goldAccent),
           _legendItem('Blocked / Maint', const Color(0xFF706B5C)),
         ],
       ),
@@ -155,7 +155,7 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
           ),
         ),
         const SizedBox(width: 8),
-        Text(label, style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: ResortTheme.charcoal)),
+        Text(label, style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.charcoal)),
       ],
     );
   }
@@ -185,7 +185,7 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(monthName, style: ResortTheme.lightTheme.textTheme.titleLarge),
+                Text(monthName, style: AppTextStyles.titleLg),
                 if (minStay != null || maxStay != null)
                   Text(
                     'Min ${minStay ?? '-'} / Max ${maxStay ?? '-'} nights',
@@ -193,9 +193,9 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
                   ),
               ],
             ),
-            const SizedBox(height: 16),
-            const Divider(color: ResortTheme.lightBone),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.lg),
+            const Divider(color: AppColors.lightBone),
+            const SizedBox(height: AppSpacing.md),
             
             GridRow(
               children: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
@@ -206,14 +206,14 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
                             style: GoogleFonts.inter(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
-                              color: ResortTheme.charcoal.withValues(alpha: 0.4),
+                              color: AppColors.charcoal.withValues(alpha: 0.4),
                             ),
                           ),
                         ),
                       ))
                   .toList(),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
 
             GridView.builder(
               shrinkWrap: true,
@@ -266,18 +266,18 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
                 CalendarDayStatus status = isBlocked ? CalendarDayStatus.blocked : (isBooked ? CalendarDayStatus.booked : CalendarDayStatus.available);
 
                 Color cellColor = Colors.white;
-                Color textColor = ResortTheme.charcoal;
-                Border? border = Border.all(color: ResortTheme.lightBone.withValues(alpha: 0.5));
+                Color textColor = AppColors.charcoal;
+                Border? border = Border.all(color: AppColors.lightBone.withValues(alpha: 0.5));
                 
                 switch (status) {
                   case CalendarDayStatus.booked:
-                    cellColor = ResortTheme.mossGreen;
+                    cellColor = AppColors.mossGreen;
                     textColor = Colors.white;
                     border = null;
                     break;
                   case CalendarDayStatus.pending:
-                    cellColor = ResortTheme.goldAccent;
-                    textColor = ResortTheme.mossGreen;
+                    cellColor = AppColors.goldAccent;
+                    textColor = AppColors.mossGreen;
                     border = null;
                     break;
                   case CalendarDayStatus.ota:
@@ -360,13 +360,13 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-          title: Text(dateStr, style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold, color: ResortTheme.mossGreen)),
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.xxlBr),
+          title: Text(dateStr, style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold, color: AppColors.mossGreen)),
           content: Text(info, style: GoogleFonts.inter(fontSize: 13, height: 1.5)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Close', style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: ResortTheme.mossGreen)),
+              child: Text('Close', style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: AppColors.mossGreen)),
             ),
           ],
         );

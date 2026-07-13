@@ -405,10 +405,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Notifications',
-                          style: GoogleFonts.playfairDisplay(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: ResortTheme.mossGreen)),
+                          style: AppTextStyles.titleMd.copyWith(color: AppColors.mossGreen)),
                       IconButton(
                           onPressed: () => Navigator.pop(ctx),
                           icon: const Icon(Icons.close)),
@@ -436,7 +433,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                                   size: 20,
                                   color: n.read
                                       ? Colors.grey
-                                      : ResortTheme.mossGreen,
+                                      : AppColors.mossGreen,
                                 ),
                                 title: Text(n.title,
                                     style: GoogleFonts.inter(
@@ -512,7 +509,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(32),
-                color: ResortTheme.mossGreen.withValues(alpha: 0.5),
+                color: AppColors.mossGreen.withValues(alpha: 0.5),
               ),
               child: Stack(
                 children: [
@@ -529,8 +526,8 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                       borderRadius: BorderRadius.circular(32),
                       gradient: LinearGradient(
                         colors: [
-                          ResortTheme.mossGreen.withValues(alpha: 0.95),
-                          ResortTheme.mossGreen.withValues(alpha: 0.4),
+                          AppColors.mossGreen.withValues(alpha: 0.95),
+                          AppColors.mossGreen.withValues(alpha: 0.4),
                           Colors.transparent,
                         ],
                         begin: Alignment.bottomLeft,
@@ -585,16 +582,16 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                             },
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: AppSpacing.sm),
                         Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 4),
                           decoration: BoxDecoration(
                             color:
-                                ResortTheme.goldAccent.withValues(alpha: 0.2),
+                                AppColors.goldAccent.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                                color: ResortTheme.goldAccent
+                                color: AppColors.goldAccent
                                     .withValues(alpha: 0.3)),
                           ),
                           child: Text(
@@ -603,11 +600,11 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 2.0,
-                              color: ResortTheme.goldAccent,
+                              color: AppColors.goldAccent,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSpacing.lg),
                         Text(
                           'Find your next sanctuary',
                           style: GoogleFonts.playfairDisplay(
@@ -617,7 +614,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                             height: 1.1,
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: AppSpacing.md),
                         Text(
                           'Explore a curated collection of ultra-premium estates across elite destinations.',
                           style: GoogleFonts.inter(
@@ -641,8 +638,8 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: ResortTheme.lightBone, width: 1.5),
+                  borderRadius: AppRadius.xxlBr,
+                  border: Border.all(color: AppColors.lightBone, width: 1.5),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.06),
@@ -661,10 +658,10 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                         children: [
                           _buildSearchInputField(),
                           const Divider(
-                              color: ResortTheme.lightBone, height: 16),
+                              color: AppColors.lightBone, height: 16),
                           _buildStateDropdown(states),
                           const Divider(
-                              color: ResortTheme.lightBone, height: 16),
+                              color: AppColors.lightBone, height: 16),
                           _buildCityDropdown(cities),
                         ],
                       );
@@ -678,7 +675,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                         Container(
                           height: 32,
                           width: 1,
-                          color: ResortTheme.lightBone,
+                          color: AppColors.lightBone,
                           margin: const EdgeInsets.symmetric(horizontal: 16),
                         ),
                         Expanded(
@@ -688,7 +685,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                         Container(
                           height: 32,
                           width: 1,
-                          color: ResortTheme.lightBone,
+                          color: AppColors.lightBone,
                           margin: const EdgeInsets.symmetric(horizontal: 16),
                         ),
                         Expanded(
@@ -715,9 +712,9 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
       decoration: InputDecoration(
         hintText: 'Search sanctuaries...',
         hintStyle: GoogleFonts.inter(
-            fontSize: 14, color: ResortTheme.charcoal.withValues(alpha: 0.4)),
+            fontSize: 14, color: AppColors.charcoal.withValues(alpha: 0.4)),
         prefixIcon:
-            const Icon(Icons.search, color: ResortTheme.mossGreen, size: 20),
+            const Icon(Icons.search, color: AppColors.mossGreen, size: 20),
         filled: true,
         fillColor: Colors.transparent,
         border: InputBorder.none,
@@ -725,7 +722,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
         focusedBorder: InputBorder.none,
         contentPadding: const EdgeInsets.symmetric(vertical: 12),
       ),
-      style: GoogleFonts.inter(fontSize: 14, color: ResortTheme.charcoal),
+      style: GoogleFonts.inter(fontSize: 14, color: AppColors.charcoal),
     );
   }
 
@@ -739,10 +736,10 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
             fontSize: 10,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.0,
-            color: ResortTheme.mossGreen.withValues(alpha: 0.6),
+            color: AppColors.mossGreen.withValues(alpha: 0.6),
           ),
           prefixIcon: const Icon(Icons.map_outlined,
-              color: ResortTheme.goldAccent, size: 18),
+              color: AppColors.goldAccent, size: 18),
           filled: true,
           fillColor: Colors.transparent,
           border: InputBorder.none,
@@ -751,10 +748,10 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
           contentPadding: EdgeInsets.zero,
         ),
         icon: const Icon(Icons.keyboard_arrow_down,
-            color: ResortTheme.mossGreen, size: 18),
+            color: AppColors.mossGreen, size: 18),
         style: GoogleFonts.inter(
             fontSize: 14,
-            color: ResortTheme.charcoal,
+            color: AppColors.charcoal,
             fontWeight: FontWeight.w600),
         items: states.map((state) {
           return DropdownMenuItem<String>(
@@ -784,10 +781,10 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
             fontSize: 10,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.0,
-            color: ResortTheme.mossGreen.withValues(alpha: 0.6),
+            color: AppColors.mossGreen.withValues(alpha: 0.6),
           ),
           prefixIcon: const Icon(Icons.location_city_outlined,
-              color: ResortTheme.goldAccent, size: 18),
+              color: AppColors.goldAccent, size: 18),
           filled: true,
           fillColor: Colors.transparent,
           border: InputBorder.none,
@@ -796,10 +793,10 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
           contentPadding: EdgeInsets.zero,
         ),
         icon: const Icon(Icons.keyboard_arrow_down,
-            color: ResortTheme.mossGreen, size: 18),
+            color: AppColors.mossGreen, size: 18),
         style: GoogleFonts.inter(
             fontSize: 14,
-            color: ResortTheme.charcoal,
+            color: AppColors.charcoal,
             fontWeight: FontWeight.w600),
         items: cities.map((city) {
           return DropdownMenuItem<String>(
@@ -831,7 +828,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               fontSize: 10,
               fontWeight: FontWeight.bold,
               letterSpacing: 1.5,
-              color: ResortTheme.mossGreen.withValues(alpha: 0.6),
+              color: AppColors.mossGreen.withValues(alpha: 0.6),
             ),
           ),
         ),
@@ -849,18 +846,18 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 12),
                     decoration: BoxDecoration(
-                      color: isSelected ? ResortTheme.mossGreen : Colors.white,
+                      color: isSelected ? AppColors.mossGreen : Colors.white,
                       borderRadius: BorderRadius.circular(30),
                       border: Border.all(
                         color: isSelected
-                            ? ResortTheme.mossGreen
-                            : ResortTheme.lightBone,
+                            ? AppColors.mossGreen
+                            : AppColors.lightBone,
                         width: 1.5,
                       ),
                       boxShadow: isSelected
                           ? [
                               BoxShadow(
-                                color: ResortTheme.mossGreen
+                                color: AppColors.mossGreen
                                     .withValues(alpha: 0.12),
                                 blurRadius: 12,
                                 offset: const Offset(0, 6),
@@ -873,7 +870,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                       children: [
                         if (isSelected) ...[
                           const Icon(Icons.star,
-                              color: ResortTheme.goldAccent, size: 14),
+                              color: AppColors.goldAccent, size: 14),
                           const SizedBox(width: 6),
                         ],
                         Text(
@@ -884,7 +881,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                             letterSpacing: 1.0,
                             color: isSelected
                                 ? Colors.white
-                                : ResortTheme.charcoal,
+                                : AppColors.charcoal,
                           ),
                         ),
                       ],
@@ -934,29 +931,29 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: ResortTheme.lightBone),
+          border: Border.all(color: AppColors.lightBone),
         ),
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(Icons.search_off,
-                  size: 48, color: ResortTheme.goldAccent),
-              const SizedBox(height: 16),
+                  size: 48, color: AppColors.goldAccent),
+              const SizedBox(height: AppSpacing.lg),
               Text(
                 'No sanctuaries match your criteria.',
                 style: GoogleFonts.playfairDisplay(
                   fontSize: 18,
-                  color: ResortTheme.mossGreen,
+                  color: AppColors.mossGreen,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
               Text(
                 'Try adjusting your search queries or category filters.',
                 style: GoogleFonts.inter(
                   fontSize: 13,
-                  color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                  color: AppColors.charcoal.withValues(alpha: 0.5),
                 ),
               ),
             ],
@@ -973,8 +970,8 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
           margin: const EdgeInsets.only(bottom: 32),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: ResortTheme.lightBone, width: 1.5),
+            borderRadius: AppRadius.xxlBr,
+            border: Border.all(color: AppColors.lightBone, width: 1.5),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.04),
@@ -984,7 +981,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: AppRadius.xxlBr,
             child: InkWell(
               onTap: () {
                 _scrollToTop();
@@ -1046,14 +1043,14 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                                   color: Colors.white.withValues(alpha: 0.95),
                                   borderRadius: BorderRadius.circular(30),
                                   border: Border.all(
-                                      color: ResortTheme.goldAccent
+                                      color: AppColors.goldAccent
                                           .withValues(alpha: 0.5)),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     const Icon(Icons.star,
-                                        color: ResortTheme.goldAccent,
+                                        color: AppColors.goldAccent,
                                         size: 12),
                                     const SizedBox(width: 4),
                                     Text(
@@ -1061,7 +1058,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                                           ? 'ELITE RESERVE'
                                           : 'EXECUTIVE RETREAT',
                                       style: GoogleFonts.spaceGrotesk(
-                                        color: ResortTheme.mossGreen,
+                                        color: AppColors.mossGreen,
                                         fontSize: 9,
                                         fontWeight: FontWeight.bold,
                                         letterSpacing: 1.0,
@@ -1075,7 +1072,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 14, vertical: 8),
                               decoration: BoxDecoration(
-                                color: ResortTheme.mossGreen
+                                color: AppColors.mossGreen
                                     .withValues(alpha: 0.85),
                                 borderRadius: BorderRadius.circular(30),
                               ),
@@ -1118,7 +1115,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                                       : Icons.favorite_border,
                                   color: isSaved
                                       ? Colors.red.shade600
-                                      : ResortTheme.mossGreen,
+                                      : AppColors.mossGreen,
                                   size: 20,
                                 ),
                                 onPressed: () {
@@ -1139,13 +1136,13 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
-                              color: ResortTheme.goldAccent,
+                              color: AppColors.goldAccent,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               'CURRENT SELECTION',
                               style: GoogleFonts.spaceGrotesk(
-                                color: ResortTheme.mossGreen,
+                                color: AppColors.mossGreen,
                                 fontSize: 9,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.0,
@@ -1166,28 +1163,28 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.5,
-                            color: ResortTheme.goldAccent,
+                            color: AppColors.goldAccent,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: AppSpacing.sm),
                         Text(
                           resort.name,
                           style: GoogleFonts.playfairDisplay(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
-                            color: ResortTheme.mossGreen,
+                            color: AppColors.mossGreen,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: AppSpacing.sm),
                         Text(
                           resort.tagline,
                           style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: ResortTheme.charcoal.withValues(alpha: 0.7),
+                            color: AppColors.charcoal.withValues(alpha: 0.7),
                             height: 1.5,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSpacing.lg),
                         Wrap(
                           spacing: 8,
                           runSpacing: 8,
@@ -1197,24 +1194,24 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                                   horizontal: 10, vertical: 6),
                               decoration: BoxDecoration(
                                 color:
-                                    ResortTheme.stoneBg.withValues(alpha: 0.5),
+                                    AppColors.stoneBg.withValues(alpha: 0.5),
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                    color: ResortTheme.lightBone
+                                    color: AppColors.lightBone
                                         .withValues(alpha: 0.5)),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Icon(_getAmenityIcon(am.icon),
-                                      size: 12, color: ResortTheme.goldAccent),
+                                      size: 12, color: AppColors.goldAccent),
                                   const SizedBox(width: 6),
                                   Text(
                                     am.label,
                                     style: GoogleFonts.inter(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600,
-                                      color: ResortTheme.charcoal
+                                      color: AppColors.charcoal
                                           .withValues(alpha: 0.8),
                                     ),
                                   ),
@@ -1224,7 +1221,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                           }).toList(),
                         ),
                         const SizedBox(height: 20),
-                        const Divider(color: ResortTheme.lightBone),
+                        const Divider(color: AppColors.lightBone),
                         const SizedBox(height: 20),
                         Wrap(
                           spacing: 16,
@@ -1241,7 +1238,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                                     fontSize: 9,
                                     fontWeight: FontWeight.bold,
                                     letterSpacing: 1.0,
-                                    color: ResortTheme.charcoal
+                                    color: AppColors.charcoal
                                         .withValues(alpha: 0.5),
                                   ),
                                 ),
@@ -1256,7 +1253,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                                       style: GoogleFonts.playfairDisplay(
                                         fontSize: 24,
                                         fontWeight: FontWeight.bold,
-                                        color: ResortTheme.mossGreen,
+                                        color: AppColors.mossGreen,
                                       ),
                                     ),
                                     const SizedBox(width: 4),
@@ -1264,7 +1261,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                                       '/ night (weekday)',
                                       style: GoogleFonts.inter(
                                         fontSize: 12,
-                                        color: ResortTheme.charcoal
+                                        color: AppColors.charcoal
                                             .withValues(alpha: 0.6),
                                       ),
                                     ),
@@ -1286,7 +1283,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                                 _loadPropertyDetail(resort.id);
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: ResortTheme.mossGreen,
+                                backgroundColor: AppColors.mossGreen,
                                 foregroundColor: Colors.white,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
@@ -1308,7 +1305,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                                   ),
                                   const SizedBox(width: 8),
                                   const Icon(Icons.arrow_forward_ios,
-                                      size: 12, color: ResortTheme.goldAccent),
+                                      size: 12, color: AppColors.goldAccent),
                                 ],
                               ),
                             ),
@@ -1348,13 +1345,10 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                   Row(
                     children: [
                       const Icon(Icons.room_service,
-                          color: ResortTheme.goldAccent, size: 20),
+                          color: AppColors.goldAccent, size: 20),
                       const SizedBox(width: 10),
                       Text('Concierge Services',
-                          style: GoogleFonts.playfairDisplay(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: ResortTheme.mossGreen)),
+                           style: AppTextStyles.titleLg.copyWith(color: AppColors.mossGreen)),
                     ],
                   ),
                   TextButton.icon(
@@ -1366,18 +1360,18 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               if (requests.isEmpty)
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: ResortTheme.stoneBg.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(16),
+                    color: AppColors.stoneBg.withValues(alpha: 0.3),
+                    borderRadius: AppRadius.lgBr,
                   ),
                   child: Row(
                     children: [
                       const Icon(Icons.spa_outlined,
-                          color: ResortTheme.goldAccent, size: 24),
+                          color: AppColors.goldAccent, size: 24),
                       const SizedBox(width: 16),
                       Expanded(
                         child: Text(
@@ -1385,7 +1379,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                           style: GoogleFonts.inter(
                               fontSize: 12,
                               color:
-                                  ResortTheme.charcoal.withValues(alpha: 0.6)),
+                                  AppColors.charcoal.withValues(alpha: 0.6)),
                         ),
                       ),
                     ],
@@ -1397,7 +1391,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                       child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: ResortTheme.stoneBg.withValues(alpha: 0.2),
+                          color: AppColors.stoneBg.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -1411,13 +1405,13 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                                     style: GoogleFonts.inter(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12,
-                                        color: ResortTheme.charcoal),
+                                        color: AppColors.charcoal),
                                   ),
                                   Text(
                                     r['description'] as String? ?? '',
                                     style: GoogleFonts.inter(
                                         fontSize: 11,
-                                        color: ResortTheme.charcoal
+                                        color: AppColors.charcoal
                                             .withValues(alpha: 0.6)),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -1483,7 +1477,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               title: Text('New Concierge Request',
                   style: GoogleFonts.playfairDisplay(
                       fontWeight: FontWeight.bold,
-                      color: ResortTheme.mossGreen)),
+                      color: AppColors.mossGreen)),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -1498,7 +1492,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                       if (v != null) setDialogState(() => selectedType = v);
                     },
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.md),
                   TextField(
                     controller: descController,
                     maxLines: 3,
@@ -1530,7 +1524,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                         context, 'Concierge request submitted!');
                   },
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: ResortTheme.mossGreen),
+                      backgroundColor: AppColors.mossGreen),
                   child: const Text('Submit',
                       style: TextStyle(color: Colors.white)),
                 ),
@@ -1570,11 +1564,11 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: const BoxDecoration(
-                  color: ResortTheme.stoneBg,
+                  color: AppColors.stoneBg,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.arrow_back_ios_new,
-                    size: 14, color: ResortTheme.mossGreen),
+                    size: 14, color: AppColors.mossGreen),
               ),
             ),
           ),
@@ -1585,11 +1579,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
                 _selectedResort.name,
-                style: GoogleFonts.playfairDisplay(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: ResortTheme.mossGreen,
-                ),
+                style: AppTextStyles.titleSm.copyWith(color: AppColors.mossGreen),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -1600,7 +1590,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: ResortTheme.stoneBg,
+              color: AppColors.stoneBg,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
@@ -1608,7 +1598,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               style: GoogleFonts.spaceGrotesk(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
-                color: ResortTheme.mossGreen,
+                color: AppColors.mossGreen,
               ),
             ),
           ),
@@ -1709,7 +1699,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
           }
         },
         loading: () => const Center(
-            child: CircularProgressIndicator(color: ResortTheme.mossGreen)),
+            child: CircularProgressIndicator(color: AppColors.mossGreen)),
         error: (err, stack) =>
             Center(child: Text('Sandbox initialisation failure: $err')),
       ),
@@ -1755,7 +1745,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               height: 320,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(32),
-                border: Border.all(color: ResortTheme.lightBone),
+                border: Border.all(color: AppColors.lightBone),
                 image: DecorationImage(
                     image: NetworkImage(heroImageUrl), fit: BoxFit.cover),
               ),
@@ -1781,11 +1771,11 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 4),
                       decoration: BoxDecoration(
-                        color: ResortTheme.mossGreen.withValues(alpha: 0.9),
+                        color: AppColors.mossGreen.withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                             color:
-                                ResortTheme.goldAccent.withValues(alpha: 0.3)),
+                                AppColors.goldAccent.withValues(alpha: 0.3)),
                       ),
                       child: Text(
                         'FEATURED SANCTUARY',
@@ -1793,10 +1783,10 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.5,
-                            color: ResortTheme.goldAccent),
+                            color: AppColors.goldAccent),
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.sm),
                     Text(
                       property.name,
                       style: GoogleFonts.playfairDisplay(
@@ -1809,7 +1799,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                     Row(
                       children: [
                         const Icon(Icons.location_on_outlined,
-                            color: ResortTheme.goldAccent, size: 18),
+                            color: AppColors.goldAccent, size: 18),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
@@ -1852,7 +1842,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                         isSaved ? Icons.favorite : Icons.favorite_border,
                         color: isSaved
                             ? Colors.red.shade600
-                            : ResortTheme.mossGreen,
+                            : AppColors.mossGreen,
                         size: 20,
                       ),
                       onPressed: () {
@@ -1867,7 +1857,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.lg),
         // Gallery row
         if (images.isNotEmpty)
           Row(
@@ -1878,9 +1868,9 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                     height: 100,
                     margin: const EdgeInsets.only(right: 16),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: AppRadius.lgBr,
                       border: Border.all(
-                          color: ResortTheme.lightBone.withValues(alpha: 0.4)),
+                          color: AppColors.lightBone.withValues(alpha: 0.4)),
                       image: DecorationImage(
                           image: NetworkImage(url), fit: BoxFit.cover),
                     ),
@@ -1892,9 +1882,9 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
           Container(
             height: 100,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: AppRadius.lgBr,
               border: Border.all(
-                  color: ResortTheme.lightBone.withValues(alpha: 0.4)),
+                  color: AppColors.lightBone.withValues(alpha: 0.4)),
               image: DecorationImage(
                   image: NetworkImage(property.image), fit: BoxFit.cover),
             ),
@@ -1916,15 +1906,15 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                 style: GoogleFonts.playfairDisplay(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: ResortTheme.mossGreen,
+                    color: AppColors.mossGreen,
                     height: 1.3),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
               Text(
                 property.description,
                 style: GoogleFonts.inter(
                     fontSize: 14,
-                    color: ResortTheme.charcoal.withValues(alpha: 0.8),
+                    color: AppColors.charcoal.withValues(alpha: 0.8),
                     height: 1.6),
               ),
               const SizedBox(height: 24),
@@ -1960,8 +1950,8 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                   style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: ResortTheme.mossGreen)),
-              const SizedBox(height: 12),
+                      color: AppColors.mossGreen)),
+              const SizedBox(height: AppSpacing.md),
               Wrap(
                 spacing: 12,
                 runSpacing: 12,
@@ -1971,9 +1961,9 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                               horizontal: 12, vertical: 8),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: AppRadius.lgBr,
                             border: Border.all(
-                                color: ResortTheme.lightBone
+                                color: AppColors.lightBone
                                     .withValues(alpha: 0.6)),
                           ),
                           child: Row(
@@ -1981,14 +1971,14 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                             children: [
                               const Text('✦',
                                   style: TextStyle(
-                                      color: ResortTheme.goldAccent,
+                                      color: AppColors.goldAccent,
                                       fontSize: 14)),
                               const SizedBox(width: 8),
                               Text(am.label,
                                   style: GoogleFonts.inter(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
-                                      color: ResortTheme.charcoal)),
+                                      color: AppColors.charcoal)),
                             ],
                           ),
                         ))
@@ -2000,13 +1990,13 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                   padding: EdgeInsets.symmetric(vertical: 16),
                   child: Center(
                       child: CircularProgressIndicator(
-                          strokeWidth: 2, color: ResortTheme.mossGreen)),
+                          strokeWidth: 2, color: AppColors.mossGreen)),
                 ),
               // Rules
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: ResortTheme.mossGreen,
+                  color: AppColors.mossGreen,
                   borderRadius: BorderRadius.circular(28),
                 ),
                 child: Column(
@@ -2016,9 +2006,9 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                         style: GoogleFonts.playfairDisplay(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: ResortTheme.goldAccent,
+                            color: AppColors.goldAccent,
                             letterSpacing: 1)),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.lg),
                     ...property.rules.map((r) => Padding(
                           padding: const EdgeInsets.only(bottom: 12.0),
                           child: Row(
@@ -2026,12 +2016,12 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                             children: [
                               const Text('• ',
                                   style: TextStyle(
-                                      color: ResortTheme.stoneBg,
+                                      color: AppColors.stoneBg,
                                       fontSize: 16)),
                               Expanded(
                                   child: Text(r,
                                       style: GoogleFonts.inter(
-                                          color: ResortTheme.stoneBg
+                                          color: AppColors.stoneBg
                                               .withValues(alpha: 0.95),
                                           fontSize: 13,
                                           height: 1.5))),
@@ -2080,9 +2070,9 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               style: GoogleFonts.playfairDisplay(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: ResortTheme.mossGreen,
+                  color: AppColors.mossGreen,
                   letterSpacing: 1)),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.lg),
           Wrap(
             spacing: 24,
             runSpacing: 16,
@@ -2099,15 +2089,15 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
             ],
           ),
           if (houseRules.isNotEmpty) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             const Divider(color: Color(0xFFE6E2D3)),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             Text('HOUSE RULES:',
                 style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: ResortTheme.mossGreen)),
-            const SizedBox(height: 12),
+                    color: AppColors.mossGreen)),
+            const SizedBox(height: AppSpacing.md),
             ...houseRules.map((r) => Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Row(
@@ -2115,12 +2105,12 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                     children: [
                       const Text('• ',
                           style: TextStyle(
-                              color: ResortTheme.goldAccent, fontSize: 14)),
+                              color: AppColors.goldAccent, fontSize: 14)),
                       Expanded(
                           child: Text('$r',
                               style: GoogleFonts.inter(
                                   fontSize: 13,
-                                  color: ResortTheme.charcoal
+                                  color: AppColors.charcoal
                                       .withValues(alpha: 0.8)))),
                     ],
                   ),
@@ -2154,20 +2144,20 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: ResortTheme.stoneBg.withValues(alpha: 0.2),
+        color: AppColors.stoneBg.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: ResortTheme.lightBone.withValues(alpha: 0.5)),
+        border: Border.all(color: AppColors.lightBone.withValues(alpha: 0.5)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 18, color: ResortTheme.mossGreen),
+          Icon(icon, size: 18, color: AppColors.mossGreen),
           const SizedBox(width: 8),
           Text(label,
               style: GoogleFonts.inter(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: ResortTheme.charcoal)),
+                  color: AppColors.charcoal)),
         ],
       ),
     );
@@ -2191,13 +2181,13 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                   style: GoogleFonts.playfairDisplay(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: ResortTheme.mossGreen,
+                      color: AppColors.mossGreen,
                       letterSpacing: 1)),
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: ResortTheme.mossGreen,
+                  color: AppColors.mossGreen,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text('${reviews.length} reviews',
@@ -2208,7 +2198,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.lg),
           ...reviews.take(5).map((r) {
             final review = r as Map<String, dynamic>;
             final authorRaw = review['author'];
@@ -2222,13 +2212,13 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                 children: [
                   CircleAvatar(
                     radius: 18,
-                    backgroundColor: ResortTheme.stoneBg,
+                    backgroundColor: AppColors.stoneBg,
                     child: Text(
                       authorInitial,
                       style: GoogleFonts.inter(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: ResortTheme.mossGreen),
+                          color: AppColors.mossGreen),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -2243,18 +2233,18 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                                 style: GoogleFonts.inter(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
-                                    color: ResortTheme.charcoal)),
+                                    color: AppColors.charcoal)),
                             if (review['rating'] != null)
                               Row(
                                 children: [
                                   const Icon(Icons.star,
-                                      size: 14, color: ResortTheme.goldAccent),
+                                      size: 14, color: AppColors.goldAccent),
                                   const SizedBox(width: 4),
                                   Text('${review['rating']}',
                                       style: GoogleFonts.inter(
                                           fontSize: 12,
                                           fontWeight: FontWeight.bold,
-                                          color: ResortTheme.charcoal)),
+                                          color: AppColors.charcoal)),
                                 ],
                               ),
                           ],
@@ -2264,7 +2254,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                             style: GoogleFonts.inter(
                                 fontSize: 12,
                                 color:
-                                    ResortTheme.charcoal.withValues(alpha: 0.7),
+                                    AppColors.charcoal.withValues(alpha: 0.7),
                                 height: 1.4)),
                       ],
                     ),
@@ -2286,7 +2276,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: ResortTheme.lightBone.withValues(alpha: 0.6)),
+        border: Border.all(color: AppColors.lightBone.withValues(alpha: 0.6)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2296,7 +2286,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
                   color: const Color(0xFF4A4A35).withValues(alpha: 0.6))),
-          const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
           Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
@@ -2333,10 +2323,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Book Property',
-                  style: GoogleFonts.playfairDisplay(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: ResortTheme.mossGreen)),
+                  style: AppTextStyles.titleLg.copyWith(color: AppColors.mossGreen)),
               Row(
                 children: [
                   _stepDot(_checkoutStep == 'details'),
@@ -2348,9 +2335,9 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.lg),
           const Divider(color: Color(0xFFE6E2D3)),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.lg),
           if (_checkoutStep == 'details') _buildStepDetails(quote),
           if (_checkoutStep == 'payment') _buildStepPayment(quote),
           if (_checkoutStep == 'confirmed') _buildStepConfirmed(quote),
@@ -2365,12 +2352,12 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
       height: 8,
       decoration: BoxDecoration(
         color: active
-            ? (isGold ? ResortTheme.goldAccent : ResortTheme.mossGreen)
-            : ResortTheme.lightBone,
+            ? (isGold ? AppColors.goldAccent : AppColors.mossGreen)
+            : AppColors.lightBone,
         borderRadius: BorderRadius.circular(4),
         border: active
             ? Border.all(
-                color: (isGold ? ResortTheme.goldAccent : ResortTheme.mossGreen)
+                color: (isGold ? AppColors.goldAccent : AppColors.mossGreen)
                     .withValues(alpha: 0.25),
                 width: 2)
             : null,
@@ -2393,14 +2380,14 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                     (v) => setState(() => _selectedEndDate = v))),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.lg),
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: AppSpacing.allLg,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
             border:
-                Border.all(color: ResortTheme.lightBone.withValues(alpha: 0.6)),
+                Border.all(color: AppColors.lightBone.withValues(alpha: 0.6)),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2416,7 +2403,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                   Text('Guests exceeding 2 are\ncharged extra',
                       style: GoogleFonts.inter(
                           fontSize: 10,
-                          color: ResortTheme.charcoal.withValues(alpha: 0.65))),
+                          color: AppColors.charcoal.withValues(alpha: 0.65))),
                 ],
               ),
               Row(
@@ -2432,7 +2419,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                               style: GoogleFonts.inter(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: ResortTheme.charcoal)))),
+                                  color: AppColors.charcoal)))),
                   _counterBtn(
                       Icons.add,
                       () => setState(() => _guestsCount =
@@ -2448,8 +2435,8 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: const Color(0xFFF7F5F0),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: ResortTheme.lightBone),
+              borderRadius: AppRadius.xxlBr,
+              border: Border.all(color: AppColors.lightBone),
             ),
             child: Column(
               children: [
@@ -2460,18 +2447,18 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                         style: GoogleFonts.inter(
                             fontSize: 12,
                             color:
-                                ResortTheme.charcoal.withValues(alpha: 0.7))),
+                                AppColors.charcoal.withValues(alpha: 0.7))),
                     Text(
                         '${quote.nightsCount} Nights (${quote.weekdayNights} Wkdy, ${quote.weekendNights}\nWknd)',
                         style: GoogleFonts.inter(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: ResortTheme.mossGreen),
+                            color: AppColors.mossGreen),
                         textAlign: TextAlign.right),
                   ],
                 ),
                 if (quote.seasonApplied != null) ...[
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSpacing.sm),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -2479,7 +2466,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                           style: GoogleFonts.inter(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
-                              color: ResortTheme.mossGreen)),
+                              color: AppColors.mossGreen)),
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 4),
@@ -2494,14 +2481,14 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                             style: GoogleFonts.inter(
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
-                                color: ResortTheme.goldAccent)),
+                                color: AppColors.goldAccent)),
                       ),
                     ],
                   ),
                 ],
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 const Divider(color: Color(0xFFE6E2D3)),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 _calcRow('Base accommodation:',
                     '₹${quote.baseAmount.toStringAsFixed(0)}'),
                 if (quote.extraGuestAmount > 0)
@@ -2515,9 +2502,9 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                       isDiscount: true),
                 _calcRow('Luxury GST (${ref.watch(taxRateProvider)}.00%):',
                     '₹${quote.taxAmount.toStringAsFixed(0)}'),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.sm),
                 const Divider(color: Color(0xFFE6E2D3)),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.sm),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -2525,20 +2512,20 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                         style: GoogleFonts.playfairDisplay(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: ResortTheme.mossGreen)),
+                            color: AppColors.mossGreen)),
                     Text('₹${quote.totalAmount.toStringAsFixed(0)}',
                         style: GoogleFonts.playfairDisplay(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: ResortTheme.mossGreen)),
+                            color: AppColors.mossGreen)),
                   ],
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.md),
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: const Color(0xFFD4B483).withValues(alpha: 0.25),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: AppRadius.lgBr,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2548,12 +2535,12 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                           style: GoogleFonts.inter(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
-                              color: ResortTheme.mossGreen)),
+                              color: AppColors.mossGreen)),
                       Text('₹${quote.requiredAdvance.toStringAsFixed(0)}',
                           style: GoogleFonts.inter(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
-                              color: ResortTheme.mossGreen)),
+                              color: AppColors.mossGreen)),
                     ],
                   ),
                 ),
@@ -2567,7 +2554,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1,
                   color: const Color(0xFF4A4A35).withValues(alpha: 0.6))),
-          const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
           Row(
             children: [
               Expanded(
@@ -2581,16 +2568,16 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
                             color:
-                                ResortTheme.lightBone.withValues(alpha: 0.8))),
+                                AppColors.lightBone.withValues(alpha: 0.8))),
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
                             color:
-                                ResortTheme.lightBone.withValues(alpha: 0.8))),
+                                AppColors.lightBone.withValues(alpha: 0.8))),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide:
-                            const BorderSide(color: ResortTheme.mossGreen)),
+                            const BorderSide(color: AppColors.mossGreen)),
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 12),
                   ),
@@ -2602,7 +2589,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               ElevatedButton(
                 onPressed: () => _applyPromo(quote),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: ResortTheme.mossGreen,
+                  backgroundColor: AppColors.mossGreen,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                   padding:
@@ -2631,8 +2618,8 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                     style: GoogleFonts.inter(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
-                        color: ResortTheme.mossGreen))),
-          const SizedBox(height: 12),
+                        color: AppColors.mossGreen))),
+          const SizedBox(height: AppSpacing.md),
           Consumer(
             builder: (context, ref, _) {
               final couponsAsync = ref.watch(customerCouponsProvider);
@@ -2641,10 +2628,10 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               return Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: ResortTheme.stoneBg.withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(16),
+                  color: AppColors.stoneBg.withValues(alpha: 0.5),
+                  borderRadius: AppRadius.lgBr,
                   border: Border.all(
-                      color: ResortTheme.lightBone.withValues(alpha: 0.6)),
+                      color: AppColors.lightBone.withValues(alpha: 0.6)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -2652,17 +2639,17 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                     Row(
                       children: [
                         const Icon(Icons.local_offer,
-                            color: ResortTheme.goldAccent, size: 14),
+                            color: AppColors.goldAccent, size: 14),
                         const SizedBox(width: 6),
                         Text('Available Coupons',
                             style: GoogleFonts.inter(
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
-                                color: ResortTheme.charcoal
+                                color: AppColors.charcoal
                                     .withValues(alpha: 0.6))),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.sm),
                     ...coupons.take(3).map((c) {
                       final code = c['code'] as String? ?? '';
                       final desc = c['description'] as String? ?? '';
@@ -2676,7 +2663,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                             '$code - $desc',
                             style: GoogleFonts.inter(
                                 fontSize: 10,
-                                color: ResortTheme.mossGreen,
+                                color: AppColors.mossGreen,
                                 fontWeight: FontWeight.w500),
                           ),
                         ),
@@ -2689,10 +2676,10 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
           ),
         ] else ...[
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: AppSpacing.allLg,
             decoration: BoxDecoration(
                 color: Colors.red.shade50,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: AppRadius.lgBr,
                 border: Border.all(color: Colors.red.shade200)),
             child: Row(
               children: [
@@ -2708,16 +2695,16 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
         ],
         const SizedBox(height: 24),
         const Divider(color: Color(0xFFE6E2D3)),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.lg),
         Text('GUEST CONTACT INFORMATION',
             style: GoogleFonts.inter(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1,
                 color: const Color(0xFF4A4A35))),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.md),
         _textField('Guest Full Name', _nameController),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.md),
         Row(
           children: [
             Expanded(child: _textField('Email Address', _emailController)),
@@ -2725,7 +2712,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
             Expanded(child: _textField('Phone Number', _phoneController)),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.md),
         _textField(
             'Any special preparation requests? (Bonfire arrangement, mild spices, late arrivals notes)',
             _hkNotesController,
@@ -2739,11 +2726,11 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                 ? () => _handleInitiatePayment(quote)
                 : null,
             style: ElevatedButton.styleFrom(
-              backgroundColor: ResortTheme.mossGreen,
+              backgroundColor: AppColors.mossGreen,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16)),
               disabledBackgroundColor:
-                  ResortTheme.mossGreen.withValues(alpha: 0.4),
+                  AppColors.mossGreen.withValues(alpha: 0.4),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -2768,12 +2755,12 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: AppSpacing.allLg,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
+                    borderRadius: AppRadius.lgBr,
             border:
-                Border.all(color: ResortTheme.lightBone.withValues(alpha: 0.6)),
+                Border.all(color: AppColors.lightBone.withValues(alpha: 0.6)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2782,38 +2769,38 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                   style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: ResortTheme.mossGreen)),
-              const SizedBox(height: 8),
+                      color: AppColors.mossGreen)),
+              const SizedBox(height: AppSpacing.sm),
               _summaryRow('Name:', _nameController.text),
               _summaryRow(
                   'Stay Period:', '$_selectedStartDate to $_selectedEndDate'),
               _summaryRow('Guests:', '$_guestsCount Adults'),
-              const SizedBox(height: 8),
-              const Divider(color: ResortTheme.lightBone),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
+              const Divider(color: AppColors.lightBone),
+              const SizedBox(height: AppSpacing.sm),
               Row(
                 children: [
                   Text('Amount Due: ',
                       style: GoogleFonts.inter(
                           fontSize: 12,
-                          color: ResortTheme.charcoal.withValues(alpha: 0.7))),
+                          color: AppColors.charcoal.withValues(alpha: 0.7))),
                   Text('₹${quote.totalAmount.toStringAsFixed(0)} INR',
                       style: GoogleFonts.inter(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: ResortTheme.mossGreen)),
+                          color: AppColors.mossGreen)),
                 ],
               ),
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.lg),
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: AppSpacing.allLg,
           decoration: BoxDecoration(
             color: const Color(0xFFF7F5F0),
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: ResortTheme.lightBone),
+            borderRadius: AppRadius.xxlBr,
+            border: Border.all(color: AppColors.lightBone),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2821,7 +2808,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               const Padding(
                 padding: EdgeInsets.only(top: 2.0),
                 child: Icon(Icons.credit_card,
-                    color: ResortTheme.goldAccent, size: 20),
+                    color: AppColors.goldAccent, size: 20),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -2832,13 +2819,13 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                         style: GoogleFonts.playfairDisplay(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: ResortTheme.mossGreen)),
+                            color: AppColors.mossGreen)),
                     const SizedBox(height: 4),
                     Text(
                         'Your booking will be confirmed after payment authorization. The full amount will be charged to complete the reservation.',
                         style: GoogleFonts.inter(
                             fontSize: 11,
-                            color: ResortTheme.charcoal.withValues(alpha: 0.85),
+                            color: AppColors.charcoal.withValues(alpha: 0.85),
                             height: 1.4)),
                   ],
                 ),
@@ -2846,24 +2833,24 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.lg),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(16),
+          padding: AppSpacing.allLg,
           decoration: BoxDecoration(
             color: const Color(0xFFF0F4EE),
-            borderRadius: BorderRadius.circular(16),
+                    borderRadius: AppRadius.lgBr,
           ),
           child: Row(
             children: [
-              Icon(Icons.verified_user, color: ResortTheme.mossGreen, size: 20),
+              Icon(Icons.verified_user, color: AppColors.mossGreen, size: 20),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   'Secure payment via encrypted gateway. Your card will be charged ₹${quote.totalAmount.toStringAsFixed(0)} INR.',
                   style: GoogleFonts.inter(
                       fontSize: 11,
-                      color: ResortTheme.charcoal.withValues(alpha: 0.8)),
+                      color: AppColors.charcoal.withValues(alpha: 0.8)),
                 ),
               ),
             ],
@@ -2876,31 +2863,31 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
           child: ElevatedButton(
             onPressed: () => _handleCompletePayment(quote),
             style: ElevatedButton.styleFrom(
-              backgroundColor: ResortTheme.goldAccent,
+              backgroundColor: AppColors.goldAccent,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16)),
             ),
             child: Text('Pay ₹${quote.totalAmount.toStringAsFixed(0)} INR',
                 style: GoogleFonts.inter(
-                    color: ResortTheme.mossGreen,
+                    color: AppColors.mossGreen,
                     fontSize: 14,
                     fontWeight: FontWeight.bold)),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.md),
         SizedBox(
           width: double.infinity,
           height: 40,
           child: OutlinedButton(
             onPressed: () => setState(() => _checkoutStep = 'details'),
             style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: ResortTheme.lightBone),
+              side: const BorderSide(color: AppColors.lightBone),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16)),
             ),
             child: Text('Back to reservation details',
                 style: GoogleFonts.inter(
-                    color: ResortTheme.mossGreen,
+                    color: AppColors.mossGreen,
                     fontSize: 12,
                     fontWeight: FontWeight.w600)),
           ),
@@ -2914,26 +2901,23 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.lg),
         Container(
           width: 56,
           height: 56,
           decoration: BoxDecoration(
-              color: ResortTheme.goldAccent.withValues(alpha: 0.2),
+              color: AppColors.goldAccent.withValues(alpha: 0.2),
               shape: BoxShape.circle),
           child: const Center(
               child: Text('✓',
                   style: TextStyle(
                       fontSize: 30,
-                      color: ResortTheme.mossGreen,
+                      color: AppColors.mossGreen,
                       fontFamily: 'serif'))),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.lg),
         Text('Stay Confirmed!',
-            style: GoogleFonts.playfairDisplay(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: ResortTheme.mossGreen)),
+            style: AppTextStyles.titleLg.copyWith(color: AppColors.mossGreen)),
         const SizedBox(height: 4),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -2941,15 +2925,15 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
             Text('Booking Reference ID: ',
                 style: GoogleFonts.inter(
                     fontSize: 12,
-                    color: ResortTheme.charcoal.withValues(alpha: 0.5))),
+                    color: AppColors.charcoal.withValues(alpha: 0.5))),
             Text(_createdBooking!.id,
                 style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: ResortTheme.goldAccent)),
+                    color: AppColors.goldAccent)),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.lg),
         Text(
             'Excellent choice. An exclusive private villa reservation is secured. We have locked dates ${_createdBooking!.startDate} to ${_createdBooking!.endDate} immediately.',
             style: GoogleFonts.inter(
@@ -2961,10 +2945,10 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: ResortTheme.stoneBg.withValues(alpha: 0.25),
-            borderRadius: BorderRadius.circular(24),
+            color: AppColors.stoneBg.withValues(alpha: 0.25),
+            borderRadius: AppRadius.xxlBr,
             border:
-                Border.all(color: ResortTheme.lightBone.withValues(alpha: 0.8)),
+                Border.all(color: AppColors.lightBone.withValues(alpha: 0.8)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2976,17 +2960,17 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                       style: GoogleFonts.inter(
                           fontSize: 11.5,
                           fontWeight: FontWeight.bold,
-                          color: ResortTheme.mossGreen)),
+                          color: AppColors.mossGreen)),
                   Text(_createdBooking!.id,
                       style: GoogleFonts.inter(
                           fontSize: 11.5,
                           fontWeight: FontWeight.bold,
-                          color: ResortTheme.mossGreen)),
+                          color: AppColors.mossGreen)),
                 ],
               ),
-              const SizedBox(height: 8),
-              const Divider(color: ResortTheme.lightBone),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
+              const Divider(color: AppColors.lightBone),
+              const SizedBox(height: AppSpacing.sm),
               _invoiceRow('Guest:', _createdBooking!.guestName),
               _invoiceRow('Phone:', _createdBooking!.guestPhone),
               _invoiceRow('Accommodation:',
@@ -2999,9 +2983,9 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                     isDiscount: true),
               _invoiceRow('Tax Amount:',
                   '₹${_createdBooking!.taxAmount.toStringAsFixed(0)}'),
-              const SizedBox(height: 8),
-              const Divider(color: ResortTheme.lightBone),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
+              const Divider(color: AppColors.lightBone),
+              const SizedBox(height: AppSpacing.sm),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -3009,13 +2993,13 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                       style: GoogleFonts.inter(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: ResortTheme.mossGreen)),
+                          color: AppColors.mossGreen)),
                   Text(
                       '₹${_createdBooking!.advancePaidAmount.toStringAsFixed(0)} INR',
                       style: GoogleFonts.inter(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: ResortTheme.mossGreen)),
+                          color: AppColors.mossGreen)),
                 ],
               ),
             ],
@@ -3027,20 +3011,20 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
           height: 44,
           child: ElevatedButton.icon(
             onPressed: () {},
-            icon: const Icon(Icons.print, size: 16, color: ResortTheme.stoneBg),
+            icon: const Icon(Icons.print, size: 16, color: AppColors.stoneBg),
             label: Text('Print Copy',
                 style: GoogleFonts.inter(
-                    color: ResortTheme.stoneBg,
+                    color: AppColors.stoneBg,
                     fontSize: 12,
                     fontWeight: FontWeight.bold)),
             style: ElevatedButton.styleFrom(
-              backgroundColor: ResortTheme.mossGreen,
+              backgroundColor: AppColors.mossGreen,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16)),
             ),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.md),
         TextButton(
           onPressed: () {
             setState(() {
@@ -3056,7 +3040,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               style: GoogleFonts.inter(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: ResortTheme.goldAccent)),
+                  color: AppColors.goldAccent)),
         ),
       ],
     );
@@ -3070,15 +3054,15 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
           Text(label,
               style: GoogleFonts.inter(
                   fontSize: 11.5,
-                  color: ResortTheme.charcoal.withValues(alpha: 0.9))),
+                  color: AppColors.charcoal.withValues(alpha: 0.9))),
           const SizedBox(width: 4),
           Text(value,
               style: GoogleFonts.inter(
                   fontSize: 11.5,
                   fontWeight: FontWeight.bold,
                   color: isDiscount
-                      ? ResortTheme.mossGreen
-                      : ResortTheme.charcoal)),
+                      ? AppColors.mossGreen
+                      : AppColors.charcoal)),
         ],
       ),
     );
@@ -3092,14 +3076,14 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
           Text(label,
               style: GoogleFonts.inter(
                   fontSize: 12,
-                  color: ResortTheme.charcoal.withValues(alpha: 0.7))),
+                  color: AppColors.charcoal.withValues(alpha: 0.7))),
           const SizedBox(width: 4),
           Expanded(
               child: Text(value,
                   style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: ResortTheme.charcoal))),
+                      color: AppColors.charcoal))),
         ],
       ),
     );
@@ -3117,14 +3101,14 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-                color: ResortTheme.lightBone.withValues(alpha: 0.8))),
+                color: AppColors.lightBone.withValues(alpha: 0.8))),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-                color: ResortTheme.lightBone.withValues(alpha: 0.8))),
+                color: AppColors.lightBone.withValues(alpha: 0.8))),
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: ResortTheme.mossGreen)),
+            borderSide: const BorderSide(color: AppColors.mossGreen)),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       ),
@@ -3142,16 +3126,16 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
               style: GoogleFonts.inter(
                   fontSize: 12,
                   color: isDiscount
-                      ? ResortTheme.mossGreen
-                      : ResortTheme.charcoal.withValues(alpha: 0.8),
+                      ? AppColors.mossGreen
+                      : AppColors.charcoal.withValues(alpha: 0.8),
                   fontWeight:
                       isDiscount ? FontWeight.bold : FontWeight.normal)),
           Text(value,
               style: GoogleFonts.inter(
                   fontSize: 12,
                   color: isDiscount
-                      ? ResortTheme.mossGreen
-                      : ResortTheme.charcoal.withValues(alpha: 0.8),
+                      ? AppColors.mossGreen
+                      : AppColors.charcoal.withValues(alpha: 0.8),
                   fontWeight:
                       isDiscount ? FontWeight.bold : FontWeight.normal)),
         ],
@@ -3185,7 +3169,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
             border:
-                Border.all(color: ResortTheme.lightBone.withValues(alpha: 0.8)),
+                Border.all(color: AppColors.lightBone.withValues(alpha: 0.8)),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -3194,9 +3178,9 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                   style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: ResortTheme.charcoal)),
+                      color: AppColors.charcoal)),
               const Icon(Icons.calendar_today,
-                  size: 14, color: ResortTheme.charcoal),
+                  size: 14, color: AppColors.charcoal),
             ],
           ),
         ),
@@ -3213,9 +3197,9 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
         decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
-          border: Border.all(color: ResortTheme.lightBone),
+          border: Border.all(color: AppColors.lightBone),
         ),
-        child: Icon(icon, size: 14, color: ResortTheme.charcoal),
+        child: Icon(icon, size: 14, color: AppColors.charcoal),
       ),
     );
   }

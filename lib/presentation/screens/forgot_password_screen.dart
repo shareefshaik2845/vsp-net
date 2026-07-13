@@ -99,7 +99,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 style: GoogleFonts.playfairDisplay(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: ResortTheme.goldAccent,
+                  color: AppColors.goldAccent,
                 ),
               ),
               const SizedBox(height: 6),
@@ -118,7 +118,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 style: GoogleFonts.spaceGrotesk(
                   fontSize: 9,
                   fontWeight: FontWeight.bold,
-                  color: ResortTheme.goldAccent.withValues(alpha: 0.6),
+                  color: AppColors.goldAccent.withValues(alpha: 0.6),
                   letterSpacing: 1.0,
                 ),
               ),
@@ -131,7 +131,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 decoration: InputDecoration(
                   hintText: 'Enter email address',
                   hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
-                  prefixIcon: const Icon(Icons.email_outlined, size: 16, color: ResortTheme.goldAccent),
+                  prefixIcon: const Icon(Icons.email_outlined, size: 16, color: AppColors.goldAccent),
                   filled: true,
                   fillColor: Colors.white.withValues(alpha: 0.04),
                   border: OutlineInputBorder(
@@ -144,7 +144,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: ResortTheme.goldAccent),
+                    borderSide: const BorderSide(color: AppColors.goldAccent),
                   ),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
@@ -160,11 +160,11 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   width: double.infinity,
                   height: 50,
                   decoration: BoxDecoration(
-                    gradient: ResortTheme.goldGradient,
+                    gradient: AppGradients.gold,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: ResortTheme.goldAccent.withValues(alpha: 0.3),
+                        color: AppColors.goldAccent.withValues(alpha: 0.3),
                         blurRadius: 16,
                         offset: const Offset(0, 4),
                       ),
@@ -201,7 +201,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     'Back to Login',
                     style: GoogleFonts.inter(
                       fontSize: 11,
-                      color: ResortTheme.goldAccent.withValues(alpha: 0.8),
+                      color: AppColors.goldAccent.withValues(alpha: 0.8),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -218,7 +218,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
-          gradient: ResortTheme.darkEmeraldGradient,
+          gradient: AppGradients.darkEmerald,
         ),
         child: Stack(
           children: [
@@ -232,8 +232,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      ResortTheme.goldAccent.withValues(alpha: 0.08),
-                      ResortTheme.goldAccent.withValues(alpha: 0.0),
+                      AppColors.goldAccent.withValues(alpha: 0.08),
+                      AppColors.goldAccent.withValues(alpha: 0.0),
                     ],
                   ),
                 ),
@@ -249,8 +249,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      ResortTheme.goldAccent.withValues(alpha: 0.05),
-                      ResortTheme.goldAccent.withValues(alpha: 0.0),
+                      AppColors.goldAccent.withValues(alpha: 0.05),
+                      AppColors.goldAccent.withValues(alpha: 0.0),
                     ],
                   ),
                 ),

@@ -95,7 +95,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                         width: 40,
                         height: 4,
                         decoration: BoxDecoration(
-                          color: ResortTheme.lightBone,
+                          color: AppColors.lightBone,
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -106,7 +106,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                       style: GoogleFonts.playfairDisplay(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: ResortTheme.mossGreen,
+                        color: AppColors.mossGreen,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -114,17 +114,17 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                       'Reservation ID: ${booking.id}',
                       style: GoogleFonts.inter(
                         fontSize: 12,
-                        color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                        color: AppColors.charcoal.withValues(alpha: 0.5),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    const Divider(color: ResortTheme.lightBone),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.lg),
+                    const Divider(color: AppColors.lightBone),
+                    const SizedBox(height: AppSpacing.lg),
                     
                     // Refund Policy info
                     Container(
-                      padding: const EdgeInsets.all(16),
+                        padding: AppSpacing.allLg,
                       decoration: BoxDecoration(
                         color: const Color(0xFFFFF5F5),
                         borderRadius: BorderRadius.circular(16),
@@ -147,7 +147,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: AppSpacing.sm),
                           Text(
                             'Cancel before 48 hours of check-in for a full 100% refund of your advance deposit. Inside 48 hours, a 30% retention fee applies.',
                             style: GoogleFonts.inter(
@@ -173,10 +173,10 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.0,
-                        color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                        color: AppColors.charcoal.withValues(alpha: 0.5),
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.sm),
                     TextField(
                       controller: _cancelReasonController,
                       maxLines: 3,
@@ -184,20 +184,20 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                       decoration: InputDecoration(
                         hintText: 'Please share your reason for cancellation...',
                         filled: true,
-                        fillColor: ResortTheme.stoneBg.withValues(alpha: 0.3),
+                        fillColor: AppColors.stoneBg.withValues(alpha: 0.3),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: BorderSide(color: ResortTheme.lightBone.withValues(alpha: 0.8)),
+                          borderRadius: AppRadius.lgBr,
+                          borderSide: BorderSide(color: AppColors.lightBone.withValues(alpha: 0.8)),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: BorderSide(color: ResortTheme.lightBone.withValues(alpha: 0.8)),
+                          borderRadius: AppRadius.lgBr,
+                          borderSide: BorderSide(color: AppColors.lightBone.withValues(alpha: 0.8)),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: const BorderSide(color: ResortTheme.mossGreen),
+                          borderRadius: AppRadius.lgBr,
+                          borderSide: const BorderSide(color: AppColors.mossGreen),
                         ),
-                        contentPadding: const EdgeInsets.all(16),
+                        contentPadding: AppSpacing.allLg,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -209,14 +209,14 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                           child: OutlinedButton(
                             onPressed: () => Navigator.pop(context),
                             style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: ResortTheme.lightBone),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                              side: const BorderSide(color: AppColors.lightBone),
+                              shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
                               padding: const EdgeInsets.symmetric(vertical: 14),
                             ),
                             child: Text(
                               'Go Back',
                               style: GoogleFonts.inter(
-                                color: ResortTheme.mossGreen,
+                                color: AppColors.mossGreen,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
                               ),
@@ -249,7 +249,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFC62828),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                              shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
                               padding: const EdgeInsets.symmetric(vertical: 14),
                             ),
                             child: Text(
@@ -284,7 +284,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
             label,
             style: GoogleFonts.inter(
               fontSize: 12,
-              color: ResortTheme.charcoal.withValues(alpha: 0.7),
+              color: AppColors.charcoal.withValues(alpha: 0.7),
             ),
           ),
           Text(
@@ -293,8 +293,8 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
               fontSize: 12,
               fontWeight: isBold || isHighlight ? FontWeight.bold : FontWeight.w500,
               color: isHighlight
-                  ? ResortTheme.mossGreen
-                  : (isBold ? const Color(0xFFC62828) : ResortTheme.charcoal),
+                  ? AppColors.mossGreen
+                  : (isBold ? const Color(0xFFC62828) : AppColors.charcoal),
             ),
           ),
         ],
@@ -355,7 +355,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                         style: GoogleFonts.playfairDisplay(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: ResortTheme.mossGreen,
+                          color: AppColors.mossGreen,
                         ),
                       ),
                       const SizedBox(height: 6),
@@ -363,7 +363,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                         'Track active check-ins, upcoming stays, download statements, and cancel reservations.',
                         style: GoogleFonts.inter(
                           fontSize: 13,
-                          color: ResortTheme.charcoal.withValues(alpha: 0.6),
+                          color: AppColors.charcoal.withValues(alpha: 0.6),
                           height: 1.4,
                         ),
                       ),
@@ -406,10 +406,10 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isActive ? ResortTheme.mossGreen : ResortTheme.stoneBg.withValues(alpha: 0.5),
+          color: isActive ? AppColors.mossGreen : AppColors.stoneBg.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isActive ? Colors.transparent : ResortTheme.lightBone,
+            color: isActive ? Colors.transparent : AppColors.lightBone,
           ),
         ),
         child: Row(
@@ -418,7 +418,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
             Icon(
               icon,
               size: 16,
-              color: isActive ? Colors.white : ResortTheme.charcoal.withValues(alpha: 0.6),
+              color: isActive ? Colors.white : AppColors.charcoal.withValues(alpha: 0.6),
             ),
             const SizedBox(width: 8),
             Text(
@@ -426,7 +426,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
               style: GoogleFonts.inter(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                color: isActive ? Colors.white : ResortTheme.charcoal.withValues(alpha: 0.8),
+                color: isActive ? Colors.white : AppColors.charcoal.withValues(alpha: 0.8),
               ),
             ),
           ],
@@ -452,9 +452,9 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
               Icon(
                 isUpcoming ? Icons.calendar_today_outlined : Icons.folder_open_outlined,
                 size: 40,
-                color: ResortTheme.charcoal.withValues(alpha: 0.3),
+                color: AppColors.charcoal.withValues(alpha: 0.3),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               Text(
                 isUpcoming
                     ? 'No upcoming stays found in your trips.'
@@ -462,7 +462,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                  color: AppColors.charcoal.withValues(alpha: 0.5),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -520,7 +520,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       color: statusBg,
-                      borderRadius: BorderRadius.circular(8),
+                              borderRadius: AppRadius.smBr,
                     ),
                     child: Text(
                       statusLabel,
@@ -536,32 +536,28 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                     style: GoogleFonts.spaceGrotesk(
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
-                      color: ResortTheme.goldAccent,
+                      color: AppColors.goldAccent,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               
               // Resort Title and Details
               Text(
                 'Whispering Valleys Sanctuary', // Standard default resort label
-                style: GoogleFonts.playfairDisplay(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: ResortTheme.mossGreen,
-                ),
+                  style: AppTextStyles.titleLg.copyWith(color: AppColors.mossGreen),
               ),
               const SizedBox(height: 6),
               Row(
                 children: [
-                  const Icon(Icons.date_range_outlined, size: 14, color: ResortTheme.mossGreen),
+                  const Icon(Icons.date_range_outlined, size: 14, color: AppColors.mossGreen),
                   const SizedBox(width: 6),
                   Text(
                     '${b.startDate} to ${b.endDate} (${b.nightsCount} Nights)',
                     style: GoogleFonts.inter(
                       fontSize: 12,
-                      color: ResortTheme.charcoal.withValues(alpha: 0.7),
+                      color: AppColors.charcoal.withValues(alpha: 0.7),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -570,22 +566,22 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
               const SizedBox(height: 4),
               Row(
                 children: [
-                  const Icon(Icons.people_outline, size: 14, color: ResortTheme.mossGreen),
+                  const Icon(Icons.people_outline, size: 14, color: AppColors.mossGreen),
                   const SizedBox(width: 6),
                   Text(
                     '${b.guestsCount} Guest(s) checked in',
                     style: GoogleFonts.inter(
                       fontSize: 12,
-                      color: ResortTheme.charcoal.withValues(alpha: 0.7),
+                      color: AppColors.charcoal.withValues(alpha: 0.7),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
               ),
               
-              const SizedBox(height: 16),
-              const Divider(color: ResortTheme.lightBone),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
+              const Divider(color: AppColors.lightBone),
+              const SizedBox(height: AppSpacing.lg),
               
               // Pricing summary
               SizedBox(
@@ -604,7 +600,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                           style: GoogleFonts.spaceGrotesk(
                             fontSize: 9,
                             fontWeight: FontWeight.bold,
-                            color: ResortTheme.charcoal.withValues(alpha: 0.4),
+                            color: AppColors.charcoal.withValues(alpha: 0.4),
                             letterSpacing: 1.0,
                           ),
                         ),
@@ -614,7 +610,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                           style: GoogleFonts.inter(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: ResortTheme.mossGreen,
+                            color: AppColors.mossGreen,
                           ),
                         ),
                       ],
@@ -639,14 +635,14 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                             }
                           },
                           style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: ResortTheme.lightBone),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            side: const BorderSide(color: AppColors.lightBone),
+                            shape: RoundedRectangleBorder(borderRadius: AppRadius.mdBr),
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                           ),
                           child: Text(
                             'View Invoice',
                             style: GoogleFonts.inter(
-                              color: ResortTheme.charcoal,
+                              color: AppColors.charcoal,
                               fontWeight: FontWeight.bold,
                               fontSize: 11,
                             ),
@@ -657,7 +653,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                             onPressed: () => _openCancellationSheet(b),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFC62828),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              shape: RoundedRectangleBorder(borderRadius: AppRadius.mdBr),
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                             ),
                             child: Text(
@@ -721,17 +717,13 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                       children: [
                         Text(
                           'VSP Nest Billing Statement',
-                          style: GoogleFonts.playfairDisplay(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: ResortTheme.mossGreen,
-                          ),
+                        style: AppTextStyles.titleMd.copyWith(color: AppColors.mossGreen),
                         ),
                         Text(
                           'Invoice #$invoiceNumber • ${booking.id}',
                           style: GoogleFonts.inter(
                             fontSize: 10,
-                            color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                            color: AppColors.charcoal.withValues(alpha: 0.5),
                           ),
                         ),
                         if (invStatus.isNotEmpty)
@@ -740,7 +732,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
                               color: invStatus == 'PAID' ? Colors.green.shade50 : Colors.orange.shade50,
-                              borderRadius: BorderRadius.circular(8),
+                      borderRadius: AppRadius.smBr,
                             ),
                             child: Text(
                               invStatus,
@@ -759,9 +751,9 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              const Divider(color: ResortTheme.lightBone),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
+              const Divider(color: AppColors.lightBone),
+              const SizedBox(height: AppSpacing.md),
               
               Expanded(
                 child: SingleChildScrollView(
@@ -772,15 +764,15 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                       _invoiceDetailsRow('Check-in Period:', '${booking.startDate} to ${booking.endDate} (${booking.nightsCount} Nights)'),
                       if (dueDate.isNotEmpty) _invoiceDetailsRow('Due Date:', dueDate.split('T').first),
                       if (paidAt.isNotEmpty) _invoiceDetailsRow('Paid At:', paidAt.split('T').first),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSpacing.lg),
                       
                       // Breakdown
                       Container(
-                        padding: const EdgeInsets.all(16),
+                      padding: AppSpacing.allLg,
                         decoration: BoxDecoration(
-                          color: ResortTheme.stoneBg.withValues(alpha: 0.4),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: ResortTheme.lightBone),
+                          color: AppColors.stoneBg.withValues(alpha: 0.4),
+                          borderRadius: AppRadius.lgBr,
+                          border: Border.all(color: AppColors.lightBone),
                         ),
                         child: Column(
                           children: [
@@ -792,7 +784,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                                   style: GoogleFonts.spaceGrotesk(
                                     fontSize: 9,
                                     fontWeight: FontWeight.bold,
-                                    color: ResortTheme.charcoal.withValues(alpha: 0.4),
+                                    color: AppColors.charcoal.withValues(alpha: 0.4),
                                     letterSpacing: 1.0,
                                   ),
                                 ),
@@ -801,14 +793,14 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                                   style: GoogleFonts.spaceGrotesk(
                                     fontSize: 9,
                                     fontWeight: FontWeight.bold,
-                                    color: ResortTheme.charcoal.withValues(alpha: 0.4),
+                                    color: AppColors.charcoal.withValues(alpha: 0.4),
                                     letterSpacing: 1.0,
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
-                            const Divider(color: ResortTheme.lightBone),
+                            const SizedBox(height: AppSpacing.sm),
+                            const Divider(color: AppColors.lightBone),
                             const SizedBox(height: 10),
                             _invoiceBreakdownItem('Luxury Accommodation Stays (${booking.nightsCount} Nights)', subtotal),
                             if (booking.extraGuestAmount > 0) _invoiceBreakdownItem('Extra Guest Capacity Surcharges', booking.extraGuestAmount),
@@ -816,8 +808,8 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                             if (discount > 0) _invoiceBreakdownItem('Coupon Applied (${booking.couponApplied ?? 'Promo'})', -discount, isDiscount: true),
                             _invoiceBreakdownItem('Luxury GST (18.00%)', tax),
                             const SizedBox(height: 10),
-                            const Divider(color: ResortTheme.lightBone),
-                            const SizedBox(height: 8),
+                            const Divider(color: AppColors.lightBone),
+                            const SizedBox(height: AppSpacing.sm),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -826,7 +818,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                                   style: GoogleFonts.inter(
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold,
-                                    color: ResortTheme.mossGreen,
+                                    color: AppColors.mossGreen,
                                   ),
                                 ),
                                 Text(
@@ -834,7 +826,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                                   style: GoogleFonts.inter(
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold,
-                                    color: ResortTheme.mossGreen,
+                                    color: AppColors.mossGreen,
                                   ),
                                 ),
                               ],
@@ -842,15 +834,15 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSpacing.lg),
                       
                       // Payment Summary
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFFFDF5),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: ResortTheme.goldAccent.withValues(alpha: 0.3)),
+                          borderRadius: AppRadius.mdBr,
+                          border: Border.all(color: AppColors.goldAccent.withValues(alpha: 0.3)),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -860,7 +852,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                               style: GoogleFonts.inter(
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
-                                color: ResortTheme.mossGreen,
+                                color: AppColors.mossGreen,
                               ),
                             ),
                             Text(
@@ -868,7 +860,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                               style: GoogleFonts.inter(
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
-                                color: ResortTheme.mossGreen,
+                                color: AppColors.mossGreen,
                               ),
                             ),
                           ],
@@ -878,7 +870,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               
               Row(
                 children: [
@@ -889,14 +881,14 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                         _invoiceData = null;
                       }),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: ResortTheme.lightBone),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        side: const BorderSide(color: AppColors.lightBone),
+                        shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                       child: Text(
                         'Close',
                         style: GoogleFonts.inter(
-                          color: ResortTheme.charcoal,
+                          color: AppColors.charcoal,
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
                         ),
@@ -919,8 +911,8 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: ResortTheme.mossGreen,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        backgroundColor: AppColors.mossGreen,
+                        shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                     ),
@@ -947,7 +939,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
               label,
               style: GoogleFonts.inter(
                 fontSize: 11.5,
-                color: ResortTheme.charcoal.withValues(alpha: 0.6),
+                color: AppColors.charcoal.withValues(alpha: 0.6),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -958,7 +950,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
               style: GoogleFonts.inter(
                 fontSize: 11.5,
                 fontWeight: FontWeight.bold,
-                color: ResortTheme.charcoal,
+                color: AppColors.charcoal,
               ),
             ),
           ),
@@ -978,7 +970,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
               label,
               style: GoogleFonts.inter(
                 fontSize: 11,
-                color: isDiscount ? ResortTheme.mossGreen : ResortTheme.charcoal.withValues(alpha: 0.8),
+                color: isDiscount ? AppColors.mossGreen : AppColors.charcoal.withValues(alpha: 0.8),
                 fontWeight: isDiscount ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -989,7 +981,7 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                 : '₹${_formatIndianCurrency(value)}',
             style: GoogleFonts.inter(
               fontSize: 11,
-              color: isDiscount ? ResortTheme.mossGreen : ResortTheme.charcoal.withValues(alpha: 0.8),
+              color: isDiscount ? AppColors.mossGreen : AppColors.charcoal.withValues(alpha: 0.8),
               fontWeight: isDiscount ? FontWeight.bold : FontWeight.normal,
             ),
           ),

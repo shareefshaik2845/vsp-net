@@ -1,38 +1,32 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../providers/state_provider.dart';
-import '../routing/app_router.dart';
-import '../routing/route_names.dart';
 import '../../core/theme.dart';
 import '../../core/rate_limiter.dart';
 import '../../domain/entities.dart';
-import '../widgets/vsp_nest_logo.dart';
 import '../../core/api_client.dart';
 import '../../core/snackbar_helper.dart';
 import '../../data/remote/auth_api_service.dart' show AuthApiService, AuthFailure, AuthSuccess;
+import '../providers/state_provider.dart';
+import '../routing/app_router.dart';
+import '../routing/route_names.dart';
+import '../widgets/vsp_nest_logo.dart';
+import '../components/app_button.dart';
+import '../components/app_text_field.dart';
 
 UserRole? _mapBackendRole(String backendRole) {
   switch (backendRole) {
-    case 'SUPER_ADMIN':
-      return UserRole.superAdmin;
-    case 'ADMIN':
-      return UserRole.admin;
-    case 'STAFF':
-      return UserRole.staff;
-    case 'ACCOUNTANT':
-      return UserRole.accountant;
-    case 'CUSTOMER':
-      return UserRole.customer;
-    default:
-      return null;
+    case 'SUPER_ADMIN': return UserRole.superAdmin;
+    case 'ADMIN': return UserRole.admin;
+    case 'STAFF': return UserRole.staff;
+    case 'ACCOUNTANT': return UserRole.accountant;
+    case 'CUSTOMER': return UserRole.customer;
+    default: return null;
   }
 }
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
-
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
@@ -42,6 +36,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordController = TextEditingController();
   final _rateLimiter = RateLimiter();
   bool _isLoading = false;
+
   @override
   void dispose() {
     _usernameController.dispose();
@@ -53,46 +48,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final email = _usernameController.text.trim().toLowerCase();
     final password = _passwordController.text;
 
-    if (email.isEmpty) {
-      SnackbarHelper.warning(context, 'Please enter an email address.');
-      return;
-    }
-
-    if (password.isEmpty) {
-      SnackbarHelper.warning(context, 'Please enter a password.');
-      return;
-    }
-
-    if (password.length < 6) {
-      SnackbarHelper.warning(context, 'Password must be at least 6 characters.');
-      return;
-    }
+    if (email.isEmpty) { SnackbarHelper.warning(context, 'Please enter an email address.'); return; }
+    if (password.isEmpty) { SnackbarHelper.warning(context, 'Please enter a password.'); return; }
+    if (password.length < 6) { SnackbarHelper.warning(context, 'Password must be at least 6 characters.'); return; }
 
     if (!_rateLimiter.canAttempt) {
       final wait = _rateLimiter.retryAfter;
       if (wait.inSeconds > 0) {
-        SnackbarHelper.warning(
-          context,
-          'Too many attempts. Please wait ${wait.inSeconds}s and try again.',
-        );
+        SnackbarHelper.warning(context, 'Too many attempts. Please wait ${wait.inSeconds}s and try again.');
       }
       return;
     }
 
     setState(() => _isLoading = true);
-
-    // Clear any stale tokens before login to avoid 403 from interceptor
     await ApiClient.instance.clearTokens();
-
     final authResult = await AuthApiService().login(email, password);
-
     if (!mounted) return;
 
     if (authResult is AuthFailure) {
       _rateLimiter.recordAttempt();
       setState(() => _isLoading = false);
-      final failure = authResult as AuthFailure;
-      SnackbarHelper.error(context, failure.message);
+      SnackbarHelper.error(context, (authResult as AuthFailure).message);
       return;
     }
 
@@ -119,203 +95,79 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
 
     ref.read(isLoggedInProvider.notifier).state = true;
-
     if (!mounted) return;
     Navigator.pushReplacementNamed(context, AppRouter.routeForRole(targetRole));
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isWide = size.width >= 800;
 
-    Widget formCard = ClipRRect(
-      borderRadius: BorderRadius.circular(32),
+    final formCard = ClipRRect(
+      borderRadius: AppRadius.xxxlBr,
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
         child: Container(
           width: isWide ? 440 : double.infinity,
-          padding: const EdgeInsets.all(32),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.06),
-            borderRadius: BorderRadius.circular(32),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.12), width: 1.2),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.25),
-                blurRadius: 30,
-                offset: const Offset(0, 15),
-              ),
-            ],
-          ),
+          padding: const EdgeInsets.all(AppSpacing.xxxl),
+          decoration: AppTheme.glass(borderRadius: AppRadius.xxxlBr, opacity: 0.06),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                'Sanctuary Portal',
-                style: GoogleFonts.playfairDisplay(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: ResortTheme.goldAccent,
-                ),
-              ),
-              const SizedBox(height: 6),
+              Text('Sanctuary Portal', style: AppTextStyles.titleLg.copyWith(color: AppColors.goldAccent)),
+              const SizedBox(height: AppSpacing.xs),
               Text(
                 'Sign in to access the sanctuary portal.',
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  color: Colors.white.withValues(alpha: 0.6),
-                  height: 1.4,
-                ),
+                style: AppTextStyles.bodyXs.copyWith(color: Colors.white.withValues(alpha: 0.6)),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.xxl),
 
-              // Username & Password fields
-              Text(
-                'CREDENTIALS',
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 9,
-                  fontWeight: FontWeight.bold,
-                  color: ResortTheme.goldAccent.withValues(alpha: 0.6),
-                  letterSpacing: 1.0,
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
+              Text('CREDENTIALS', style: AppTextStyles.labelSm.copyWith(color: AppColors.goldAccent.withValues(alpha: 0.6))),
+              const SizedBox(height: AppSpacing.sm),
+              AppDarkTextField(
                 controller: _usernameController,
-                readOnly: false,
+                hintText: 'Enter email address',
+                prefixIcon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
-                style: GoogleFonts.inter(fontSize: 12, color: Colors.white.withValues(alpha: 0.9)),
-                decoration: InputDecoration(
-                  hintText: 'Enter email address',
-                  hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
-                  prefixIcon: const Icon(Icons.email_outlined, size: 16, color: ResortTheme.goldAccent),
-                  filled: true,
-                  fillColor: Colors.white.withValues(alpha: 0.04),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: ResortTheme.goldAccent),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                ),
               ),
-              const SizedBox(height: 12),
-              TextField(
+              const SizedBox(height: AppSpacing.sm),
+              AppDarkTextField(
                 controller: _passwordController,
+                hintText: 'Enter password',
+                prefixIcon: Icons.lock_outline,
                 obscureText: true,
-                readOnly: false,
-                style: GoogleFonts.inter(fontSize: 12, color: Colors.white.withValues(alpha: 0.9)),
-                decoration: InputDecoration(
-                  hintText: 'Enter password',
-                  hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
-                  prefixIcon: const Icon(Icons.lock_outline, size: 16, color: ResortTheme.goldAccent),
-                  filled: true,
-                  fillColor: Colors.white.withValues(alpha: 0.04),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: ResortTheme.goldAccent),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.xl),
 
-              // Access button with Gold Gradient
-              InkWell(
-                onTap: _isLoading ? null : _handleLogin,
-                borderRadius: BorderRadius.circular(16),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  width: double.infinity,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    gradient: ResortTheme.goldGradient,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: ResortTheme.goldAccent.withValues(alpha: 0.3),
-                        blurRadius: 16,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  alignment: Alignment.center,
-                  child: _isLoading
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            color: Color(0xFF2C3627),
-                            strokeWidth: 2.5,
-                          ),
-                        )
-                      : Text(
-                          'Access Sanctuary Portal',
-                          style: GoogleFonts.inter(
-                            color: const Color(0xFF2C3627),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                ),
+              AppButton(
+                label: 'Access Sanctuary Portal',
+                onPressed: _isLoading ? null : _handleLogin,
+                variant: AppButtonVariant.gold,
+                loading: _isLoading,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
 
               Row(
                 children: [
                   Expanded(
                     child: TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, RouteNames.forgotPassword);
-                      },
-                      child: Text(
-                        'Forgot Password?',
-                        style: GoogleFonts.inter(
-                          fontSize: 11,
-                          color: ResortTheme.goldAccent.withValues(alpha: 0.8),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      onPressed: () => Navigator.pushNamed(context, RouteNames.forgotPassword),
+                      child: Text('Forgot Password?',
+                          style: AppTextStyles.bodyXs.copyWith(color: AppColors.goldAccent.withValues(alpha: 0.8))),
                     ),
                   ),
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, RouteNames.install);
-                      },
+                      onPressed: () => Navigator.pushNamed(context, RouteNames.install),
                       style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: ResortTheme.goldAccent.withValues(alpha: 0.4)),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        side: BorderSide(color: AppColors.goldAccent.withValues(alpha: 0.4)),
+                        shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
                         padding: const EdgeInsets.symmetric(vertical: 10),
                       ),
-                      child: Text(
-                        'Request a Live Demo',
-                        style: GoogleFonts.inter(
-                          fontSize: 11,
-                          color: ResortTheme.goldAccent.withValues(alpha: 0.8),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      child: Text('Request a Live Demo',
+                          style: AppTextStyles.bodyXs.copyWith(color: AppColors.goldAccent.withValues(alpha: 0.8))),
                     ),
                   ),
                 ],
@@ -330,81 +182,50 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: ResortTheme.darkEmeraldGradient,
-        ),
+        decoration: const BoxDecoration(gradient: AppGradients.darkEmerald),
         child: Stack(
           children: [
-            // Ambient light glow backdrops
             Positioned(
-              top: -100,
-              left: -100,
+              top: -100, left: -100,
               child: Container(
-                width: 350,
-                height: 350,
+                width: 350, height: 350,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      ResortTheme.goldAccent.withValues(alpha: 0.08),
-                      ResortTheme.goldAccent.withValues(alpha: 0.0),
-                    ],
-                  ),
+                  gradient: RadialGradient(colors: [AppColors.goldAccent.withValues(alpha: 0.08), AppColors.goldAccent.withValues(alpha: 0.0)]),
                 ),
               ),
             ),
             Positioned(
-              bottom: -150,
-              right: -100,
+              bottom: -150, right: -100,
               child: Container(
-                width: 450,
-                height: 450,
+                width: 450, height: 450,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      ResortTheme.goldAccent.withValues(alpha: 0.05),
-                      ResortTheme.goldAccent.withValues(alpha: 0.0),
-                    ],
-                  ),
+                  gradient: RadialGradient(colors: [AppColors.goldAccent.withValues(alpha: 0.05), AppColors.goldAccent.withValues(alpha: 0.0)]),
                 ),
               ),
             ),
-
-            // Main content
             Center(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Premium Logo Header
                     const VspNestBrandHeader(
-                      isVertical: true,
-                      logoSize: 72,
-                      titleFontSize: 34,
-                      subtitleFontSize: 26,
-                      isDarkBackground: true,
-                      useSingleLine: true,
+                      isVertical: true, logoSize: 72, titleFontSize: 34, subtitleFontSize: 26,
+                      isDarkBackground: true, useSingleLine: true,
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: AppSpacing.xs),
                     FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
                         'A U T H E N T I C   S A N C T U A R I E S',
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 9.5,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 2.5,
-                          color: ResortTheme.goldAccent,
-                        ),
+                        style: AppTextStyles.labelSm.copyWith(fontSize: 9.5, color: AppColors.goldAccent, letterSpacing: 2.5),
                       ),
                     ),
                     const SizedBox(height: 36),
-
                     formCard,
-
                   ],
                 ),
               ),

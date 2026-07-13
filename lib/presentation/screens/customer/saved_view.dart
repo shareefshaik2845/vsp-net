@@ -12,7 +12,7 @@ class SavedView extends ConsumerWidget {
     final savedResorts = ref.watch(savedPropertiesProvider);
 
     return Container(
-      color: ResortTheme.stoneBg,
+      color: AppColors.stoneBg,
       child: savedResorts.isEmpty
           ? Center(
               child: Column(
@@ -21,24 +21,24 @@ class SavedView extends ConsumerWidget {
                   Icon(
                     Icons.favorite_border,
                     size: 64,
-                    color: ResortTheme.mossGreen.withValues(alpha: 0.5),
+                    color: AppColors.mossGreen.withValues(alpha: 0.5),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSpacing.lg),
                   Text(
                     'No Saved Resorts Yet',
                     style: GoogleFonts.playfairDisplay(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: ResortTheme.mossGreen,
+                      color: AppColors.mossGreen,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.md),
                   Text(
                     'Tap the heart icon on a resort\nto save it to your wishlist.',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
                       fontSize: 15,
-                      color: ResortTheme.charcoal.withValues(alpha: 0.7),
+                      color: AppColors.charcoal.withValues(alpha: 0.7),
                       height: 1.5,
                     ),
                   ),
@@ -55,18 +55,18 @@ class SavedView extends ConsumerWidget {
                     style: GoogleFonts.playfairDisplay(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: ResortTheme.mossGreen,
+                      color: AppColors.mossGreen,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSpacing.sm),
                   Text(
                     'Quickly access and book your favorite private reserves.',
                     style: GoogleFonts.inter(
                       fontSize: 14,
-                      color: ResortTheme.charcoal.withValues(alpha: 0.6),
+                      color: AppColors.charcoal.withValues(alpha: 0.6),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSpacing.lg),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -77,8 +77,8 @@ class SavedView extends ConsumerWidget {
                         margin: const EdgeInsets.only(bottom: 20),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(color: ResortTheme.lightBone, width: 1.5),
+                          borderRadius: AppRadius.xxlBr,
+                          border: Border.all(color: AppColors.lightBone, width: 1.5),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withValues(alpha: 0.03),
@@ -88,7 +88,7 @@ class SavedView extends ConsumerWidget {
                           ],
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(24),
+                          borderRadius: AppRadius.xxlBr,
                           child: InkWell(
                             onTap: () {
                               ref.read(propertyProvider.notifier).updateProperty(resort);
@@ -115,17 +115,13 @@ class SavedView extends ConsumerWidget {
                                             fontSize: 9,
                                             fontWeight: FontWeight.bold,
                                             letterSpacing: 1.0,
-                                            color: ResortTheme.goldAccent,
+                                            color: AppColors.goldAccent,
                                           ),
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
                                           resort.name,
-                                          style: GoogleFonts.playfairDisplay(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: ResortTheme.mossGreen,
-                                          ),
+                                          style: AppTextStyles.titleSm.copyWith(color: AppColors.mossGreen),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -135,7 +131,7 @@ class SavedView extends ConsumerWidget {
                                           style: GoogleFonts.inter(
                                             fontSize: 13,
                                             fontWeight: FontWeight.bold,
-                                            color: ResortTheme.charcoal.withValues(alpha: 0.8),
+                                            color: AppColors.charcoal.withValues(alpha: 0.8),
                                           ),
                                         ),
                                       ],

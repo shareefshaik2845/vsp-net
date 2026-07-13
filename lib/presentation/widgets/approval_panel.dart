@@ -43,7 +43,7 @@ class ApprovalPanel extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: ResortTheme.lightBone),
+        border: Border.all(color: AppColors.lightBone),
         boxShadow: [
           BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4)),
         ],
@@ -53,7 +53,7 @@ class ApprovalPanel extends ConsumerWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.approval_outlined, color: ResortTheme.mossGreen, size: 22),
+              const Icon(Icons.approval_outlined, color: AppColors.mossGreen, size: 22),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -61,7 +61,7 @@ class ApprovalPanel extends ConsumerWidget {
                   style: GoogleFonts.playfairDisplay(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: ResortTheme.charcoal,
+                    color: AppColors.charcoal,
                   ),
                 ),
               ),
@@ -84,7 +84,7 @@ class ApprovalPanel extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 12),
-          const Divider(color: ResortTheme.lightBone),
+          const Divider(color: AppColors.lightBone),
           const SizedBox(height: 12),
           if (pending.isEmpty)
             Padding(
@@ -98,7 +98,7 @@ class ApprovalPanel extends ConsumerWidget {
                       'No pending approvals',
                       style: GoogleFonts.inter(
                         fontSize: 13,
-                        color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                        color: AppColors.charcoal.withValues(alpha: 0.5),
                       ),
                     ),
                   ],
@@ -117,9 +117,9 @@ class ApprovalPanel extends ConsumerWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: ResortTheme.softCream,
+        color: AppColors.softCream,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: ResortTheme.lightBone),
+        border: Border.all(color: AppColors.lightBone),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,16 +144,13 @@ class ApprovalPanel extends ConsumerWidget {
                       style: GoogleFonts.inter(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
-                        color: ResortTheme.charcoal,
+                        color: AppColors.charcoal,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       'Requested by ${req.requestedBy}',
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        color: ResortTheme.charcoal.withValues(alpha: 0.6),
-                      ),
+                      style: AppTextStyles.bodyXs,
                     ),
                   ],
                 ),
@@ -195,7 +192,7 @@ class ApprovalPanel extends ConsumerWidget {
                 icon: const Icon(Icons.check, size: 14),
                 label: Text('Approve', style: GoogleFonts.inter(fontSize: 11)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: ResortTheme.mossGreen,
+                  backgroundColor: AppColors.mossGreen,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

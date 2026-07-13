@@ -112,14 +112,14 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                               width: 60,
                               height: 60,
                               decoration: const BoxDecoration(
-                                color: ResortTheme.goldAccent,
+                                color: AppColors.goldAccent,
                                 shape: BoxShape.circle,
                               ),
                               alignment: Alignment.center,
                               child: Text(
                                 name.isNotEmpty ? name.substring(0, 1).toUpperCase() : 'U',
                                 style: GoogleFonts.playfairDisplay(
-                                  color: ResortTheme.mossGreen,
+                                  color: AppColors.mossGreen,
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -136,7 +136,7 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                                     style: GoogleFonts.playfairDisplay(
                                       fontSize: 22,
                                       fontWeight: FontWeight.bold,
-                                      color: ResortTheme.mossGreen,
+                                      color: AppColors.mossGreen,
                                     ),
                                   ),
                                   const SizedBox(height: 2),
@@ -145,7 +145,7 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                                     style: GoogleFonts.inter(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600,
-                                      color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                                      color: AppColors.charcoal.withValues(alpha: 0.5),
                                     ),
                                   ),
                                 ],
@@ -167,19 +167,19 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                           icon: Icon(
                             _isEditing ? Icons.close : Icons.edit_outlined,
                             size: 14,
-                            color: ResortTheme.mossGreen,
+                            color: AppColors.mossGreen,
                           ),
                           label: Text(
                             _isEditing ? 'Cancel' : 'Edit Profile',
                             style: GoogleFonts.inter(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
-                              color: ResortTheme.mossGreen,
+                              color: AppColors.mossGreen,
                             ),
                           ),
                           style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: ResortTheme.lightBone),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            side: const BorderSide(color: AppColors.lightBone),
+                            shape: RoundedRectangleBorder(borderRadius: AppRadius.mdBr),
                             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                           ),
                         ),
@@ -187,14 +187,14 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  const Divider(color: ResortTheme.lightBone),
+                  const Divider(color: AppColors.lightBone),
                   const SizedBox(height: 24),
 
                   // Profile fields
                   _profileField('FULL NAME', _nameController, _isEditing, Icons.person_outline),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.lg),
                   _profileField('EMAIL ADDRESS', _emailController, _isEditing, Icons.email_outlined, keyboardType: TextInputType.emailAddress),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.lg),
                   _profileField('TELEPHONE NUMBER', _phoneController, _isEditing, Icons.phone_android_outlined, keyboardType: TextInputType.phone),
 
                   if (_isEditing) ...[
@@ -223,8 +223,8 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                           SnackbarHelper.success(context, 'Profile details updated successfully!');
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: ResortTheme.mossGreen,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          backgroundColor: AppColors.mossGreen,
+                          shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
                         ),
                         child: Text(
                           'Save Settings Changes',
@@ -249,10 +249,10 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.2,
-                color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                color: AppColors.charcoal.withValues(alpha: 0.5),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
             LayoutBuilder(
               builder: (context, constraints) {
                 final isMobile = constraints.maxWidth < 600;
@@ -283,7 +283,7 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
               },
             ),
             if (memberSince.isNotEmpty) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
               Text(
                 'Member since ${memberSince.split('T').first}',
                 style: GoogleFonts.inter(fontSize: 11, color: Colors.grey),
@@ -296,37 +296,37 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
             GestureDetector(
               onTap: () => setState(() => _showPasswordSection = !_showPasswordSection),
               child: Container(
-                padding: const EdgeInsets.all(16),
+                padding: AppSpacing.allLg,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: AppRadius.lgBr,
                   border: Border.all(color: const Color(0xFFE6E2D3)),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.lock_outline, size: 18, color: ResortTheme.mossGreen),
+                    const Icon(Icons.lock_outline, size: 18, color: AppColors.mossGreen),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         'Security & Password',
-                        style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 13, color: ResortTheme.charcoal),
+                        style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.charcoal),
                       ),
                     ),
                     Icon(
                       _showPasswordSection ? Icons.expand_less : Icons.expand_more,
-                      color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                      color: AppColors.charcoal.withValues(alpha: 0.5),
                     ),
                   ],
                 ),
               ),
             ),
             if (_showPasswordSection) ...[
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: AppSpacing.allLg,
                 decoration: BoxDecoration(
-                  color: ResortTheme.stoneBg.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(16),
+                  color: AppColors.stoneBg.withValues(alpha: 0.3),
+                  borderRadius: AppRadius.lgBr,
                   border: Border.all(color: const Color(0xFFE6E2D3)),
                 ),
                 child: Column(
@@ -338,22 +338,22 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                       decoration: InputDecoration(
                         labelText: 'Current Password',
                         prefixIcon: const Icon(Icons.lock, size: 18),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                        border: OutlineInputBorder(borderRadius: AppRadius.mdBr),
                       ),
                       style: GoogleFonts.inter(fontSize: 12),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: AppSpacing.md),
                     TextField(
                       controller: _newPasswordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: 'New Password',
                         prefixIcon: const Icon(Icons.lock_outline, size: 18),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                        border: OutlineInputBorder(borderRadius: AppRadius.mdBr),
                       ),
                       style: GoogleFonts.inter(fontSize: 12),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: AppSpacing.md),
                     SizedBox(
                       width: double.infinity,
                       height: 44,
@@ -376,8 +376,8 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: ResortTheme.mossGreen,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          backgroundColor: AppColors.mossGreen,
+                          shape: RoundedRectangleBorder(borderRadius: AppRadius.mdBr),
                         ),
                         child: Text(
                           'Change Password',
@@ -405,7 +405,7 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
             fontSize: 9,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.0,
-            color: ResortTheme.charcoal.withValues(alpha: 0.4),
+            color: AppColors.charcoal.withValues(alpha: 0.4),
           ),
         ),
         const SizedBox(height: 6),
@@ -416,23 +416,23 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
           style: GoogleFonts.inter(
             fontSize: 13,
             fontWeight: FontWeight.bold,
-            color: enabled ? ResortTheme.charcoal : ResortTheme.charcoal.withValues(alpha: 0.6),
+            color: enabled ? AppColors.charcoal : AppColors.charcoal.withValues(alpha: 0.6),
           ),
           decoration: InputDecoration(
-            prefixIcon: Icon(prefixIcon, size: 18, color: ResortTheme.mossGreen.withValues(alpha: 0.6)),
+            prefixIcon: Icon(prefixIcon, size: 18, color: AppColors.mossGreen.withValues(alpha: 0.6)),
             filled: true,
-            fillColor: enabled ? Colors.white : ResortTheme.stoneBg.withValues(alpha: 0.4),
+            fillColor: enabled ? Colors.white : AppColors.stoneBg.withValues(alpha: 0.4),
             disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: ResortTheme.lightBone),
+              borderRadius: AppRadius.lgBr,
+              borderSide: const BorderSide(color: AppColors.lightBone),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: ResortTheme.lightBone.withValues(alpha: 0.8)),
+              borderRadius: AppRadius.lgBr,
+              borderSide: BorderSide(color: AppColors.lightBone.withValues(alpha: 0.8)),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: ResortTheme.mossGreen),
+              borderRadius: AppRadius.lgBr,
+              borderSide: const BorderSide(color: AppColors.mossGreen),
             ),
             contentPadding: const EdgeInsets.all(12),
           ),
@@ -446,7 +446,7 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: AppRadius.xxlBr,
         border: Border.all(color: const Color(0xFFE6E2D3)),
         boxShadow: [
           BoxShadow(
@@ -477,7 +477,7 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                   style: GoogleFonts.spaceGrotesk(
                     fontSize: 8.5,
                     fontWeight: FontWeight.bold,
-                    color: ResortTheme.charcoal.withValues(alpha: 0.4),
+                    color: AppColors.charcoal.withValues(alpha: 0.4),
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -487,7 +487,7 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: ResortTheme.charcoal,
+                    color: AppColors.charcoal,
                   ),
                 ),
               ],

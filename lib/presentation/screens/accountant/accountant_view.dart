@@ -139,7 +139,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
             .toList();
 
     return Scaffold(
-      backgroundColor: ResortTheme.stoneBg,
+      backgroundColor: AppColors.stoneBg,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isMobile = constraints.maxWidth < 750;
@@ -177,8 +177,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24.0),
-        border: Border.all(color: ResortTheme.lightBone, width: 1.0),
+        borderRadius: AppRadius.xxlBr,
+        border: Border.all(color: AppColors.lightBone, width: 1.0),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -199,15 +199,15 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                   children: [
                     Text(
                       '$resortName Ledger Office',
-                      style: ResortTheme.lightTheme.textTheme.displayMedium?.copyWith(
+                      style: AppTextStyles.displayMedium.copyWith(
                         fontSize: isMobile ? 20 : 24,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'Track incoming invoices, process refund streams, and balance corporate assets cash flow.',
-                      style: ResortTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-                        color: ResortTheme.charcoal.withValues(alpha: 0.6),
+                      style: AppTextStyles.bodyMd.copyWith(
+                        color: AppColors.charcoal.withValues(alpha: 0.6),
                         fontSize: isMobile ? 11 : 13,
                       ),
                     ),
@@ -221,7 +221,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
             ],
           ),
           if (isMobile && activeResort != null) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             _buildPropertySelector(activeResort, isMobile),
           ],
           const SizedBox(height: 20),
@@ -274,20 +274,20 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
       width: isMobile ? double.infinity : null,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-        color: ResortTheme.mossGreen.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: ResortTheme.mossGreen.withValues(alpha: 0.3)),
+        color: AppColors.mossGreen.withValues(alpha: 0.1),
+        borderRadius: AppRadius.mdBr,
+        border: Border.all(color: AppColors.mossGreen.withValues(alpha: 0.3)),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<PropertyDetails>(
           isExpanded: isMobile,
           value: currentProperty,
-          icon: const Icon(Icons.arrow_drop_down, color: ResortTheme.mossGreen),
+          icon: const Icon(Icons.arrow_drop_down, color: AppColors.mossGreen),
           dropdownColor: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: AppRadius.lgBr,
           style: GoogleFonts.inter(
             fontWeight: FontWeight.bold,
-            color: ResortTheme.mossGreen,
+            color: AppColors.mossGreen,
             fontSize: 13,
           ),
           onChanged: (PropertyDetails? newProperty) {
@@ -334,19 +334,19 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
           }
         }
       },
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: AppRadius.lgBr,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: ResortTheme.lightBone, width: 1.0),
+          borderRadius: AppRadius.lgBr,
+          border: Border.all(color: AppColors.lightBone, width: 1.0),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(icon, size: 14, color: ResortTheme.charcoal),
+            Icon(icon, size: 14, color: AppColors.charcoal),
             const SizedBox(width: 6),
             Flexible(
               child: Text(
@@ -355,7 +355,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                 style: GoogleFonts.inter(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
-                  color: ResortTheme.charcoal,
+                  color: AppColors.charcoal,
                   height: 1.2,
                 ),
               ),
@@ -495,8 +495,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF0F172A) : Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: isDark ? null : Border.all(color: ResortTheme.lightBone),
+        borderRadius: AppRadius.xxlBr,
+        border: isDark ? null : Border.all(color: AppColors.lightBone),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.02),
@@ -517,7 +517,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                   style: GoogleFonts.spaceGrotesk(
                     fontSize: 9,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.grey.shade400 : ResortTheme.charcoal.withValues(alpha: 0.4),
+                    color: isDark ? Colors.grey.shade400 : AppColors.charcoal.withValues(alpha: 0.4),
                     letterSpacing: 1.0,
                   ),
                 ),
@@ -527,7 +527,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                   style: GoogleFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : ResortTheme.charcoal,
+                    color: isDark ? Colors.white : AppColors.charcoal,
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -555,7 +555,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
             height: 38,
             decoration: BoxDecoration(
               color: isDark ? const Color(0xFF1E293B) : accentBg,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: AppRadius.mdBr,
             ),
             alignment: Alignment.center,
             child: symbol != null
@@ -614,20 +614,20 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: ResortTheme.lightBone),
+        borderRadius: AppRadius.xxlBr,
+        border: Border.all(color: AppColors.lightBone),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.credit_card, size: 16, color: ResortTheme.charcoal),
+              const Icon(Icons.credit_card, size: 16, color: AppColors.charcoal),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   'Pending Refunds Queue (${list.length})',
-                  style: ResortTheme.lightTheme.textTheme.titleLarge?.copyWith(
+                  style: AppTextStyles.titleLg.copyWith(
                     fontSize: 15,
                   ),
                 ),
@@ -635,8 +635,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
             ],
           ),
           const SizedBox(height: 12),
-          const Divider(color: ResortTheme.lightBone, height: 1),
-          const SizedBox(height: 16),
+          const Divider(color: AppColors.lightBone, height: 1),
+          const SizedBox(height: AppSpacing.lg),
           if (list.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 40.0),
@@ -644,7 +644,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                 child: Text(
                   'No pending refunds require bookkeeping clears.',
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(fontSize: 11, color: Colors.grey.shade400),
+                  style: AppTextStyles.bodyXs.copyWith(color: Colors.grey.shade400),
                 ),
               ),
             )
@@ -662,7 +662,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                   decoration: BoxDecoration(
                     color: Colors.red.shade50.withValues(alpha: 0.15),
                     border: Border.all(color: Colors.red.shade100.withValues(alpha: 0.6)),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: AppRadius.lgBr,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -676,7 +676,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                               style: GoogleFonts.inter(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12,
-                                color: ResortTheme.charcoal,
+                                color: AppColors.charcoal,
                               ),
                             ),
                           ),
@@ -695,7 +695,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                         'Stays period: ${b.startDate} to ${b.endDate}',
                         style: GoogleFonts.inter(
                           fontSize: 10,
-                          color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                          color: AppColors.charcoal.withValues(alpha: 0.5),
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -703,7 +703,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                         text: TextSpan(
                           style: GoogleFonts.inter(
                             fontSize: 10,
-                            color: ResortTheme.charcoal.withValues(alpha: 0.6),
+                            color: AppColors.charcoal.withValues(alpha: 0.6),
                           ),
                           children: [
                             const TextSpan(text: 'Refund Obligation: '),
@@ -722,7 +722,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                         'Reason: ${b.cancellationReason ?? "Admin cancellation"}',
                         style: GoogleFonts.inter(
                           fontSize: 9.5,
-                          color: ResortTheme.charcoal.withValues(alpha: 0.45),
+                          color: AppColors.charcoal.withValues(alpha: 0.45),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -771,8 +771,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: ResortTheme.lightBone),
+        borderRadius: AppRadius.xxlBr,
+        border: Border.all(color: AppColors.lightBone),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -788,24 +788,21 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                   children: [
                     Text(
                       'Corporate Invoices Ledger',
-                      style: ResortTheme.lightTheme.textTheme.titleLarge?.copyWith(
+                      style: AppTextStyles.titleLg.copyWith(
                         fontSize: 15,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       'Review all generated customer transaction papers.',
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        color: ResortTheme.charcoal.withValues(alpha: 0.4),
-                      ),
+                      style: AppTextStyles.bodyXs.copyWith(color: AppColors.charcoal.withValues(alpha: 0.4)),
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.lg),
           
           // Search & Filter controls
           isMobile
@@ -836,7 +833,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: list.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 16),
+                  separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.lg),
                   itemBuilder: (context, index) {
                     return _buildInvoiceCard(context, list[index]);
                   },
@@ -853,7 +850,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: ResortTheme.lightBone),
+        border: Border.all(color: AppColors.lightBone),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
@@ -861,7 +858,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
           isExpanded: true,
           style: GoogleFonts.inter(
             fontSize: 11.5,
-            color: ResortTheme.charcoal,
+            color: AppColors.charcoal,
           ),
           items: const [
             DropdownMenuItem(value: 'all', child: Text('All States')),
@@ -887,7 +884,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: ResortTheme.lightBone),
+        border: Border.all(color: AppColors.lightBone),
       ),
       child: TextField(
         controller: _searchController,
@@ -911,7 +908,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
 
   Widget _buildInvoiceCard(BuildContext context, Booking invoice) {
     Color stateBg = Colors.white;
-    Color stateText = ResortTheme.charcoal;
+    Color stateText = AppColors.charcoal;
     switch (invoice.paymentStatus) {
       case PaymentStatus.paid:
         stateBg = const Color(0xFFD1FAE5);
@@ -932,11 +929,11 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
     }
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppSpacing.allLg,
       decoration: BoxDecoration(
-        color: ResortTheme.stoneBg.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ResortTheme.lightBone),
+        color: AppColors.stoneBg.withValues(alpha: 0.3),
+        borderRadius: AppRadius.lgBr,
+        border: Border.all(color: AppColors.lightBone),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -970,21 +967,21 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
             ],
           ),
           const SizedBox(height: 10),
-          const Divider(color: ResortTheme.lightBone, height: 1),
+          const Divider(color: AppColors.lightBone, height: 1),
           const SizedBox(height: 10),
           Text(
             invoice.guestName,
             style: GoogleFonts.inter(
               fontWeight: FontWeight.bold,
               fontSize: 13,
-              color: ResortTheme.charcoal,
+              color: AppColors.charcoal,
             ),
           ),
           Text(
             invoice.guestEmail,
             style: GoogleFonts.inter(
               fontSize: 10,
-              color: ResortTheme.charcoal.withValues(alpha: 0.5),
+              color: AppColors.charcoal.withValues(alpha: 0.5),
             ),
           ),
           const SizedBox(height: 12),
@@ -999,7 +996,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                     style: GoogleFonts.spaceGrotesk(
                       fontSize: 8,
                       fontWeight: FontWeight.bold,
-                      color: ResortTheme.charcoal.withValues(alpha: 0.4),
+                      color: AppColors.charcoal.withValues(alpha: 0.4),
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -1008,7 +1005,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
-                      color: ResortTheme.charcoal,
+                      color: AppColors.charcoal,
                     ),
                   ),
                 ],
@@ -1021,7 +1018,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                     style: GoogleFonts.spaceGrotesk(
                       fontSize: 8,
                       fontWeight: FontWeight.bold,
-                      color: ResortTheme.charcoal.withValues(alpha: 0.4),
+                      color: AppColors.charcoal.withValues(alpha: 0.4),
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -1037,7 +1034,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                     'Balance: ₹${_formatIndianCurrency(invoice.balanceAmount)}',
                     style: GoogleFonts.inter(
                       fontSize: 9,
-                      color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                      color: AppColors.charcoal.withValues(alpha: 0.5),
                     ),
                   ),
                 ],
@@ -1045,7 +1042,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
             ],
           ),
           const SizedBox(height: 12),
-          const Divider(color: ResortTheme.lightBone, height: 1),
+          const Divider(color: AppColors.lightBone, height: 1),
           const SizedBox(height: 12),
           SizedBox(
             width: double.infinity,
@@ -1061,7 +1058,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: ResortTheme.charcoal,
+                backgroundColor: AppColors.charcoal,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -1077,11 +1074,11 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
   Widget _buildDesktopTable(BuildContext context, List<Booking> invoices) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: ResortTheme.lightBone),
-        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.lightBone),
+        borderRadius: AppRadius.mdBr,
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: AppRadius.mdBr,
         child: Column(
           children: [
             Container(
@@ -1098,14 +1095,14 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                 ],
               ),
             ),
-            const Divider(color: ResortTheme.lightBone, height: 1),
+            const Divider(color: AppColors.lightBone, height: 1),
             if (invoices.isEmpty)
               Padding(
                 padding: const EdgeInsets.all(32.0),
                 child: Center(
                   child: Text(
                     'No matching records found.',
-                    style: GoogleFonts.inter(fontSize: 12, color: Colors.grey.shade500),
+                    style: AppTextStyles.bodySm.copyWith(color: Colors.grey.shade500),
                   ),
                 ),
               )
@@ -1114,11 +1111,11 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: invoices.length,
-                separatorBuilder: (context, index) => const Divider(color: ResortTheme.lightBone, height: 1),
+                separatorBuilder: (context, index) => const Divider(color: AppColors.lightBone, height: 1),
                 itemBuilder: (context, index) {
                   final invoice = invoices[index];
                   Color stateBg = Colors.white;
-                  Color stateText = ResortTheme.charcoal;
+                  Color stateText = AppColors.charcoal;
                   switch (invoice.paymentStatus) {
                     case PaymentStatus.paid:
                       stateBg = const Color(0xFFD1FAE5);
@@ -1164,14 +1161,14 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                                 style: GoogleFonts.inter(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,
-                                  color: ResortTheme.charcoal,
+                                  color: AppColors.charcoal,
                                 ),
                               ),
                               Text(
                                 invoice.guestEmail,
                                 style: GoogleFonts.inter(
                                   fontSize: 9.5,
-                                  color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                                  color: AppColors.charcoal.withValues(alpha: 0.5),
                                 ),
                               ),
                             ],
@@ -1184,7 +1181,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                             style: GoogleFonts.inter(
                               fontWeight: FontWeight.bold,
                               fontSize: 12,
-                              color: ResortTheme.charcoal,
+                              color: AppColors.charcoal,
                             ),
                           ),
                         ),
@@ -1198,14 +1195,14 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                                 style: GoogleFonts.inter(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,
-                                  color: ResortTheme.charcoal,
+                                  color: AppColors.charcoal,
                                 ),
                               ),
                               Text(
                                 'Balance: ₹${_formatIndianCurrency(invoice.balanceAmount)}',
                                 style: GoogleFonts.inter(
                                   fontSize: 9.5,
-                                  color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                                  color: AppColors.charcoal.withValues(alpha: 0.5),
                                 ),
                               ),
                             ],
@@ -1242,7 +1239,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                               child: Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: ResortTheme.charcoal,
+                                  color: AppColors.charcoal,
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Row(
@@ -1278,7 +1275,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
   TextStyle get _tableHeaderStyle => GoogleFonts.spaceGrotesk(
         fontSize: 9,
         fontWeight: FontWeight.bold,
-        color: ResortTheme.charcoal.withValues(alpha: 0.4),
+        color: AppColors.charcoal.withValues(alpha: 0.4),
       );
 
   void _showInvoiceDialog(BuildContext context, Booking invoice) {
@@ -1288,7 +1285,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
         return AlertDialog(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: AppRadius.xxlBr,
           ),
           titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
           contentPadding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
@@ -1313,7 +1310,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                       'Settled Reservation Reference • ${invoice.id}',
                       style: GoogleFonts.spaceGrotesk(
                         fontSize: 9,
-                        color: ResortTheme.charcoal.withValues(alpha: 0.4),
+                        color: AppColors.charcoal.withValues(alpha: 0.4),
                       ),
                     ),
                   ],
@@ -1332,21 +1329,21 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Divider(color: ResortTheme.lightBone, height: 1),
-                const SizedBox(height: 16),
+                const Divider(color: AppColors.lightBone, height: 1),
+                const SizedBox(height: AppSpacing.lg),
                 _dialogInvoiceRow('Direct client:', invoice.guestName),
                 _dialogInvoiceRow('Telephone:', invoice.guestPhone),
                 _dialogInvoiceRow(
                   'Check-in period:',
                   '${invoice.startDate} to ${invoice.endDate} (${invoice.nightsCount} Nights)',
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: AppSpacing.allLg,
                   decoration: BoxDecoration(
-                    color: ResortTheme.stoneBg.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: ResortTheme.lightBone),
+                    color: AppColors.stoneBg.withValues(alpha: 0.3),
+                    borderRadius: AppRadius.lgBr,
+                    border: Border.all(color: AppColors.lightBone),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1359,7 +1356,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                             style: GoogleFonts.spaceGrotesk(
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
-                              color: ResortTheme.charcoal.withValues(alpha: 0.4),
+                              color: AppColors.charcoal.withValues(alpha: 0.4),
                             ),
                           ),
                           Text(
@@ -1367,13 +1364,13 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                             style: GoogleFonts.spaceGrotesk(
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
-                              color: ResortTheme.charcoal.withValues(alpha: 0.4),
+                              color: AppColors.charcoal.withValues(alpha: 0.4),
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 8),
-                      const Divider(color: ResortTheme.lightBone, height: 1),
+                      const Divider(color: AppColors.lightBone, height: 1),
                       const SizedBox(height: 8),
                       _itemBreakdownRow(
                         'Luxury Accommodation Nights (${invoice.nightsCount} nights)',
@@ -1415,12 +1412,12 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                             ],
                           ),
                         ),
-                      const Divider(color: ResortTheme.lightBone, height: 12),
+                      const Divider(color: AppColors.lightBone, height: 12),
                       _itemBreakdownRow(
                         'Luxury Tax (18% GST)',
                         invoice.taxAmount,
                       ),
-                      const Divider(color: ResortTheme.lightBone, height: 16),
+                      const Divider(color: AppColors.lightBone, height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -1429,7 +1426,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                             style: GoogleFonts.inter(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
-                              color: ResortTheme.charcoal,
+                              color: AppColors.charcoal,
                             ),
                           ),
                           Text(
@@ -1437,7 +1434,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                             style: GoogleFonts.inter(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
-                              color: ResortTheme.charcoal,
+                              color: AppColors.charcoal,
                             ),
                           ),
                         ],
@@ -1445,13 +1442,13 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFFBEB),
                     border: Border.all(color: const Color(0xFFFEF3C7)),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: AppRadius.mdBr,
                   ),
                   child: RichText(
                     text: TextSpan(
@@ -1504,9 +1501,9 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: ResortTheme.charcoal,
+                          backgroundColor: AppColors.charcoal,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: AppRadius.mdBr,
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
@@ -1517,9 +1514,9 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                       child: OutlinedButton(
                         onPressed: () => Navigator.pop(context),
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: ResortTheme.lightBone),
+                          side: const BorderSide(color: AppColors.lightBone),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: AppRadius.mdBr,
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
@@ -1528,7 +1525,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                           style: GoogleFonts.inter(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
-                            color: ResortTheme.charcoal.withValues(alpha: 0.7),
+                            color: AppColors.charcoal.withValues(alpha: 0.7),
                           ),
                         ),
                       ),
@@ -1551,17 +1548,14 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
         children: [
           Text(
             label,
-            style: GoogleFonts.inter(
-              fontSize: 11,
-              color: ResortTheme.charcoal.withValues(alpha: 0.6),
-            ),
+            style: AppTextStyles.bodyXs.copyWith(color: AppColors.charcoal.withValues(alpha: 0.6)),
           ),
           Text(
             value,
             style: GoogleFonts.inter(
               fontSize: 11,
               fontWeight: FontWeight.bold,
-              color: ResortTheme.charcoal,
+              color: AppColors.charcoal,
             ),
           ),
         ],
@@ -1578,18 +1572,12 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
           Expanded(
             child: Text(
               label,
-              style: GoogleFonts.inter(
-                fontSize: 11,
-                color: ResortTheme.charcoal.withValues(alpha: 0.8),
-              ),
+              style: AppTextStyles.bodyXs.copyWith(color: AppColors.charcoal.withValues(alpha: 0.8)),
             ),
           ),
           Text(
             '₹${_formatIndianCurrency(val)}',
-            style: GoogleFonts.inter(
-              fontSize: 11,
-              color: ResortTheme.charcoal,
-            ),
+            style: AppTextStyles.bodyXs.copyWith(color: AppColors.charcoal),
           ),
         ],
       ),

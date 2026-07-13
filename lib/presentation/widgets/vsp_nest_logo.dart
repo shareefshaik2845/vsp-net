@@ -14,37 +14,24 @@ class VspNestLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final borderColor = isDarkBackground
+        ? AppColors.goldAccent.withValues(alpha: 0.4)
+        : AppColors.mossGreen.withValues(alpha: 0.15);
+    final glowColor = (isDarkBackground ? AppColors.goldAccent : AppColors.mossGreen).withValues(alpha: 0.08);
+
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(
-          color: isDarkBackground 
-              ? ResortTheme.goldAccent.withValues(alpha: 0.4)
-              : ResortTheme.mossGreen.withValues(alpha: 0.15),
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: (isDarkBackground ? ResortTheme.goldAccent : ResortTheme.mossGreen).withValues(alpha: 0.08),
-            blurRadius: size * 0.15,
-            spreadRadius: 1,
-          ),
-        ],
+        border: Border.all(color: borderColor, width: 1.5),
+        boxShadow: [BoxShadow(color: glowColor, blurRadius: size * 0.15, spreadRadius: 1)],
       ),
       child: Container(
         margin: EdgeInsets.all(size * 0.06),
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: ResortTheme.goldGradient,
-        ),
+        decoration: const BoxDecoration(shape: BoxShape.circle, gradient: AppGradients.gold),
         alignment: Alignment.center,
-        child: Icon(
-          Icons.spa_outlined, // Elegant leaf/nest spa shape
-          size: size * 0.52,
-          color: const Color(0xFF2C3627),
-        ),
+        child: Icon(Icons.spa_outlined, size: size * 0.52, color: AppColors.mossGreen),
       ),
     );
   }
@@ -70,33 +57,18 @@ class VspNestBrandHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final logo = VspNestLogo(
-      size: logoSize,
-      isDarkBackground: isDarkBackground,
-    );
+    final logo = VspNestLogo(size: logoSize, isDarkBackground: isDarkBackground);
+
+    final vspColor = isDarkBackground ? AppColors.white : const Color(0xFF4A4A35);
 
     final Widget textWidget;
     if (useSingleLine) {
       textWidget = Text.rich(
         TextSpan(
-          style: GoogleFonts.playfairDisplay(
-            fontSize: titleFontSize,
-            fontWeight: FontWeight.bold,
-          ),
+          style: GoogleFonts.playfairDisplay(fontSize: titleFontSize, fontWeight: FontWeight.bold),
           children: [
-            TextSpan(
-              text: 'VSP ',
-              style: TextStyle(
-                color: isDarkBackground ? Colors.white : const Color(0xFF4A4A35),
-              ),
-            ),
-            const TextSpan(
-              text: 'Nest',
-              style: TextStyle(
-                color: ResortTheme.goldAccent,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
+            TextSpan(text: 'VSP ', style: TextStyle(color: vspColor)),
+            const TextSpan(text: 'Nest', style: TextStyle(color: AppColors.goldAccent, fontStyle: FontStyle.italic)),
           ],
         ),
         textAlign: isVertical ? TextAlign.center : TextAlign.start,
@@ -106,47 +78,23 @@ class VspNestBrandHeader extends StatelessWidget {
         crossAxisAlignment: isVertical ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            'VSP',
-            style: GoogleFonts.playfairDisplay(
-              color: isDarkBackground ? Colors.white : const Color(0xFF4A4A35),
-              fontSize: titleFontSize,
-              fontWeight: FontWeight.bold,
-              height: 1.1,
-            ),
-          ),
-          Text(
-            'Nest',
-            style: GoogleFonts.playfairDisplay(
-              color: ResortTheme.goldAccent,
-              fontSize: subtitleFontSize,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
+          Text('VSP', style: GoogleFonts.playfairDisplay(color: vspColor, fontSize: titleFontSize, fontWeight: FontWeight.bold, height: 1.1)),
+          Text('Nest', style: GoogleFonts.playfairDisplay(color: AppColors.goldAccent, fontSize: subtitleFontSize, fontStyle: FontStyle.italic)),
         ],
       );
     }
 
     if (isVertical) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          logo,
-          SizedBox(height: logoSize * 0.25),
-          textWidget,
-        ],
-      );
-    } else {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          logo,
-          const SizedBox(width: 12),
-          textWidget,
-        ],
-      );
+      return Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.center, children: [
+        logo,
+        SizedBox(height: logoSize * 0.25),
+        textWidget,
+      ]);
     }
+    return Row(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.center, children: [
+      logo,
+      const SizedBox(width: 12),
+      textWidget,
+    ]);
   }
 }

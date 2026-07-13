@@ -152,7 +152,7 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: ResortTheme.lightBone),
+        border: Border.all(color: AppColors.lightBone),
         boxShadow: [
           BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4)),
         ],
@@ -162,14 +162,14 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
         children: [
           Row(
             children: [
-              const Icon(Icons.admin_panel_settings_outlined, color: ResortTheme.mossGreen, size: 22),
+              const Icon(Icons.admin_panel_settings_outlined, color: AppColors.mossGreen, size: 22),
               const SizedBox(width: 8),
               Text(
                 'Roles & Permissions',
                 style: GoogleFonts.playfairDisplay(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: ResortTheme.charcoal,
+                  color: AppColors.charcoal,
                 ),
               ),
             ],
@@ -177,26 +177,26 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
           const SizedBox(height: 8),
           Text(
             'Select a role to view and edit its permissions. Click Save to apply changes.',
-            style: GoogleFonts.inter(fontSize: 11, color: ResortTheme.charcoal.withValues(alpha: 0.5)),
+            style: GoogleFonts.inter(fontSize: 11, color: AppColors.charcoal.withValues(alpha: 0.5)),
           ),
           const SizedBox(height: 16),
-          const Divider(color: ResortTheme.lightBone),
+          const Divider(color: AppColors.lightBone),
           const SizedBox(height: 16),
 
           // Role selector dropdown
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
-              color: ResortTheme.softCream,
+              color: AppColors.softCream,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: ResortTheme.lightBone),
+              border: Border.all(color: AppColors.lightBone),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<UserRole>(
                 value: _selectedRoleValue,
                 isExpanded: true,
-                hint: Text('Select a role', style: GoogleFonts.inter(fontSize: 13, color: ResortTheme.charcoal)),
-                style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: ResortTheme.charcoal),
+                hint: Text('Select a role', style: GoogleFonts.inter(fontSize: 13, color: AppColors.charcoal)),
+                style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.charcoal),
                 items: UserRole.values.map((role) => DropdownMenuItem(
                   value: role,
                   child: Row(
@@ -209,7 +209,7 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
                           children: [
                             Text(_labelFor(role), style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
                             if (_descriptionFor(role).isNotEmpty)
-                              Text(_descriptionFor(role), style: GoogleFonts.inter(fontSize: 9, color: ResortTheme.charcoal.withValues(alpha: 0.5)), overflow: TextOverflow.ellipsis),
+                              Text(_descriptionFor(role), style: GoogleFonts.inter(fontSize: 9, color: AppColors.charcoal.withValues(alpha: 0.5)), overflow: TextOverflow.ellipsis),
                           ],
                         ),
                       ),
@@ -242,7 +242,7 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
                   onPressed: _hasChanges() ? () => _selectRole(_selectedRoleValue!) : null,
                   icon: const Icon(Icons.refresh, size: 16),
                   label: Text('Reset', style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 12)),
-                  style: TextButton.styleFrom(foregroundColor: ResortTheme.charcoal.withValues(alpha: 0.6)),
+                  style: TextButton.styleFrom(foregroundColor: AppColors.charcoal.withValues(alpha: 0.6)),
                 ),
                 const SizedBox(width: 12),
                 ElevatedButton.icon(
@@ -250,9 +250,9 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
                   icon: const Icon(Icons.save_outlined, size: 16),
                   label: Text('Save Changes', style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 12)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: ResortTheme.mossGreen,
+                    backgroundColor: AppColors.mossGreen,
                     foregroundColor: Colors.white,
-                    disabledBackgroundColor: ResortTheme.mossGreen.withValues(alpha: 0.3),
+                    disabledBackgroundColor: AppColors.mossGreen.withValues(alpha: 0.3),
                     disabledForegroundColor: Colors.white.withValues(alpha: 0.5),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -272,9 +272,9 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: ResortTheme.goldAccent.withValues(alpha: 0.05),
+        color: AppColors.goldAccent.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ResortTheme.goldAccent.withValues(alpha: 0.2)),
+        border: Border.all(color: AppColors.goldAccent.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -289,11 +289,11 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
                   children: [
                     Text(
                       role.displayName.isNotEmpty ? role.displayName : _labelFor(_selectedRoleValue!),
-                      style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: ResortTheme.charcoal),
+                      style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.charcoal),
                     ),
                     Text(
                       'Super Admin has full system access. Permissions are locked and cannot be modified.',
-                      style: GoogleFonts.inter(fontSize: 10, color: ResortTheme.charcoal.withValues(alpha: 0.5)),
+                      style: GoogleFonts.inter(fontSize: 10, color: AppColors.charcoal.withValues(alpha: 0.5)),
                     ),
                   ],
                 ),
@@ -318,7 +318,7 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
                 final perm = role.permissions.where((p) => p.resource == resource);
                 final actions = perm.isNotEmpty ? perm.first.actions : <PermissionAction>[];
                 return DataRow(cells: [
-                  DataCell(Text(resource.name, style: GoogleFonts.inter(fontSize: 10, color: ResortTheme.charcoal.withValues(alpha: 0.7)))),
+                  DataCell(Text(resource.name, style: GoogleFonts.inter(fontSize: 10, color: AppColors.charcoal.withValues(alpha: 0.7)))),
                   ...allActions.map((action) => DataCell(
                     Icon(
                       actions.contains(action) ? Icons.check_circle : Icons.remove_circle_outline,
@@ -353,7 +353,7 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
           final perm = _dirtyPermissions!.where((p) => p.resource == resource);
           final actions = perm.isNotEmpty ? perm.first.actions : <PermissionAction>[];
           return DataRow(cells: [
-            DataCell(Text(resource.name, style: GoogleFonts.inter(fontSize: 10, color: ResortTheme.charcoal.withValues(alpha: 0.7)))),
+            DataCell(Text(resource.name, style: GoogleFonts.inter(fontSize: 10, color: AppColors.charcoal.withValues(alpha: 0.7)))),
             ...allActions.map((action) {
               final checked = actions.contains(action);
               return DataCell(
@@ -362,7 +362,7 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
                   child: Icon(
                     checked ? Icons.check_box : Icons.check_box_outline_blank,
                     size: 16,
-                    color: checked ? ResortTheme.mossGreen : Colors.grey.shade400,
+                    color: checked ? AppColors.mossGreen : Colors.grey.shade400,
                   ),
                 ),
               );

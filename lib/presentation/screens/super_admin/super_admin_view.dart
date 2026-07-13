@@ -94,13 +94,13 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [ResortTheme.mossGreen, Color(0xFF181F15)],
+          colors: [AppColors.mossGreen, Color(0xFF181F15)],
         ),
         border: const Border(
-            bottom: BorderSide(color: ResortTheme.goldAccent, width: 0.5)),
+            bottom: BorderSide(color: AppColors.goldAccent, width: 0.5)),
         boxShadow: [
           BoxShadow(
-            color: ResortTheme.mossGreen.withValues(alpha: 0.12),
+            color: AppColors.mossGreen.withValues(alpha: 0.12),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -109,7 +109,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
       child: Row(
         children: [
           const Icon(Icons.admin_panel_settings_rounded,
-              color: ResortTheme.goldAccent, size: 24),
+              color: AppColors.goldAccent, size: 24),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -127,7 +127,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   'SUPER ADMIN ROLE PANEL',
                   style: GoogleFonts.spaceGrotesk(
                     fontSize: 8,
-                    color: ResortTheme.goldAccent,
+                    color: AppColors.goldAccent,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.8,
                   ),
@@ -215,21 +215,21 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
               child: InkWell(
                 onTap: () =>
                     setState(() => _activeAdminTab = tab['id'] as String),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: AppRadius.mdBr,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   decoration: BoxDecoration(
-                    gradient: isSelected ? ResortTheme.goldGradient : null,
+                    gradient: isSelected ? AppGradients.gold : null,
                     color: isSelected
                         ? null
-                        : ResortTheme.stoneBg.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(12),
+                        : AppColors.stoneBg.withValues(alpha: 0.3),
+                    borderRadius: AppRadius.mdBr,
                     boxShadow: isSelected
                         ? [
                             BoxShadow(
-                                color: ResortTheme.goldAccent
+                                color: AppColors.goldAccent
                                     .withValues(alpha: 0.15),
                                 blurRadius: 6,
                                 offset: const Offset(0, 3))
@@ -244,7 +244,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                         size: 16,
                         color: isSelected
                             ? const Color(0xFF2C3627)
-                            : ResortTheme.charcoal.withValues(alpha: 0.6),
+                            : AppColors.charcoal.withValues(alpha: 0.6),
                       ),
                       const SizedBox(width: 6),
                       Text(
@@ -254,7 +254,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                           fontWeight: FontWeight.bold,
                           color: isSelected
                               ? const Color(0xFF2C3627)
-                              : ResortTheme.charcoal.withValues(alpha: 0.7),
+                              : AppColors.charcoal.withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -335,11 +335,11 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
   Widget _buildUserManagement() {
     final List<UserAccount> users = ref.watch(superAdminUsersProvider);
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(AppSpacing.xxl),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: ResortTheme.lightBone),
+        borderRadius: AppRadius.xxlBr,
+        border: Border.all(color: AppColors.lightBone),
         boxShadow: [
           BoxShadow(
               color: Colors.black.withValues(alpha: 0.02),
@@ -353,7 +353,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
           Row(
             children: [
               const Icon(Icons.people_outline_rounded,
-                  color: ResortTheme.mossGreen, size: 22),
+                  color: AppColors.mossGreen, size: 22),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -361,27 +361,27 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   style: GoogleFonts.playfairDisplay(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: ResortTheme.charcoal,
+                    color: AppColors.charcoal,
                   ),
                 ),
               ),
               ElevatedButton.icon(
                 onPressed: () => _showCreateUserDialog(context),
                 icon: const Icon(Icons.person_add_alt_1,
-                    color: ResortTheme.mossGreen, size: 16),
+                    color: AppColors.mossGreen, size: 16),
                 label: Text(
                   'Create User',
                   style: GoogleFonts.spaceGrotesk(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
-                    color: ResortTheme.mossGreen,
+                    color: AppColors.mossGreen,
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: ResortTheme.goldAccent,
-                  foregroundColor: ResortTheme.mossGreen,
+                  backgroundColor: AppColors.goldAccent,
+                  foregroundColor: AppColors.mossGreen,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: AppRadius.mdBr),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   elevation: 0,
@@ -389,9 +389,9 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          const Divider(color: ResortTheme.lightBone),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
+          const Divider(color: AppColors.lightBone),
+          const SizedBox(height: AppSpacing.lg),
           if (users.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
@@ -400,7 +400,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   'No users created yet. Click "Create User" to add one.',
                   style: GoogleFonts.inter(
                     fontSize: 12,
-                    color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                    color: AppColors.charcoal.withValues(alpha: 0.5),
                   ),
                 ),
               ),
@@ -412,13 +412,13 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
                     color: user.role == UserRole.superAdmin
-                        ? ResortTheme.goldAccent.withValues(alpha: 0.08)
-                        : ResortTheme.softCream,
-                    borderRadius: BorderRadius.circular(12),
+                        ? AppColors.goldAccent.withValues(alpha: 0.08)
+                        : AppColors.softCream,
+                    borderRadius: AppRadius.mdBr,
                     border: Border.all(
                       color: user.role == UserRole.superAdmin
-                          ? ResortTheme.goldAccent.withValues(alpha: 0.3)
-                          : ResortTheme.lightBone,
+                          ? AppColors.goldAccent.withValues(alpha: 0.3)
+                          : AppColors.lightBone,
                     ),
                   ),
                   child: Row(
@@ -442,7 +442,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                               style: GoogleFonts.inter(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
-                                color: ResortTheme.charcoal,
+                                color: AppColors.charcoal,
                               ),
                             ),
                             const SizedBox(height: 2),
@@ -451,7 +451,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                               style: GoogleFonts.inter(
                                 fontSize: 11,
                                 color:
-                                    ResortTheme.charcoal.withValues(alpha: 0.6),
+                                    AppColors.charcoal.withValues(alpha: 0.6),
                               ),
                             ),
                           ],
@@ -526,7 +526,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
           height: 28,
           child: IconButton(
             icon: const Icon(Icons.edit_outlined, size: 14),
-            color: ResortTheme.charcoal.withValues(alpha: 0.5),
+            color: AppColors.charcoal.withValues(alpha: 0.5),
             tooltip: 'Edit User',
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
@@ -560,18 +560,18 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDialogState) => AlertDialog(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              RoundedRectangleBorder(borderRadius: AppRadius.xlBr),
           title: Row(
             children: [
               const Icon(Icons.edit_outlined,
-                  color: ResortTheme.mossGreen, size: 22),
+                  color: AppColors.mossGreen, size: 22),
               const SizedBox(width: 8),
               Text(
                 'Edit User',
                 style: GoogleFonts.playfairDisplay(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: ResortTheme.charcoal,
+                  color: AppColors.charcoal,
                 ),
               ),
             ],
@@ -588,10 +588,10 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                     labelText: 'Full Name',
                     prefixIcon: const Icon(Icons.person_outline, size: 18),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                        borderRadius: AppRadius.mdBr),
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.md),
                 TextField(
                   controller: emailController,
                   style: GoogleFonts.inter(fontSize: 13),
@@ -600,10 +600,10 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                     labelText: 'Email Address',
                     prefixIcon: const Icon(Icons.email_outlined, size: 18),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                        borderRadius: AppRadius.mdBr),
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.md),
                 TextField(
                   controller: passwordController,
                   obscureText: true,
@@ -612,17 +612,17 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                     labelText: 'New Password (leave blank to keep current)',
                     prefixIcon: const Icon(Icons.lock_outline, size: 18),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                        borderRadius: AppRadius.mdBr),
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.md),
                 DropdownButtonFormField<UserRole>(
                   initialValue: selectedRole,
                   decoration: InputDecoration(
                     labelText: 'Role',
                     prefixIcon: const Icon(Icons.badge_outlined, size: 18),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                        borderRadius: AppRadius.mdBr),
                   ),
                   items: UserRole.values
                       .map((role) => DropdownMenuItem(
@@ -646,9 +646,9 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: ResortTheme.mossGreen,
+                backgroundColor: AppColors.mossGreen,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                    borderRadius: AppRadius.mdBr),
               ),
               onPressed: () async {
                 final name = nameController.text.trim();
@@ -701,7 +701,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.xlBr),
         title: Row(
           children: [
             const Icon(Icons.warning_amber_rounded,
@@ -712,7 +712,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
               style: GoogleFonts.playfairDisplay(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: ResortTheme.charcoal,
+                color: AppColors.charcoal,
               ),
             ),
           ],
@@ -720,7 +720,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
         content: Text(
           'Are you sure you want to deactivate "${user.name}" (${user.email})?\n\n'
           'They will no longer be able to log in. This action can be reversed.',
-          style: GoogleFonts.inter(fontSize: 13, color: ResortTheme.charcoal),
+          style: GoogleFonts.inter(fontSize: 13, color: AppColors.charcoal),
         ),
         actions: [
           TextButton(
@@ -731,7 +731,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+                  borderRadius: AppRadius.mdBr),
             ),
             onPressed: () async {
               try {
@@ -771,18 +771,18 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDialogState) => AlertDialog(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              RoundedRectangleBorder(borderRadius: AppRadius.xlBr),
           title: Row(
             children: [
               const Icon(Icons.person_add_alt_1,
-                  color: ResortTheme.mossGreen, size: 22),
+                  color: AppColors.mossGreen, size: 22),
               const SizedBox(width: 8),
               Text(
                 'Create User Account',
                 style: GoogleFonts.playfairDisplay(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: ResortTheme.charcoal,
+                  color: AppColors.charcoal,
                 ),
               ),
             ],
@@ -799,10 +799,10 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                     labelText: 'Full Name',
                     prefixIcon: const Icon(Icons.person_outline, size: 18),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                        borderRadius: AppRadius.mdBr),
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.md),
                 TextField(
                   controller: emailController,
                   style: GoogleFonts.inter(fontSize: 13),
@@ -811,10 +811,10 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                     labelText: 'Email Address',
                     prefixIcon: const Icon(Icons.email_outlined, size: 18),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                        borderRadius: AppRadius.mdBr),
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.md),
                 TextField(
                   controller: passwordController,
                   obscureText: true,
@@ -823,17 +823,17 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.lock_outline, size: 18),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                        borderRadius: AppRadius.mdBr),
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.md),
                 DropdownButtonFormField<UserRole>(
                   initialValue: selectedRole,
                   decoration: InputDecoration(
                     labelText: 'Role',
                     prefixIcon: const Icon(Icons.badge_outlined, size: 18),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                        borderRadius: AppRadius.mdBr),
                   ),
                   items: UserRole.values
                       .map((role) => DropdownMenuItem(
@@ -857,9 +857,9 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: ResortTheme.mossGreen,
+                backgroundColor: AppColors.mossGreen,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                    borderRadius: AppRadius.mdBr),
               ),
               onPressed: () async {
                 final name = nameController.text.trim();
@@ -925,11 +925,11 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
     final apiTaxRate = settings['taxRate'] is int ? settings['taxRate'] as int : ref.watch(taxRateProvider);
     final apiDepositRate = settings['depositRate'] is int ? settings['depositRate'] as int : ref.watch(depositRateProvider);
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(AppSpacing.xxl),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: ResortTheme.lightBone),
+        borderRadius: AppRadius.xxlBr,
+        border: Border.all(color: AppColors.lightBone),
         boxShadow: [
           BoxShadow(
               color: Colors.black.withValues(alpha: 0.02),
@@ -943,7 +943,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
           Row(
             children: [
               const Icon(Icons.tune_rounded,
-                  color: ResortTheme.mossGreen, size: 22),
+                  color: AppColors.mossGreen, size: 22),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -951,25 +951,25 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   style: GoogleFonts.playfairDisplay(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: ResortTheme.charcoal,
+                    color: AppColors.charcoal,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          const Divider(color: ResortTheme.lightBone),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
+          const Divider(color: AppColors.lightBone),
+          const SizedBox(height: AppSpacing.lg),
           Text(
             'MULTI-PROPERTY CLUSTER TOGGLES',
             style: GoogleFonts.spaceGrotesk(
               fontSize: 10,
               fontWeight: FontWeight.bold,
-              color: ResortTheme.charcoal.withValues(alpha: 0.5),
+              color: AppColors.charcoal.withValues(alpha: 0.5),
               letterSpacing: 1.2,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.md),
           Row(
             children: [
               Expanded(
@@ -977,7 +977,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   'Click a property to load its configuration, or onboard a new resort.',
                   style: GoogleFonts.inter(
                     fontSize: 10,
-                    color: ResortTheme.charcoal.withValues(alpha: 0.4),
+                    color: AppColors.charcoal.withValues(alpha: 0.4),
                   ),
                 ),
               ),
@@ -987,18 +987,18 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                 child: ElevatedButton.icon(
                   onPressed: () => _showAddResortDialog(context),
                   icon: const Icon(Icons.add_home_work_rounded,
-                      size: 14, color: ResortTheme.mossGreen),
+                      size: 14, color: AppColors.mossGreen),
                   label: Text(
                     'Onboard New Resort',
                     style: GoogleFonts.spaceGrotesk(
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
-                      color: ResortTheme.mossGreen,
+                      color: AppColors.mossGreen,
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: ResortTheme.goldAccent,
-                    foregroundColor: ResortTheme.mossGreen,
+                    backgroundColor: AppColors.goldAccent,
+                    foregroundColor: AppColors.mossGreen,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -1008,7 +1008,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.md),
           LayoutBuilder(builder: (context, constraints) {
             final double itemWidth = constraints.maxWidth > 500
                 ? (constraints.maxWidth - 12) / 2
@@ -1029,8 +1029,8 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
             );
           }),
           const SizedBox(height: 24),
-          const Divider(color: ResortTheme.lightBone),
-          const SizedBox(height: 16),
+          const Divider(color: AppColors.lightBone),
+          const SizedBox(height: AppSpacing.lg),
           LayoutBuilder(builder: (context, constraints) {
             final double itemWidth = constraints.maxWidth > 500
                 ? (constraints.maxWidth - 16) / 2
@@ -1083,16 +1083,16 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isActive ? ResortTheme.mossGreen : ResortTheme.softCream,
-          borderRadius: BorderRadius.circular(16),
+          color: isActive ? AppColors.mossGreen : AppColors.softCream,
+          borderRadius: AppRadius.lgBr,
           border: Border.all(
-            color: isActive ? ResortTheme.goldAccent : ResortTheme.lightBone,
+            color: isActive ? AppColors.goldAccent : AppColors.lightBone,
             width: isActive ? 1.5 : 1.0,
           ),
           boxShadow: isActive
               ? [
                   BoxShadow(
-                    color: ResortTheme.mossGreen.withValues(alpha: 0.12),
+                    color: AppColors.mossGreen.withValues(alpha: 0.12),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   )
@@ -1112,7 +1112,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                     style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: isActive ? Colors.white : ResortTheme.charcoal,
+                      color: isActive ? Colors.white : AppColors.charcoal,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -1121,7 +1121,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                 if (isActive)
                   const Icon(
                     Icons.check_circle_rounded,
-                    color: ResortTheme.goldAccent,
+                    color: AppColors.goldAccent,
                     size: 14,
                   )
                 else
@@ -1131,7 +1131,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border:
-                          Border.all(color: ResortTheme.lightBone, width: 1.5),
+                          Border.all(color: AppColors.lightBone, width: 1.5),
                     ),
                   ),
               ],
@@ -1145,20 +1145,20 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                     fontSize: 9,
                     color: isActive
                         ? Colors.white.withValues(alpha: 0.7)
-                        : ResortTheme.charcoal.withValues(alpha: 0.5),
+                        : AppColors.charcoal.withValues(alpha: 0.5),
                     fontWeight: FontWeight.w500,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.xs),
                 Text(
                   'Base: ₹${resort.basePriceWeekday.toInt()}/night',
                   style: GoogleFonts.spaceGrotesk(
                     fontSize: 10,
                     color: isActive
-                        ? ResortTheme.goldAccent
-                        : ResortTheme.mossGreen,
+                        ? AppColors.goldAccent
+                        : AppColors.mossGreen,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -1179,11 +1179,11 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
     required Function(int) onChanged,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppSpacing.allLg,
       decoration: BoxDecoration(
-        color: ResortTheme.softCream,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ResortTheme.lightBone),
+        color: AppColors.softCream,
+        borderRadius: AppRadius.lgBr,
+        border: Border.all(color: AppColors.lightBone),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1193,26 +1193,26 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
             style: GoogleFonts.spaceGrotesk(
               fontSize: 10,
               fontWeight: FontWeight.bold,
-              color: ResortTheme.charcoal.withValues(alpha: 0.5),
+              color: AppColors.charcoal.withValues(alpha: 0.5),
               letterSpacing: 1.2,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.md),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: ResortTheme.lightBone),
+                  borderRadius: AppRadius.smBr,
+                  border: Border.all(color: AppColors.lightBone),
                 ),
                 child: IconButton(
                   constraints:
                       const BoxConstraints.tightFor(width: 36, height: 36),
                   padding: EdgeInsets.zero,
                   icon: const Icon(Icons.remove,
-                      size: 16, color: ResortTheme.mossGreen),
+                      size: 16, color: AppColors.mossGreen),
                   onPressed: value > min ? () => onChanged(value - 1) : null,
                 ),
               ),
@@ -1221,34 +1221,34 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                 style: GoogleFonts.spaceGrotesk(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: ResortTheme.mossGreen,
+                  color: AppColors.mossGreen,
                 ),
               ),
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: ResortTheme.lightBone),
+                  borderRadius: AppRadius.smBr,
+                  border: Border.all(color: AppColors.lightBone),
                 ),
                 child: IconButton(
                   constraints:
                       const BoxConstraints.tightFor(width: 36, height: 36),
                   padding: EdgeInsets.zero,
                   icon: const Icon(Icons.add,
-                      size: 16, color: ResortTheme.mossGreen),
+                      size: 16, color: AppColors.mossGreen),
                   onPressed: value < max ? () => onChanged(value + 1) : null,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.sm),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: ResortTheme.mossGreen,
-              inactiveTrackColor: ResortTheme.lightBone,
-              thumbColor: ResortTheme.goldAccent,
-              overlayColor: ResortTheme.goldAccent.withValues(alpha: 0.2),
-              valueIndicatorColor: ResortTheme.mossGreen,
+              activeTrackColor: AppColors.mossGreen,
+              inactiveTrackColor: AppColors.lightBone,
+              thumbColor: AppColors.goldAccent,
+              overlayColor: AppColors.goldAccent.withValues(alpha: 0.2),
+              valueIndicatorColor: AppColors.mossGreen,
               trackHeight: 3.0,
               valueIndicatorTextStyle:
                   GoogleFonts.spaceGrotesk(color: Colors.white, fontSize: 10),
@@ -1262,12 +1262,12 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
               onChanged: (val) => onChanged(val.round()),
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSpacing.xs),
           Text(
             hint,
             style: GoogleFonts.inter(
               fontSize: 9,
-              color: ResortTheme.charcoal.withValues(alpha: 0.5),
+              color: AppColors.charcoal.withValues(alpha: 0.5),
             ),
           ),
         ],
@@ -1280,11 +1280,11 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
     final schemaData = schemaAsync.valueOrNull ?? [];
 
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(AppSpacing.xxl),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: ResortTheme.lightBone),
+          borderRadius: AppRadius.xxlBr,
+          border: Border.all(color: AppColors.lightBone),
           boxShadow: [
             BoxShadow(
                 color: Colors.black.withValues(alpha: 0.02),
@@ -1297,7 +1297,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
           Row(
             children: [
               const Icon(Icons.storage_rounded,
-                  color: ResortTheme.mossGreen, size: 22),
+                  color: AppColors.mossGreen, size: 22),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -1305,33 +1305,33 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   style: GoogleFonts.playfairDisplay(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: ResortTheme.charcoal,
+                    color: AppColors.charcoal,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          const Divider(color: ResortTheme.lightBone),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
+          const Divider(color: AppColors.lightBone),
+          const SizedBox(height: AppSpacing.lg),
           Text(
             'SCHEMA OVERVIEW',
             style: GoogleFonts.spaceGrotesk(
               fontSize: 10,
               fontWeight: FontWeight.bold,
-              color: ResortTheme.charcoal.withValues(alpha: 0.5),
+              color: AppColors.charcoal.withValues(alpha: 0.5),
               letterSpacing: 1.2,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.md),
           Container(
             decoration: BoxDecoration(
-              color: ResortTheme.softCream,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: ResortTheme.lightBone),
+              color: AppColors.softCream,
+              borderRadius: AppRadius.lgBr,
+              border: Border.all(color: AppColors.lightBone),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: AppRadius.lgBr,
               child: Table(
                 columnWidths: const {
                   0: FlexColumnWidth(2.5),
@@ -1376,7 +1376,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
         border: isLast
             ? null
             : const Border(
-                bottom: BorderSide(color: ResortTheme.lightBone, width: 1)),
+                bottom: BorderSide(color: AppColors.lightBone, width: 1)),
       ),
       children: [
         Padding(
@@ -1384,14 +1384,14 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
           child: Row(
             children: [
               const Icon(Icons.key_rounded,
-                  size: 14, color: ResortTheme.goldAccent),
+                  size: 14, color: AppColors.goldAccent),
               const SizedBox(width: 8),
               Text(
                 keyName,
                 style: GoogleFonts.spaceGrotesk(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: ResortTheme.charcoal,
+                  color: AppColors.charcoal,
                 ),
               ),
             ],
@@ -1404,7 +1404,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
             style: GoogleFonts.spaceGrotesk(
               fontSize: 11,
               fontWeight: FontWeight.bold,
-              color: ResortTheme.mossGreen,
+              color: AppColors.mossGreen,
             ),
             textAlign: TextAlign.right,
           ),
@@ -1429,7 +1429,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
             style: GoogleFonts.spaceGrotesk(
               fontSize: 9,
               fontWeight: FontWeight.bold,
-              color: ResortTheme.charcoal.withValues(alpha: 0.5),
+              color: AppColors.charcoal.withValues(alpha: 0.5),
               letterSpacing: 1.0,
             ),
           ),
@@ -1440,31 +1440,31 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
               hintText: hint,
               hintStyle: GoogleFonts.inter(
                   fontSize: 12,
-                  color: ResortTheme.charcoal.withValues(alpha: 0.35)),
+                  color: AppColors.charcoal.withValues(alpha: 0.35)),
               prefixIcon: icon != null
                   ? Icon(icon,
                       size: 16,
-                      color: ResortTheme.charcoal.withValues(alpha: 0.5))
+                      color: AppColors.charcoal.withValues(alpha: 0.5))
                   : null,
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               filled: true,
-              fillColor: ResortTheme.softCream,
+              fillColor: AppColors.softCream,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: ResortTheme.lightBone),
+                borderRadius: AppRadius.mdBr,
+                borderSide: const BorderSide(color: AppColors.lightBone),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: ResortTheme.lightBone),
+                borderRadius: AppRadius.mdBr,
+                borderSide: const BorderSide(color: AppColors.lightBone),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: AppRadius.mdBr,
                 borderSide:
-                    const BorderSide(color: ResortTheme.mossGreen, width: 1.5),
+                    const BorderSide(color: AppColors.mossGreen, width: 1.5),
               ),
             ),
-            style: GoogleFonts.inter(fontSize: 13, color: ResortTheme.charcoal),
+            style: GoogleFonts.inter(fontSize: 13, color: AppColors.charcoal),
           ),
         ],
       ),
@@ -1498,17 +1498,17 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
             return AlertDialog(
               backgroundColor: Colors.white,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24)),
+                  borderRadius: AppRadius.xxlBr),
               title: Row(
                 children: [
                   const Icon(Icons.add_home_work_rounded,
-                      color: ResortTheme.mossGreen, size: 24),
+                      color: AppColors.mossGreen, size: 24),
                   const SizedBox(width: 8),
                   Text(
                     'Onboard New Resort',
                     style: GoogleFonts.playfairDisplay(
                       fontWeight: FontWeight.bold,
-                      color: ResortTheme.mossGreen,
+                      color: AppColors.mossGreen,
                       fontSize: 20,
                     ),
                   ),
@@ -1520,7 +1520,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.sm),
 
                       // Core info
                       _buildDialogField(
@@ -1547,9 +1547,9 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
                               color:
-                                  ResortTheme.charcoal.withValues(alpha: 0.5),
+                                  AppColors.charcoal.withValues(alpha: 0.5),
                               letterSpacing: 1.0)),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.sm),
                       Row(
                         children: [
                           OutlinedButton.icon(
@@ -1557,9 +1557,9 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                             label: Text('Pick Cover Image',
                                 style: GoogleFonts.inter(fontSize: 12)),
                             style: OutlinedButton.styleFrom(
-                              foregroundColor: ResortTheme.mossGreen,
+                              foregroundColor: AppColors.mossGreen,
                               side: const BorderSide(
-                                  color: ResortTheme.mossGreen),
+                                  color: AppColors.mossGreen),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                             ),
@@ -1585,7 +1585,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 12),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: AppRadius.smBr,
                             child: Image.file(File(pickedCoverImage!.path),
                                 height: 120,
                                 width: double.infinity,
@@ -1595,15 +1595,15 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                         ),
 
                       // Gallery
-                      const Divider(color: ResortTheme.lightBone),
+                      const Divider(color: AppColors.lightBone),
                       Text('GALLERY IMAGES',
                           style: GoogleFonts.spaceGrotesk(
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
                               color:
-                                  ResortTheme.charcoal.withValues(alpha: 0.5),
+                                  AppColors.charcoal.withValues(alpha: 0.5),
                               letterSpacing: 1.0)),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.sm),
                       Row(
                         children: [
                           OutlinedButton.icon(
@@ -1612,9 +1612,9 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                             label: Text('Pick Gallery Images',
                                 style: GoogleFonts.inter(fontSize: 12)),
                             style: OutlinedButton.styleFrom(
-                              foregroundColor: ResortTheme.mossGreen,
+                              foregroundColor: AppColors.mossGreen,
                               side: const BorderSide(
-                                  color: ResortTheme.mossGreen),
+                                  color: AppColors.mossGreen),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                             ),
@@ -1634,7 +1634,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                               child: Text('Clear all',
                                   style: GoogleFonts.inter(
                                       fontSize: 11,
-                                      color: ResortTheme.charcoal
+                                      color: AppColors.charcoal
                                           .withValues(alpha: 0.5))),
                             ),
                           ],
@@ -1655,7 +1655,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                                 return Stack(
                                   children: [
                                     ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
+                                      borderRadius: AppRadius.smBr,
                                       child: Image.file(File(img.path),
                                           width: 60,
                                           height: 60,
@@ -1708,15 +1708,15 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                       ),
 
                       // Pricing
-                      const Divider(color: ResortTheme.lightBone),
+                      const Divider(color: AppColors.lightBone),
                       Text('PRICING',
                           style: GoogleFonts.spaceGrotesk(
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
                               color:
-                                  ResortTheme.charcoal.withValues(alpha: 0.5),
+                                  AppColors.charcoal.withValues(alpha: 0.5),
                               letterSpacing: 1.0)),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.sm),
                       Row(
                         children: [
                           Expanded(
@@ -1751,15 +1751,15 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                       ),
 
                       // Amenities
-                      const Divider(color: ResortTheme.lightBone),
+                      const Divider(color: AppColors.lightBone),
                       Text('AMENITIES',
                           style: GoogleFonts.spaceGrotesk(
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
                               color:
-                                  ResortTheme.charcoal.withValues(alpha: 0.5),
+                                  AppColors.charcoal.withValues(alpha: 0.5),
                               letterSpacing: 1.0)),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.sm),
                       Row(
                         children: [
                           Expanded(
@@ -1772,7 +1772,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                           const SizedBox(width: 8),
                           IconButton(
                             icon: const Icon(Icons.add_circle_outline,
-                                color: ResortTheme.mossGreen),
+                                color: AppColors.mossGreen),
                             onPressed: () {
                               if (amenityLabelController.text
                                   .trim()
@@ -1801,7 +1801,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                                 .map((e) => Chip(
                                       avatar: const Icon(Icons.star,
                                           size: 14,
-                                          color: ResortTheme.goldAccent),
+                                          color: AppColors.goldAccent),
                                       label: Text(e.value.label,
                                           style:
                                               GoogleFonts.inter(fontSize: 10)),
@@ -1815,15 +1815,15 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                         ),
 
                       // Rules
-                      const Divider(color: ResortTheme.lightBone),
+                      const Divider(color: AppColors.lightBone),
                       Text('RULES & POLICIES',
                           style: GoogleFonts.spaceGrotesk(
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
                               color:
-                                  ResortTheme.charcoal.withValues(alpha: 0.5),
+                                  AppColors.charcoal.withValues(alpha: 0.5),
                               letterSpacing: 1.0)),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.sm),
                       Row(
                         children: [
                           Expanded(
@@ -1836,7 +1836,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                           const SizedBox(width: 8),
                           IconButton(
                             icon: const Icon(Icons.add_circle_outline,
-                                color: ResortTheme.mossGreen),
+                                color: AppColors.mossGreen),
                             onPressed: () {
                               if (ruleController.text.trim().isNotEmpty) {
                                 setDialogState(() {
@@ -1880,7 +1880,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   onPressed: () => Navigator.pop(context),
                   child: Text('Cancel',
                       style: GoogleFonts.inter(
-                          color: ResortTheme.charcoal.withValues(alpha: 0.6),
+                          color: AppColors.charcoal.withValues(alpha: 0.6),
                           fontWeight: FontWeight.bold)),
                 ),
                 ElevatedButton(
@@ -1985,9 +1985,9 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: ResortTheme.mossGreen,
+                    backgroundColor: AppColors.mossGreen,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                        borderRadius: AppRadius.mdBr),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 12),
                   ),
@@ -2030,7 +2030,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
               style: GoogleFonts.spaceGrotesk(
                   fontSize: 9,
                   fontWeight: FontWeight.bold,
-                  color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                  color: AppColors.charcoal.withValues(alpha: 0.5),
                   letterSpacing: 1.0)),
           const SizedBox(height: 6),
           TextField(
@@ -2040,28 +2040,28 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
               hintText: hint,
               hintStyle: GoogleFonts.inter(
                   fontSize: 12,
-                  color: ResortTheme.charcoal.withValues(alpha: 0.35)),
+                  color: AppColors.charcoal.withValues(alpha: 0.35)),
               prefixIcon: icon != null
                   ? Icon(icon,
                       size: 16,
-                      color: ResortTheme.charcoal.withValues(alpha: 0.5))
+                      color: AppColors.charcoal.withValues(alpha: 0.5))
                   : null,
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               filled: true,
-              fillColor: ResortTheme.softCream,
+              fillColor: AppColors.softCream,
               border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: ResortTheme.lightBone)),
+                  borderRadius: AppRadius.mdBr,
+                  borderSide: const BorderSide(color: AppColors.lightBone)),
               enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: ResortTheme.lightBone)),
+                  borderRadius: AppRadius.mdBr,
+                  borderSide: const BorderSide(color: AppColors.lightBone)),
               focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: AppRadius.mdBr,
                   borderSide: const BorderSide(
-                      color: ResortTheme.mossGreen, width: 1.5)),
+                      color: AppColors.mossGreen, width: 1.5)),
             ),
-            style: GoogleFonts.inter(fontSize: 13, color: ResortTheme.charcoal),
+            style: GoogleFonts.inter(fontSize: 13, color: AppColors.charcoal),
           ),
         ],
       ),
@@ -2071,11 +2071,11 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
   Widget _buildAuditLogsView() {
     final logs = ref.watch(superAdminAuditLogsProvider);
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(AppSpacing.xxl),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: ResortTheme.lightBone),
+        borderRadius: AppRadius.xxlBr,
+        border: Border.all(color: AppColors.lightBone),
         boxShadow: [
           BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))
         ],
@@ -2085,25 +2085,25 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
         children: [
           Row(
             children: [
-              const Icon(Icons.history_rounded, color: ResortTheme.mossGreen, size: 22),
+              const Icon(Icons.history_rounded, color: AppColors.mossGreen, size: 22),
               const SizedBox(width: 8),
-              Text('Audit Logs', style: GoogleFonts.playfairDisplay(fontSize: 18, fontWeight: FontWeight.bold, color: ResortTheme.charcoal)),
+              Text('Audit Logs', style: AppTextStyles.titleMd.copyWith(color: AppColors.charcoal)),
             ],
           ),
-          const SizedBox(height: 8),
-          Text('All system actions recorded for compliance and monitoring.', style: GoogleFonts.inter(fontSize: 11, color: ResortTheme.charcoal.withValues(alpha: 0.5))),
-          const SizedBox(height: 16),
-          const Divider(color: ResortTheme.lightBone),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.sm),
+          Text('All system actions recorded for compliance and monitoring.', style: GoogleFonts.inter(fontSize: 11, color: AppColors.charcoal.withValues(alpha: 0.5))),
+          const SizedBox(height: AppSpacing.lg),
+          const Divider(color: AppColors.lightBone),
+          const SizedBox(height: AppSpacing.lg),
           if (logs.isEmpty)
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(40),
                 child: Column(
                   children: [
-                    Icon(Icons.history_rounded, size: 40, color: ResortTheme.charcoal.withValues(alpha: 0.15)),
-                    const SizedBox(height: 12),
-                    Text('No audit logs recorded yet.', style: GoogleFonts.inter(fontSize: 13, color: ResortTheme.charcoal.withValues(alpha: 0.5))),
+                    Icon(Icons.history_rounded, size: 40, color: AppColors.charcoal.withValues(alpha: 0.15)),
+                    const SizedBox(height: AppSpacing.md),
+                    Text('No audit logs recorded yet.', style: GoogleFonts.inter(fontSize: 13, color: AppColors.charcoal.withValues(alpha: 0.5))),
                   ],
                 ),
               ),
@@ -2113,19 +2113,19 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
               margin: const EdgeInsets.only(bottom: 8),
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: ResortTheme.softCream,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: ResortTheme.lightBone),
+                color: AppColors.softCream,
+                borderRadius: AppRadius.mdBr,
+                border: Border.all(color: AppColors.lightBone),
               ),
               child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: ResortTheme.goldAccent.withValues(alpha: 0.1),
+                      color: AppColors.goldAccent.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(Icons.touch_app_rounded, size: 16, color: ResortTheme.goldAccent),
+                    child: const Icon(Icons.touch_app_rounded, size: 16, color: AppColors.goldAccent),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -2134,28 +2134,28 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                       children: [
                         Row(
                           children: [
-                            Text(log['action'] as String? ?? '', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: ResortTheme.charcoal)),
+                            Text(log['action'] as String? ?? '', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.charcoal)),
                             const SizedBox(width: 8),
                             if (log['targetType'] != null)
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                 decoration: BoxDecoration(
-                                  color: ResortTheme.mossGreen.withValues(alpha: 0.08),
+                                  color: AppColors.mossGreen.withValues(alpha: 0.08),
                                   borderRadius: BorderRadius.circular(100),
                                 ),
-                                child: Text(log['targetType'] as String? ?? '', style: GoogleFonts.spaceGrotesk(fontSize: 9, fontWeight: FontWeight.bold, color: ResortTheme.mossGreen)),
+                                child: Text(log['targetType'] as String? ?? '', style: GoogleFonts.spaceGrotesk(fontSize: 9, fontWeight: FontWeight.bold, color: AppColors.mossGreen)),
                               ),
                           ],
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: AppSpacing.xs),
                         if (log['userName'] != null)
-                          Text('by ${log['userName']} (${log['userRole'] ?? ''})', style: GoogleFonts.inter(fontSize: 10, color: ResortTheme.charcoal.withValues(alpha: 0.5))),
+                          Text('by ${log['userName']} (${log['userRole'] ?? ''})', style: GoogleFonts.inter(fontSize: 10, color: AppColors.charcoal.withValues(alpha: 0.5))),
                         if (log['details'] != null)
-                          Text(log['details'] as String? ?? '', style: GoogleFonts.inter(fontSize: 10, color: ResortTheme.charcoal.withValues(alpha: 0.6))),
+                          Text(log['details'] as String? ?? '', style: GoogleFonts.inter(fontSize: 10, color: AppColors.charcoal.withValues(alpha: 0.6))),
                       ],
                     ),
                   ),
-                  Text(log['timestamp'] as String? ?? '', style: GoogleFonts.spaceGrotesk(fontSize: 9, color: ResortTheme.charcoal.withValues(alpha: 0.4))),
+                  Text(log['timestamp'] as String? ?? '', style: GoogleFonts.spaceGrotesk(fontSize: 9, color: AppColors.charcoal.withValues(alpha: 0.4))),
                 ],
               ),
             )),
@@ -2167,11 +2167,11 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
   Widget _buildNotificationsView() {
     final notifications = ref.watch(superAdminNotificationsProvider);
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(AppSpacing.xxl),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: ResortTheme.lightBone),
+        borderRadius: AppRadius.xxlBr,
+        border: Border.all(color: AppColors.lightBone),
         boxShadow: [
           BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))
         ],
@@ -2181,10 +2181,10 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
         children: [
           Row(
             children: [
-              const Icon(Icons.notifications_outlined, color: ResortTheme.mossGreen, size: 22),
+              const Icon(Icons.notifications_outlined, color: AppColors.mossGreen, size: 22),
               const SizedBox(width: 8),
               Expanded(
-                child: Text('System Notifications', style: GoogleFonts.playfairDisplay(fontSize: 18, fontWeight: FontWeight.bold, color: ResortTheme.charcoal)),
+                child: Text('System Notifications', style: AppTextStyles.titleMd.copyWith(color: AppColors.charcoal)),
               ),
               if (notifications.any((n) => !n.read))
                 TextButton.icon(
@@ -2198,18 +2198,18 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                 ),
             ],
           ),
-          const SizedBox(height: 16),
-          const Divider(color: ResortTheme.lightBone),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.lg),
+          const Divider(color: AppColors.lightBone),
+          const SizedBox(height: AppSpacing.lg),
           if (notifications.isEmpty)
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(40),
                 child: Column(
                   children: [
-                    Icon(Icons.notifications_none_rounded, size: 40, color: ResortTheme.charcoal.withValues(alpha: 0.15)),
-                    const SizedBox(height: 12),
-                    Text('No notifications yet.', style: GoogleFonts.inter(fontSize: 13, color: ResortTheme.charcoal.withValues(alpha: 0.5))),
+                    Icon(Icons.notifications_none_rounded, size: 40, color: AppColors.charcoal.withValues(alpha: 0.15)),
+                    const SizedBox(height: AppSpacing.md),
+                    Text('No notifications yet.', style: GoogleFonts.inter(fontSize: 13, color: AppColors.charcoal.withValues(alpha: 0.5))),
                   ],
                 ),
               ),
@@ -2219,16 +2219,16 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
               margin: const EdgeInsets.only(bottom: 8),
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: n.read ? ResortTheme.softCream : Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: n.read ? ResortTheme.lightBone : ResortTheme.goldAccent.withValues(alpha: 0.3)),
+                color: n.read ? AppColors.softCream : Colors.white,
+                borderRadius: AppRadius.mdBr,
+                border: Border.all(color: n.read ? AppColors.lightBone : AppColors.goldAccent.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: n.read ? ResortTheme.charcoal.withValues(alpha: 0.05) : ResortTheme.goldAccent.withValues(alpha: 0.15),
+                      color: n.read ? AppColors.charcoal.withValues(alpha: 0.05) : AppColors.goldAccent.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
@@ -2236,7 +2236,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                       n.type == 'payment' ? Icons.payment_outlined :
                       n.type == 'promo' ? Icons.local_offer_outlined :
                       Icons.notifications_outlined,
-                      size: 16, color: n.read ? ResortTheme.charcoal.withValues(alpha: 0.3) : ResortTheme.goldAccent,
+                      size: 16, color: n.read ? AppColors.charcoal.withValues(alpha: 0.3) : AppColors.goldAccent,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -2244,14 +2244,14 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(n.title, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: ResortTheme.charcoal)),
+                        Text(n.title, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.charcoal)),
                         const SizedBox(height: 2),
-                        Text(n.message, style: GoogleFonts.inter(fontSize: 10, color: ResortTheme.charcoal.withValues(alpha: 0.6)), maxLines: 2, overflow: TextOverflow.ellipsis),
+                        Text(n.message, style: GoogleFonts.inter(fontSize: 10, color: AppColors.charcoal.withValues(alpha: 0.6)), maxLines: 2, overflow: TextOverflow.ellipsis),
                       ],
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Text(n.timestamp, style: GoogleFonts.spaceGrotesk(fontSize: 9, color: ResortTheme.charcoal.withValues(alpha: 0.4))),
+                  Text(n.timestamp, style: GoogleFonts.spaceGrotesk(fontSize: 9, color: AppColors.charcoal.withValues(alpha: 0.4))),
                   if (!n.read) ...[
                     const SizedBox(width: 8),
                     SizedBox(
@@ -2260,7 +2260,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                         icon: const Icon(Icons.check_circle_outline, size: 14),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
-                        color: ResortTheme.mossGreen,
+                        color: AppColors.mossGreen,
                         onPressed: () => ref.read(superAdminNotificationsProvider.notifier).markAsRead(n.id),
                       ),
                     ),
@@ -2288,11 +2288,11 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(AppSpacing.xxl),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: ResortTheme.lightBone),
+        borderRadius: AppRadius.xxlBr,
+        border: Border.all(color: AppColors.lightBone),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.02),
@@ -2307,7 +2307,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
           Row(
             children: [
               const Icon(Icons.analytics_rounded,
-                  color: ResortTheme.mossGreen, size: 22),
+                  color: AppColors.mossGreen, size: 22),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -2315,15 +2315,15 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   style: GoogleFonts.playfairDisplay(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: ResortTheme.charcoal,
+                    color: AppColors.charcoal,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          const Divider(color: ResortTheme.lightBone),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
+          const Divider(color: AppColors.lightBone),
+          const SizedBox(height: AppSpacing.lg),
 
           // Stat Cards Grid
           LayoutBuilder(
@@ -2343,7 +2343,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                       value: '₹${_formatAmount(totalRevenue)}',
                       subtext: 'Room stays & services',
                       icon: Icons.currency_rupee_rounded,
-                      color: ResortTheme.mossGreen,
+                      color: AppColors.mossGreen,
                     ),
                   ),
                   SizedBox(
@@ -2353,7 +2353,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                       value: '₹${_formatAmount(adr)}',
                       subtext: 'Average per night stayed',
                       icon: Icons.bar_chart_rounded,
-                      color: ResortTheme.goldAccent,
+                      color: AppColors.goldAccent,
                     ),
                   ),
                   SizedBox(
@@ -2363,7 +2363,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                       value: '$totalNights nights',
                       subtext: 'Total volume booked',
                       icon: Icons.bed_rounded,
-                      color: ResortTheme.charcoal,
+                      color: AppColors.charcoal,
                     ),
                   ),
                   SizedBox(
@@ -2416,19 +2416,19 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
             style: GoogleFonts.spaceGrotesk(
               fontSize: 10,
               fontWeight: FontWeight.bold,
-              color: ResortTheme.charcoal.withValues(alpha: 0.5),
+              color: AppColors.charcoal.withValues(alpha: 0.5),
               letterSpacing: 1.2,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.md),
           Container(
             decoration: BoxDecoration(
-              color: ResortTheme.softCream,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: ResortTheme.lightBone),
+              color: AppColors.softCream,
+              borderRadius: AppRadius.lgBr,
+              border: Border.all(color: AppColors.lightBone),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: AppRadius.lgBr,
               child: Table(
                 columnWidths: const {
                   0: FlexColumnWidth(2.5),
@@ -2439,7 +2439,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                 children: [
                   TableRow(
                     decoration: const BoxDecoration(
-                      color: ResortTheme.lightBone,
+                      color: AppColors.lightBone,
                     ),
                     children: [
                       Padding(
@@ -2449,7 +2449,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                             style: GoogleFonts.spaceGrotesk(
                                 fontSize: 9,
                                 fontWeight: FontWeight.bold,
-                                color: ResortTheme.charcoal)),
+                                color: AppColors.charcoal)),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -2458,7 +2458,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                             style: GoogleFonts.spaceGrotesk(
                                 fontSize: 9,
                                 fontWeight: FontWeight.bold,
-                                color: ResortTheme.charcoal),
+                                color: AppColors.charcoal),
                             textAlign: TextAlign.right),
                       ),
                       Padding(
@@ -2468,7 +2468,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                             style: GoogleFonts.spaceGrotesk(
                                 fontSize: 9,
                                 fontWeight: FontWeight.bold,
-                                color: ResortTheme.charcoal),
+                                color: AppColors.charcoal),
                             textAlign: TextAlign.right),
                       ),
                       Padding(
@@ -2478,7 +2478,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                             style: GoogleFonts.spaceGrotesk(
                                 fontSize: 9,
                                 fontWeight: FontWeight.bold,
-                                color: ResortTheme.charcoal),
+                                color: AppColors.charcoal),
                             textAlign: TextAlign.right),
                       ),
                     ],
@@ -2491,7 +2491,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                           child: Text('No resort data available',
                               style: GoogleFonts.inter(
                                   fontSize: 11,
-                                  color: ResortTheme.charcoal.withValues(alpha: 0.5))),
+                                  color: AppColors.charcoal.withValues(alpha: 0.5))),
                         ),
                         const SizedBox(),
                         const SizedBox(),
@@ -2512,7 +2512,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                               ? null
                               : const Border(
                                   bottom: BorderSide(
-                                      color: ResortTheme.lightBone, width: 1)),
+                                      color: AppColors.lightBone, width: 1)),
                         ),
                         children: [
                           Padding(
@@ -2522,7 +2522,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                                 style: GoogleFonts.inter(
                                     fontSize: 11,
                                     fontWeight: FontWeight.bold,
-                                    color: ResortTheme.charcoal)),
+                                    color: AppColors.charcoal)),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
@@ -2531,7 +2531,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                                 style: GoogleFonts.spaceGrotesk(
                                     fontSize: 11,
                                     fontWeight: FontWeight.bold,
-                                    color: ResortTheme.charcoal),
+                                    color: AppColors.charcoal),
                                 textAlign: TextAlign.right),
                           ),
                           Padding(
@@ -2541,7 +2541,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                                 style: GoogleFonts.spaceGrotesk(
                                     fontSize: 11,
                                     fontWeight: FontWeight.bold,
-                                    color: ResortTheme.mossGreen),
+                                    color: AppColors.mossGreen),
                                 textAlign: TextAlign.right),
                           ),
                           Padding(
@@ -2551,7 +2551,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                                 style: GoogleFonts.spaceGrotesk(
                                     fontSize: 11,
                                     fontWeight: FontWeight.bold,
-                                    color: ResortTheme.charcoal),
+                                    color: AppColors.charcoal),
                                 textAlign: TextAlign.right),
                           ),
                         ],
@@ -2576,9 +2576,9 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: ResortTheme.softCream,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ResortTheme.lightBone),
+        color: AppColors.softCream,
+        borderRadius: AppRadius.lgBr,
+        border: Border.all(color: AppColors.lightBone),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2593,7 +2593,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   style: GoogleFonts.spaceGrotesk(
                     fontSize: 8,
                     fontWeight: FontWeight.bold,
-                    color: ResortTheme.charcoal.withValues(alpha: 0.5),
+                    color: AppColors.charcoal.withValues(alpha: 0.5),
                     letterSpacing: 1.0,
                   ),
                   maxLines: 1,
@@ -2604,23 +2604,23 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
               Icon(icon, size: 14, color: color),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             value,
             style: GoogleFonts.spaceGrotesk(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: ResortTheme.charcoal,
+              color: AppColors.charcoal,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSpacing.xs),
           Text(
             subtext,
             style: GoogleFonts.inter(
               fontSize: 8,
-              color: ResortTheme.charcoal.withValues(alpha: 0.5),
+              color: AppColors.charcoal.withValues(alpha: 0.5),
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -2636,9 +2636,9 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: ResortTheme.softCream,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ResortTheme.lightBone),
+        color: AppColors.softCream,
+        borderRadius: AppRadius.lgBr,
+        border: Border.all(color: AppColors.lightBone),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2648,16 +2648,16 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
             style: GoogleFonts.spaceGrotesk(
               fontSize: 10,
               fontWeight: FontWeight.bold,
-              color: ResortTheme.charcoal.withValues(alpha: 0.6),
+              color: AppColors.charcoal.withValues(alpha: 0.6),
               letterSpacing: 1.0,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.lg),
           if (sourceData.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Text('No booking source data available',
-                  style: GoogleFonts.inter(fontSize: 11, color: ResortTheme.charcoal.withValues(alpha: 0.5))),
+                  style: GoogleFonts.inter(fontSize: 11, color: AppColors.charcoal.withValues(alpha: 0.5))),
             )
           else
             ...sourceData.map((src) {
@@ -2680,7 +2680,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                             style: GoogleFonts.inter(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
-                                color: ResortTheme.charcoal),
+                                color: AppColors.charcoal),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -2691,19 +2691,19 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                           style: GoogleFonts.spaceGrotesk(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
-                              color: ResortTheme.charcoal),
+                              color: AppColors.charcoal),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: AppSpacing.xs),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(4),
                       child: LinearProgressIndicator(
                         value: percent / 100,
                         minHeight: 5,
-                        backgroundColor: ResortTheme.lightBone,
+                        backgroundColor: AppColors.lightBone,
                         valueColor: const AlwaysStoppedAnimation<Color>(
-                            ResortTheme.mossGreen),
+                            AppColors.mossGreen),
                       ),
                     ),
                     Row(
@@ -2713,7 +2713,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                           '₹${_formatAmount(revenue)}',
                           style: GoogleFonts.spaceGrotesk(
                               fontSize: 9,
-                              color: ResortTheme.mossGreen,
+                              color: AppColors.mossGreen,
                               fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -2738,9 +2738,9 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: ResortTheme.softCream,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ResortTheme.lightBone),
+        color: AppColors.softCream,
+        borderRadius: AppRadius.lgBr,
+        border: Border.all(color: AppColors.lightBone),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2750,7 +2750,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
             style: GoogleFonts.spaceGrotesk(
               fontSize: 10,
               fontWeight: FontWeight.bold,
-              color: ResortTheme.charcoal.withValues(alpha: 0.6),
+              color: AppColors.charcoal.withValues(alpha: 0.6),
               letterSpacing: 1.0,
             ),
           ),
@@ -2760,23 +2760,23 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
             label: 'Reporting Period',
             value: '$periodFrom – $periodTo',
             subtext: 'Fiscal year to date',
-            color: ResortTheme.mossGreen,
+            color: AppColors.mossGreen,
           ),
-          const Divider(color: ResortTheme.lightBone, height: 24),
+          const Divider(color: AppColors.lightBone, height: 24),
           _buildDetailRow(
             icon: Icons.currency_exchange_rounded,
             label: 'Base Currency',
             value: currency,
             subtext: 'All amounts in this currency',
-            color: ResortTheme.goldAccent,
+            color: AppColors.goldAccent,
           ),
-          const Divider(color: ResortTheme.lightBone, height: 24),
+          const Divider(color: AppColors.lightBone, height: 24),
           _buildDetailRow(
             icon: Icons.analytics_rounded,
             label: 'Average Daily Rate (ADR)',
             value: '₹${_formatAmount((revenueData['averageDailyRate'] as num?)?.toDouble() ?? 0)}',
             subtext: 'Per occupied room/night',
-            color: ResortTheme.charcoal,
+            color: AppColors.charcoal,
           ),
         ],
       ),
@@ -2809,12 +2809,12 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: ResortTheme.charcoal)),
+                      color: AppColors.charcoal)),
               const SizedBox(height: 2),
               Text(subtext,
                   style: GoogleFonts.inter(
                       fontSize: 9,
-                      color: ResortTheme.charcoal.withValues(alpha: 0.5))),
+                      color: AppColors.charcoal.withValues(alpha: 0.5))),
             ],
           ),
         ),
@@ -2823,7 +2823,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
           style: GoogleFonts.spaceGrotesk(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-            color: ResortTheme.charcoal,
+            color: AppColors.charcoal,
           ),
         ),
       ],

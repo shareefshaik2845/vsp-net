@@ -149,7 +149,7 @@ class _VspNestSplashScreenState extends ConsumerState<VspNestSplashScreen> with 
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
-          gradient: ResortTheme.darkEmeraldGradient,
+          gradient: AppGradients.darkEmerald,
         ),
         child: Stack(
           children: [
@@ -164,8 +164,8 @@ class _VspNestSplashScreenState extends ConsumerState<VspNestSplashScreen> with 
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      ResortTheme.goldAccent.withValues(alpha: 0.08),
-                      ResortTheme.goldAccent.withValues(alpha: 0.0),
+                      AppColors.goldAccent.withValues(alpha: 0.08),
+                      AppColors.goldAccent.withValues(alpha: 0.0),
                     ],
                   ),
                 ),
@@ -181,8 +181,8 @@ class _VspNestSplashScreenState extends ConsumerState<VspNestSplashScreen> with 
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      ResortTheme.goldAccent.withValues(alpha: 0.05),
-                      ResortTheme.goldAccent.withValues(alpha: 0.0),
+                      AppColors.goldAccent.withValues(alpha: 0.05),
+                      AppColors.goldAccent.withValues(alpha: 0.0),
                     ],
                   ),
                 ),
@@ -211,7 +211,7 @@ class _VspNestSplashScreenState extends ConsumerState<VspNestSplashScreen> with 
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 4.0,
-                        color: ResortTheme.goldAccent.withValues(alpha: 0.8),
+                        color: AppColors.goldAccent.withValues(alpha: 0.8),
                       ),
                     ),
                   ],
@@ -234,7 +234,7 @@ class _VspNestSplashScreenState extends ConsumerState<VspNestSplashScreen> with 
                         width: 24,
                         height: 24,
                         child: CircularProgressIndicator(
-                          color: ResortTheme.goldAccent,
+                          color: AppColors.goldAccent,
                           strokeWidth: 2.0,
                         ),
                       ),
