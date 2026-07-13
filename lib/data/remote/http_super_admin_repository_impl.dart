@@ -56,7 +56,10 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
   }
 
   @override
-  Future<void> factoryReset() async {
+  Future<void> factoryReset({String? confirmationToken}) async {
+    if (confirmationToken != 'CONFIRM_FACTORY_RESET') {
+      throw ApiException('Factory reset requires confirmation token');
+    }
     await _dio.post('/super-admin/system/factory-reset');
   }
 

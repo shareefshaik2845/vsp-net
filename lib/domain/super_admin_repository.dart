@@ -15,7 +15,7 @@ abstract class ISuperAdminRepository {
   // ── Global Settings ──
   Future<Map<String, dynamic>> fetchGlobalSettings();
   Future<void> updateGlobalSettings(Map<String, dynamic> settings);
-  Future<void> factoryReset();
+  Future<void> factoryReset({String? confirmationToken});
   Future<Map<String, dynamic>> fetchSchema();
 
   // ── Multi-Property Management ──

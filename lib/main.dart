@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/theme.dart';
+import 'core/ssl_pinning_stub.dart'
+    if (dart.library.io) 'core/ssl_pinning.dart';
 import 'presentation/routing/app_router.dart';
 import 'presentation/routing/route_names.dart';
 
 void main() {
+  configureSslPinning();
   runApp(
     const ProviderScope(
       child: VspNestApp(),

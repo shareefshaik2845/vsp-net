@@ -288,9 +288,13 @@ class _StaffViewState extends ConsumerState<StaffView> {
                     )
                   : Row(
                       children: [
-                        _buildGroupToggleButton('roster', Icons.people_outline, 'Guest Transit manifest', isMobile: false),
+                        Expanded(
+                          child: _buildGroupToggleButton('roster', Icons.people_outline, 'Guest Transit manifest', isMobile: false),
+                        ),
                         const SizedBox(width: 8),
-                        _buildGroupToggleButton('housekeeping', Icons.assignment_outlined, 'Housekeeping status board ($pendingCount Pending)', isMobile: false),
+                        Expanded(
+                          child: _buildGroupToggleButton('housekeeping', Icons.assignment_outlined, 'Housekeeping status board ($pendingCount Pending)', isMobile: false),
+                        ),
                       ],
                     ),
               const SizedBox(height: 24),
@@ -397,9 +401,13 @@ class _StaffViewState extends ConsumerState<StaffView> {
                 )
               : Row(
                   children: [
-                    _buildGroupToggleButton('roster', Icons.people_outline, 'Guest Transit manifest', isMobile: false),
+                    Expanded(
+                      child: _buildGroupToggleButton('roster', Icons.people_outline, 'Guest Transit manifest', isMobile: false),
+                    ),
                     const SizedBox(width: 8),
-                    _buildGroupToggleButton('housekeeping', Icons.assignment_outlined, 'Housekeeping status board ($pendingCount Pending)', isMobile: false),
+                    Expanded(
+                      child: _buildGroupToggleButton('housekeeping', Icons.assignment_outlined, 'Housekeeping status board ($pendingCount Pending)', isMobile: false),
+                    ),
                   ],
                 ),
         ],

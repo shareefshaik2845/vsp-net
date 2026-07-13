@@ -1,9 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/api_client.dart';
 import '../../core/theme.dart';
-import '../../data/remote/auth_api_service.dart';
+import '../../data/remote/auth_api_service.dart' show AuthApiService, AuthFailure, AuthSuccess, AuthResult, RemoteUserInfo;
 import '../../domain/entities.dart';
 import '../providers/state_provider.dart';
 import '../routing/app_router.dart';
@@ -48,16 +49,32 @@ class _VspNestSplashScreenState extends ConsumerState<VspNestSplashScreen> with 
       return;
     }
 
+    if (_isTokenExpired(token)) {
+      await ApiClient.instance.clearTokens();
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, RouteNames.login);
+      return;
+    }
+
     try {
-      final result = await AuthApiService().me();
+      final authResult = await AuthApiService().me();
       if (!mounted) return;
 
-      if (result == null || !result.active) {
+      if (authResult is AuthFailure) {
         await ApiClient.instance.clearTokens();
+        if (!mounted) return;
         Navigator.pushReplacementNamed(context, RouteNames.login);
         return;
       }
 
+      if (authResult is AuthSuccess<RemoteUserInfo> && !authResult.data.active) {
+        await ApiClient.instance.clearTokens();
+        if (!mounted) return;
+        Navigator.pushReplacementNamed(context, RouteNames.login);
+        return;
+      }
+
+      final result = (authResult as AuthSuccess<RemoteUserInfo>).data;
       final targetRole = _mapBackendRole(result.role);
       if (targetRole == null) {
         await ApiClient.instance.clearTokens();
@@ -85,6 +102,20 @@ class _VspNestSplashScreenState extends ConsumerState<VspNestSplashScreen> with 
       await ApiClient.instance.clearTokens();
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, RouteNames.login);
+    }
+  }
+
+  bool _isTokenExpired(String token) {
+    try {
+      final parts = token.split('.');
+      if (parts.length != 3) return true;
+      final payload = utf8.decode(base64Url.decode(base64Url.normalize(parts[1])));
+      final claims = json.decode(payload) as Map<String, dynamic>;
+      final exp = claims['exp'] as int?;
+      if (exp == null) return false;
+      return DateTime.now().millisecondsSinceEpoch > exp * 1000;
+    } catch (_) {
+      return true;
     }
   }
 

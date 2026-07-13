@@ -247,16 +247,20 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                 )
               : Row(
                   children: [
-                    _buildExportButton(
-                      'pdf',
-                      Icons.download,
-                      'Export PDF Ledger',
+                    Expanded(
+                      child: _buildExportButton(
+                        'pdf',
+                        Icons.download,
+                        'Export PDF Ledger',
+                      ),
                     ),
                     const SizedBox(width: 8),
-                    _buildExportButton(
-                      'excel',
-                      Icons.trending_up,
-                      'Export Excel',
+                    Expanded(
+                      child: _buildExportButton(
+                        'excel',
+                        Icons.trending_up,
+                        'Export Excel',
+                      ),
                     ),
                   ],
                 ),
@@ -309,13 +313,26 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
 
   Widget _buildExportButton(String format, IconData icon, String label) {
     return InkWell(
-      onTap: () {
-        ref.read(notificationsProvider.notifier).addNotification(
-          'Export Initiated',
-          'Successfully generated financial ledger stream in ${format.toUpperCase()} format. Download started.',
-          'system',
-        );
-        SnackbarHelper.success(context, 'Ledger exported in ${format.toUpperCase()} format.');
+      onTap: () async {
+        final resort = ref.read(propertyProvider).valueOrNull;
+        final pid = resort?.id ?? '';
+        try {
+          final path = format == 'pdf'
+              ? await ref.read(accountantRepositoryProvider).downloadLedgerPdf(pid, '2026-01-01', '2026-12-31')
+              : await ref.read(accountantRepositoryProvider).downloadLedgerExcel(pid, '2026-01-01', '2026-12-31');
+          ref.read(notificationsProvider.notifier).addNotification(
+            'Export Complete',
+            'Ledger saved to $path',
+            'system',
+          );
+          if (context.mounted) {
+            SnackbarHelper.success(context, 'Ledger saved to $path');
+          }
+        } catch (e) {
+          if (context.mounted) {
+            SnackbarHelper.error(context, 'Export failed: $e');
+          }
+        }
       },
       borderRadius: BorderRadius.circular(16),
       child: Container(

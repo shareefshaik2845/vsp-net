@@ -3,7 +3,7 @@ import 'entities.dart';
 abstract class IResortRepository {
   Future<PropertyDetails> fetchPropertyDetails();
   Future<List<Booking>> fetchBookings();
-  Future<void> addBooking(Booking booking);
+  Future<Map<String, dynamic>> addBooking(Booking booking);
   Future<void> updateBooking(Booking booking);
   
   Future<List<CalendarBlock>> fetchCalendarBlocks();

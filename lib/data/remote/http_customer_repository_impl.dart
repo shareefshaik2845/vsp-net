@@ -156,9 +156,9 @@ class HttpCustomerRepositoryImpl implements ICustomerRepository {
   @override
   Future<Map<String, dynamic>> initiatePayment(Map<String, dynamic> payment) async {
     final bookingId = payment['bookingId'] as String? ?? '';
-    final paymentMethod = payment['paymentMethod'] as String? ?? 'credit_card';
-    final response = await _dio.post('/customer/bookings/$bookingId/payment',
-        queryParameters: {'paymentMethod': paymentMethod});
+    final response = await _dio.post('/customer/bookings/$bookingId/payment', data: {
+      'paymentMethod': payment['paymentMethod'] as String? ?? 'credit_card',
+    });
     return unwrapMap(_unwrap(response));
   }
 
@@ -287,10 +287,24 @@ class HttpCustomerRepositoryImpl implements ICustomerRepository {
     return unwrapMap(_unwrap(response));
   }
 
+  static const _validConciergeTypes = [
+    'AIRPORT_TRANSFER',
+    'SPA_BOOKING',
+    'DINING_RESERVATION',
+    'HOUSEKEEPING',
+    'MAINTENANCE',
+    'SPECIAL_REQUEST',
+    'GENERAL',
+  ];
+
   @override
   Future<void> sendConciergeMessage(String message, String source) async {
+    final normalized = source.trim().toUpperCase().replaceAll(' ', '_');
+    final requestType = _validConciergeTypes.contains(normalized)
+        ? normalized
+        : 'GENERAL';
     await _dio.post('/customer/concierge', data: {
-      'requestType': source.toUpperCase(),
+      'requestType': requestType,
       'description': message,
     });
   }

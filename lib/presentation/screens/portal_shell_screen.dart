@@ -16,6 +16,7 @@ import 'customer/customer_view.dart';
 import 'customer/saved_view.dart';
 import 'customer/dashboard_view.dart';
 import 'customer/profile_view.dart';
+import 'customer/calendar_view.dart';
 import 'admin/admin_view.dart';
 import 'staff/staff_view.dart';
 import 'accountant/accountant_view.dart';
@@ -203,6 +204,23 @@ class _ResortPortalShellState extends ConsumerState<ResortPortalShell> {
                           ),
                         ],
                       ),
+                      if (authenticatedRole != null && authenticatedRole != activeRole) ...[
+                        const SizedBox(height: 6),
+                        Row(
+                          children: [
+                            Icon(Icons.info_outline, size: 10, color: ResortTheme.goldAccent.withValues(alpha: 0.6)),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Logged in as ${_getRoleLabel(authenticatedRole)}',
+                              style: GoogleFonts.inter(
+                                color: ResortTheme.goldAccent.withValues(alpha: 0.6),
+                                fontSize: 9.5,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -229,11 +247,11 @@ class _ResortPortalShellState extends ConsumerState<ResortPortalShell> {
                             ),
                           ),
                         ),
-                        _sidebarRoleItem(ref, 'Customer Space', UserRole.customer, Icons.hotel_outlined, activeRole),
-                        _sidebarRoleItem(ref, 'Admin Desk', UserRole.admin, Icons.dashboard_customize_outlined, activeRole),
-                        _sidebarRoleItem(ref, 'Staff Ops', UserRole.staff, Icons.cleaning_services_outlined, activeRole),
-                        _sidebarRoleItem(ref, 'Accountant Ledger', UserRole.accountant, Icons.receipt_long_outlined, activeRole),
-                        _sidebarRoleItem(ref, 'Super Admin Config', UserRole.superAdmin, Icons.admin_panel_settings_outlined, activeRole),
+                        _sidebarRoleItem(ref, 'Customer Space', UserRole.customer, Icons.hotel_outlined, activeRole, authenticatedRole),
+                        _sidebarRoleItem(ref, 'Admin Desk', UserRole.admin, Icons.dashboard_customize_outlined, activeRole, authenticatedRole),
+                        _sidebarRoleItem(ref, 'Staff Ops', UserRole.staff, Icons.cleaning_services_outlined, activeRole, authenticatedRole),
+                        _sidebarRoleItem(ref, 'Accountant Ledger', UserRole.accountant, Icons.receipt_long_outlined, activeRole, authenticatedRole),
+                        _sidebarRoleItem(ref, 'Super Admin Config', UserRole.superAdmin, Icons.admin_panel_settings_outlined, activeRole, authenticatedRole),
                       ],
 
                       if (activeRole == UserRole.customer) ...[
@@ -342,7 +360,7 @@ class _ResortPortalShellState extends ConsumerState<ResortPortalShell> {
     }
   }
 
-  Widget _sidebarRoleItem(WidgetRef ref, String title, UserRole role, IconData icon, UserRole activeRole) {
+  Widget _sidebarRoleItem(WidgetRef ref, String title, UserRole role, IconData icon, UserRole activeRole, UserRole? authenticatedRole) {
     final isSelected = activeRole == role;
 
     return Container(
@@ -379,7 +397,49 @@ class _ResortPortalShellState extends ConsumerState<ResortPortalShell> {
                 color: isSelected ? ResortTheme.mossGreen : Colors.white70,
               ),
             ),
-            onTap: () {
+            onTap: () async {
+              if (role == authenticatedRole) {
+                ref.read(activeRoleProvider.notifier).state = role;
+                if (role == UserRole.customer) {
+                  ref.read(activeTabProvider.notifier).state = 'villa';
+                }
+                Navigator.pushReplacementNamed(context, AppRouter.routeForRole(role));
+                return;
+              }
+              final confirmed = await showDialog<bool>(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  title: const Row(
+                    children: [
+                      Icon(Icons.swap_horiz_rounded, color: ResortTheme.goldAccent, size: 22),
+                      SizedBox(width: 8),
+                      Text('Switch Perspective', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  content: Text(
+                    'You are switching from ${_getRoleLabel(authenticatedRole ?? role)} to ${_getRoleLabel(role)}.\n\n'
+                    'This is a simulation for testing purposes. All role-based permissions '
+                    'are enforced server-side by your JWT claims.',
+                    style: GoogleFonts.inter(fontSize: 13),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(ctx).pop(false),
+                      child: Text('Cancel', style: GoogleFonts.inter(color: Colors.grey)),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ResortTheme.mossGreen,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      onPressed: () => Navigator.of(ctx).pop(true),
+                      child: Text('Switch', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              );
+              if (confirmed != true) return;
               ref.read(activeRoleProvider.notifier).state = role;
               if (role == UserRole.customer) {
                 ref.read(activeTabProvider.notifier).state = 'villa';
@@ -451,6 +511,8 @@ class _ResortPortalShellState extends ConsumerState<ResortPortalShell> {
           case 'explore':
           case 'villa': // legacy fallback
             return const CustomerView();
+          case 'calendar':
+            return const ValleyCalendarView();
           case 'saved':
             return const SavedView();
           case 'trips':
@@ -667,7 +729,48 @@ class _ResortPortalShellState extends ConsumerState<ResortPortalShell> {
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                          onSelected: (role) {
+                          onSelected: (role) async {
+                            if (role == authenticatedRole) {
+                              ref.read(activeRoleProvider.notifier).state = role;
+                              if (role == UserRole.customer) {
+                                ref.read(activeTabProvider.notifier).state = 'villa';
+                              }
+                              Navigator.pushReplacementNamed(context, AppRouter.routeForRole(role));
+                              return;
+                            }
+                            final confirmed = await showDialog<bool>(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                title: const Row(
+                                  children: [
+                                    Icon(Icons.swap_horiz_rounded, color: ResortTheme.goldAccent, size: 22),
+                                    SizedBox(width: 8),
+                                    Text('Switch Perspective', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                                content: Text(
+                                  'Switching from ${_getRoleLabel(authenticatedRole!)} to ${_getRoleLabel(role)}.\n\n'
+                                  'This is a simulation. Server-side permissions are based on your JWT claims.',
+                                  style: GoogleFonts.inter(fontSize: 13),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.of(ctx).pop(false),
+                                    child: Text('Cancel', style: GoogleFonts.inter(color: Colors.grey)),
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: ResortTheme.mossGreen,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                    ),
+                                    onPressed: () => Navigator.of(ctx).pop(true),
+                                    child: Text('Switch', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
+                                  ),
+                                ],
+                              ),
+                            );
+                            if (confirmed != true) return;
                             ref.read(activeRoleProvider.notifier).state = role;
                             if (role == UserRole.customer) {
                               ref.read(activeTabProvider.notifier).state = 'villa';

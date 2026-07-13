@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities.dart';
 import '../../domain/repositories.dart';
@@ -70,14 +69,14 @@ class BookingsNotifier extends StateNotifier<List<Booking>> {
       state = await _repository.fetchBookings();
     } catch (e) {
       lastError = 'Failed to load bookings';
-      debugPrint('loadBookings error: $e');
       state = [];
     }
   }
 
-  Future<void> addBooking(Booking booking) async {
-    await _repository.addBooking(booking);
+  Future<Map<String, dynamic>> addBooking(Booking booking) async {
+    final result = await _repository.addBooking(booking);
     state = [booking, ...state];
+    return result;
   }
 
   Future<void> cancelBooking(String bookingId, String reason, double refundPercent) async {
@@ -183,7 +182,6 @@ class CalendarBlocksNotifier extends StateNotifier<List<CalendarBlock>> {
       state = await _repository.fetchCalendarBlocks();
     } catch (e) {
       lastError = 'Failed to load blocks';
-      debugPrint('loadBlocks error: $e');
       state = [];
     }
   }
@@ -218,7 +216,6 @@ class CouponsNotifier extends StateNotifier<List<Coupon>> {
       state = await _repository.fetchCoupons();
     } catch (e) {
       lastError = 'Failed to load coupons';
-      debugPrint('loadCoupons error: $e');
       state = [];
     }
   }
@@ -265,7 +262,6 @@ class RoomsNotifier extends StateNotifier<List<RoomStatus>> {
       state = await _repository.fetchRoomStatuses();
     } catch (e) {
       lastError = 'Failed to load rooms';
-      debugPrint('loadRooms error: $e');
       state = [];
     }
   }
@@ -308,7 +304,6 @@ class PricingRulesNotifier extends StateNotifier<List<PricingSeasonRule>> {
       state = await _repository.fetchPricingRules();
     } catch (e) {
       lastError = 'Failed to load pricing rules';
-      debugPrint('loadRules error: $e');
       state = [];
     }
   }
@@ -355,7 +350,6 @@ class OtaChannelsNotifier extends StateNotifier<List<OtaSyncStatus>> {
       state = await _repository.fetchOtaSyncStatuses();
     } catch (e) {
       lastError = 'Failed to load OTA channels';
-      debugPrint('loadChannels error: $e');
       state = [];
     }
   }
@@ -408,7 +402,6 @@ class NotificationsNotifier extends StateNotifier<List<AppNotification>> {
       state = await _repository.fetchNotifications();
     } catch (e) {
       lastError = 'Failed to load notifications';
-      debugPrint('loadNotifications error: $e');
       state = [];
     }
   }
@@ -576,7 +569,6 @@ class ResortsNotifier extends StateNotifier<List<PropertyDetails>> {
       state = props.map((json) => _propertyFromJson(json)).toList();
     } catch (e) {
       lastError = 'Failed to load properties';
-      debugPrint('ResortsNotifier._init error: $e');
     }
   }
 
@@ -632,7 +624,6 @@ class SavedPropertiesNotifier extends StateNotifier<List<PropertyDetails>> {
       )).toList();
     } catch (e) {
       lastError = 'Failed to load favorites';
-      debugPrint('SavedPropertiesNotifier._loadRemote error: $e');
     }
   }
 
@@ -652,7 +643,6 @@ class SavedPropertiesNotifier extends StateNotifier<List<PropertyDetails>> {
       }
     } catch (e) {
       lastError = 'Failed to toggle favorite';
-      debugPrint('SavedPropertiesNotifier._remoteToggle error: $e');
     }
   }
 
@@ -688,7 +678,6 @@ class SuperAdminBookingsNotifier extends StateNotifier<List<Booking>> {
       state = await _repository.fetchAllBookings();
     } catch (e) {
       lastError = 'Failed to load bookings';
-      debugPrint('SuperAdminBookingsNotifier.loadBookings error: $e');
       state = [];
     }
   }
@@ -729,7 +718,6 @@ class SuperAdminUsersNotifier extends StateNotifier<List<UserAccount>> {
       )).toList();
     } catch (e) {
       lastError = 'Failed to load users';
-      debugPrint('SuperAdminUsersNotifier.loadUsers error: $e');
       state = [];
     }
   }
@@ -756,7 +744,6 @@ class SuperAdminRolesNotifier extends StateNotifier<List<RoleDefinition>> {
       state = await _repository.fetchRoles();
     } catch (e) {
       lastError = 'Failed to load roles';
-      debugPrint('SuperAdminRolesNotifier.loadRoles error: $e');
       state = [];
     }
   }
@@ -791,7 +778,6 @@ class SuperAdminApprovalsNotifier extends StateNotifier<List<Map<String, dynamic
       state = await _repository.fetchApprovals();
     } catch (e) {
       lastError = 'Failed to load approvals';
-      debugPrint('SuperAdminApprovalsNotifier.loadApprovals error: $e');
       state = [];
     }
   }
@@ -826,7 +812,6 @@ class SuperAdminNotificationsNotifier extends StateNotifier<List<AppNotification
       state = await _repository.fetchNotifications();
     } catch (e) {
       lastError = 'Failed to load notifications';
-      debugPrint('SuperAdminNotificationsNotifier.loadNotifications error: $e');
       state = [];
     }
   }
@@ -879,7 +864,6 @@ class SuperAdminSettingsNotifier extends StateNotifier<Map<String, dynamic>> {
       state = await _repository.fetchGlobalSettings();
     } catch (e) {
       lastError = 'Failed to load settings';
-      debugPrint('SuperAdminSettingsNotifier.loadSettings error: $e');
       state = {};
     }
   }
@@ -966,7 +950,6 @@ class SuperAdminAuditLogsNotifier extends StateNotifier<List<Map<String, dynamic
       state = await _repository.fetchAuditLogs(userId: userId, action: action, from: from, to: to, page: page, pageSize: pageSize);
     } catch (e) {
       lastError = 'Failed to load audit logs';
-      debugPrint('SuperAdminAuditLogsNotifier.loadAuditLogs error: $e');
       state = [];
     }
   }
@@ -1084,7 +1067,6 @@ class CustomerFavoritesNotifier extends StateNotifier<List<Map<String, dynamic>>
       state = await _repository.fetchFavorites();
     } catch (e) {
       lastError = 'Failed to load favorites';
-      debugPrint('CustomerFavoritesNotifier.loadFavorites error: $e');
       state = [];
     }
   }
@@ -1173,7 +1155,6 @@ class CustomerPricingNotifier extends StateNotifier<Map<String, dynamic>> {
       };
     } catch (e) {
       lastError = 'Failed to load pricing';
-      debugPrint('CustomerPricingNotifier.loadPricing error: $e');
     }
   }
 }
@@ -1225,7 +1206,6 @@ class CustomerNotificationsNotifier extends StateNotifier<List<AppNotification>>
       state = await _repository.fetchNotifications();
     } catch (e) {
       lastError = 'Failed to load notifications';
-      debugPrint('CustomerNotificationsNotifier.load error: $e');
       state = [];
     }
   }

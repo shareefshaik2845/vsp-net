@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 
 import '../../core/api_client.dart';
@@ -129,21 +131,27 @@ class HttpAccountantRepositoryImpl implements IAccountantRepository {
   }
 
   @override
-  Future<void> downloadLedgerPdf(String propertyId, String from, String to) async {
-    await _dio.get('/accountant/reports/ledger/pdf', queryParameters: {
-      'propertyId': propertyId,
-      'from': from,
-      'to': to,
-    });
+  Future<String> downloadLedgerPdf(String propertyId, String from, String to) async {
+    final dir = Directory.systemTemp.createTempSync('vsp_ledger_');
+    final path = '${dir.path}/ledger_${propertyId}_${from}_$to.pdf';
+    await _dio.download(
+      '/accountant/reports/ledger/pdf',
+      path,
+      queryParameters: {'propertyId': propertyId, 'from': from, 'to': to},
+    );
+    return path;
   }
 
   @override
-  Future<void> downloadLedgerExcel(String propertyId, String from, String to) async {
-    await _dio.get('/accountant/reports/ledger/excel', queryParameters: {
-      'propertyId': propertyId,
-      'from': from,
-      'to': to,
-    });
+  Future<String> downloadLedgerExcel(String propertyId, String from, String to) async {
+    final dir = Directory.systemTemp.createTempSync('vsp_ledger_');
+    final path = '${dir.path}/ledger_${propertyId}_${from}_$to.xlsx';
+    await _dio.download(
+      '/accountant/reports/ledger/excel',
+      path,
+      queryParameters: {'propertyId': propertyId, 'from': from, 'to': to},
+    );
+    return path;
   }
 
   @override

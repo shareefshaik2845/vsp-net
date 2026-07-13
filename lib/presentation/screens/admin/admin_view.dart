@@ -604,7 +604,7 @@ class _AdminViewState extends ConsumerState<AdminView> {
     required Color iconBg,
   }) {
     return Container(
-      padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24.0),
@@ -628,7 +628,7 @@ class _AdminViewState extends ConsumerState<AdminView> {
                     color: ResortTheme.charcoal.withValues(alpha: 0.5),
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 Text(
                   value,
                   style: GoogleFonts.inter(
@@ -637,7 +637,7 @@ class _AdminViewState extends ConsumerState<AdminView> {
                     color: ResortTheme.charcoal,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 4),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(

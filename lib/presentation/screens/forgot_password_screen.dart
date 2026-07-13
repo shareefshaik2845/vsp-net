@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/theme.dart';
+import '../../core/rate_limiter.dart';
 import '../../core/snackbar_helper.dart';
 import '../../data/remote/auth_api_service.dart';
 import '../widgets/vsp_nest_logo.dart';
@@ -16,6 +17,7 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
 
 class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   final _emailController = TextEditingController();
+  final _rateLimiter = RateLimiter(minInterval: const Duration(seconds: 10));
   bool _isLoading = false;
 
   @override
@@ -37,6 +39,17 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       return;
     }
 
+    if (!_rateLimiter.canAttempt) {
+      final wait = _rateLimiter.retryAfter;
+      if (wait.inSeconds > 0) {
+        SnackbarHelper.warning(
+          context,
+          'Please wait ${wait.inSeconds}s before requesting again.',
+        );
+      }
+      return;
+    }
+
     setState(() => _isLoading = true);
 
     final success = await AuthApiService().forgotPassword(email);
@@ -45,11 +58,11 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
     setState(() => _isLoading = false);
 
-    if (success) {
-      SnackbarHelper.success(context, 'Password reset link sent to your email.');
+    _rateLimiter.recordAttempt(success: true);
+
+    if (context.mounted) {
+      SnackbarHelper.success(context, 'If an account exists, a reset link has been sent.');
       Navigator.pop(context);
-    } else {
-      SnackbarHelper.error(context, 'Failed to send reset link. Please try again.');
     }
   }
 

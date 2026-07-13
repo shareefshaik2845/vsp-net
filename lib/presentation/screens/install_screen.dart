@@ -6,7 +6,7 @@ import '../routing/route_names.dart';
 import '../../core/snackbar_helper.dart';
 import '../../core/theme.dart';
 import '../widgets/vsp_nest_logo.dart';
-import '../../data/remote/auth_api_service.dart';
+import '../../data/remote/auth_api_service.dart' show AuthApiService, AuthFailure;
 
 class InstallationScreen extends ConsumerStatefulWidget {
   const InstallationScreen({super.key});
@@ -58,7 +58,7 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
 
     setState(() => _isLoading = true);
 
-    final result = await AuthApiService().setup(
+    final authResult = await AuthApiService().setup(
       name: _nameController.text.trim(),
       email: _emailController.text.trim().toLowerCase(),
       password: _passwordController.text,
@@ -66,9 +66,10 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
 
     if (!mounted) return;
 
-    if (result == null) {
+    if (authResult is AuthFailure) {
       setState(() => _isLoading = false);
-      SnackbarHelper.error(context, 'Setup failed. Please try again.');
+      final failure = authResult as AuthFailure;
+      SnackbarHelper.error(context, failure.message);
       return;
     }
 

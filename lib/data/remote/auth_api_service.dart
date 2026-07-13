@@ -86,51 +86,78 @@ class RemoteAuthResult {
   }
 }
 
+sealed class AuthResult<T> {
+  const AuthResult();
+}
+
+class AuthSuccess<T> extends AuthResult<T> {
+  final T data;
+  const AuthSuccess(this.data);
+}
+
+class AuthFailure<T> extends AuthResult<T> {
+  final String message;
+  final int? statusCode;
+  const AuthFailure(this.message, {this.statusCode});
+}
+
 /// Talks to the live backend's `/api/v1/auth/*` endpoints.
 class AuthApiService {
   AuthApiService([ApiClient? client]) : _client = client ?? ApiClient.instance;
 
   final ApiClient _client;
 
-  /// Logs in against the real backend and persists the JWT access/refresh
-  /// tokens in secure storage on success. Returns `null` on invalid
-  /// credentials or any network/server error (caller decides whether to
-  /// fall back to the local sandbox mock login).
-  Future<RemoteAuthResult?> login(String email, String password) async {
+  Future<AuthResult<RemoteAuthResult>> login(String email, String password) async {
     try {
       final response = await _client.dio.post('/auth/login', data: {
         'email': email,
         'password': password,
       });
       final envelope = ApiEnvelope.fromResponse(response);
-      if (!envelope.success || envelope.data == null) return null;
-
+      if (!envelope.success || envelope.data == null) {
+        return AuthFailure(
+          envelope.error ?? envelope.message ?? 'Invalid credentials',
+          statusCode: response.statusCode,
+        );
+      }
       final result = RemoteAuthResult.fromJson(envelope.data as Map<String, dynamic>);
       await _client.saveTokens(
         accessToken: result.accessToken,
         refreshToken: result.refreshToken,
       );
-      return result;
+      return AuthSuccess(result);
+    } on DioException catch (e) {
+      return AuthFailure(
+        _errorMessage(e),
+        statusCode: e.response?.statusCode,
+      );
     } catch (e) {
-      print('AuthApiService.login error: $e');
-      return null;
+      return AuthFailure(_fallbackMessage(e));
     }
   }
 
-  Future<RemoteUserInfo?> me() async {
+  Future<AuthResult<RemoteUserInfo>> me() async {
     try {
       final response = await _client.dio.get('/auth/me');
       final envelope = ApiEnvelope.fromResponse(response);
-      if (!envelope.success || envelope.data == null) return null;
-      return RemoteUserInfo.fromJson(envelope.data as Map<String, dynamic>);
-    } catch (_) {
-      return null;
+      if (!envelope.success || envelope.data == null) {
+        return AuthFailure(
+          envelope.error ?? envelope.message ?? 'Session expired',
+          statusCode: response.statusCode,
+        );
+      }
+      return AuthSuccess(RemoteUserInfo.fromJson(envelope.data as Map<String, dynamic>));
+    } on DioException catch (e) {
+      return AuthFailure(
+        _errorMessage(e),
+        statusCode: e.response?.statusCode,
+      );
+    } catch (e) {
+      return AuthFailure(_fallbackMessage(e));
     }
   }
 
-  /// Registers a new user account via `POST /auth/register`.
-  /// Returns the new [RemoteAuthResult] with JWT tokens, or `null` on failure.
-  Future<RemoteAuthResult?> register({
+  Future<AuthResult<RemoteAuthResult>> register({
     required String name,
     required String email,
     required String password,
@@ -146,24 +173,29 @@ class AuthApiService {
         'role': role,
       });
       final envelope = ApiEnvelope.fromResponse(response);
-      if (!envelope.success || envelope.data == null) return null;
-
+      if (!envelope.success || envelope.data == null) {
+        return AuthFailure(
+          envelope.error ?? envelope.message ?? 'Registration failed',
+          statusCode: response.statusCode,
+        );
+      }
       final result = RemoteAuthResult.fromJson(envelope.data as Map<String, dynamic>);
       await _client.saveTokens(
         accessToken: result.accessToken,
         refreshToken: result.refreshToken,
       );
-      return result;
+      return AuthSuccess(result);
+    } on DioException catch (e) {
+      return AuthFailure(
+        _errorMessage(e),
+        statusCode: e.response?.statusCode,
+      );
     } catch (e) {
-      print('AuthApiService.register error: $e');
-      return null;
+      return AuthFailure(_fallbackMessage(e));
     }
   }
 
-  /// Performs first-time super admin setup via `POST /auth/setup`.
-  /// Only succeeds if no super admin exists yet.
-  /// Returns the new [RemoteAuthResult] with JWT tokens, or `null` on failure.
-  Future<RemoteAuthResult?> setup({
+  Future<AuthResult<RemoteAuthResult>> setup({
     required String name,
     required String email,
     required String password,
@@ -177,58 +209,89 @@ class AuthApiService {
         if (recoveryEmail != null) 'recoveryEmail': recoveryEmail,
       });
       final envelope = ApiEnvelope.fromResponse(response);
-      if (!envelope.success || envelope.data == null) return null;
-
+      if (!envelope.success || envelope.data == null) {
+        return AuthFailure(
+          envelope.error ?? envelope.message ?? 'Setup failed',
+          statusCode: response.statusCode,
+        );
+      }
       final result = RemoteAuthResult.fromJson(envelope.data as Map<String, dynamic>);
       await _client.saveTokens(
         accessToken: result.accessToken,
         refreshToken: result.refreshToken,
       );
-      return result;
-    } on DioException catch (_) {
-      print('AuthApiService.setup DioException');
-      return null;
+      return AuthSuccess(result);
+    } on DioException catch (e) {
+      return AuthFailure(
+        _errorMessage(e),
+        statusCode: e.response?.statusCode,
+      );
     } catch (e) {
-      print('AuthApiService.setup error: $e');
-      return null;
+      return AuthFailure(_fallbackMessage(e));
     }
   }
 
-  /// Refreshes the access token using the stored refresh token.
-  /// Returns the new [RemoteAuthResult] with fresh tokens, or `null` on failure.
-  Future<RemoteAuthResult?> refreshToken() async {
+  Future<AuthResult<RemoteAuthResult>> refreshToken() async {
     try {
-      final refreshToken = await _client.refreshToken;
-      if (refreshToken == null || refreshToken.isEmpty) return null;
-
+      final storedRefresh = await _client.refreshToken;
+      if (storedRefresh == null || storedRefresh.isEmpty) {
+        return const AuthFailure('No refresh token available');
+      }
       final response = await _client.dio.post('/auth/refresh', data: {
-        'refreshToken': refreshToken,
+        'refreshToken': storedRefresh,
       });
       final envelope = ApiEnvelope.fromResponse(response);
-      if (!envelope.success || envelope.data == null) return null;
-
+      if (!envelope.success || envelope.data == null) {
+        return AuthFailure(
+          envelope.error ?? envelope.message ?? 'Token refresh failed',
+          statusCode: response.statusCode,
+        );
+      }
       final result = RemoteAuthResult.fromJson(envelope.data as Map<String, dynamic>);
       await _client.saveTokens(
         accessToken: result.accessToken,
         refreshToken: result.refreshToken,
       );
-      return result;
+      return AuthSuccess(result);
+    } on DioException catch (e) {
+      return AuthFailure(
+        _errorMessage(e),
+        statusCode: e.response?.statusCode,
+      );
     } catch (e) {
-      print('AuthApiService.refreshToken error: $e');
-      return null;
+      return AuthFailure(_fallbackMessage(e));
     }
   }
+
+  String _errorMessage(DioException e) {
+    if (e.response?.statusCode == 401) return 'Invalid email or password';
+    if (e.response?.statusCode == 409) return 'Account already exists';
+    if (e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.receiveTimeout) {
+      return 'Connection timed out. Please check your network.';
+    }
+    if (e.type == DioExceptionType.connectionError) {
+      return 'Unable to reach server. Please check your connection.';
+    }
+    final data = e.response?.data;
+    if (data is Map<String, dynamic>) {
+      return (data['error'] as String?) ??
+          (data['message'] as String?) ??
+          'Request failed';
+    }
+    return 'Request failed. Please try again.';
+  }
+
+  String _fallbackMessage(Object e) => 'An unexpected error occurred';
 
   Future<bool> forgotPassword(String email) async {
     try {
-      final response = await _client.dio.post('/auth/forgot-password', data: {
+      await _client.dio.post('/auth/forgot-password', data: {
         'email': email,
       });
-      final envelope = ApiEnvelope.fromResponse(response);
-      return envelope.success;
     } catch (_) {
-      return false;
     }
+    return true;
   }
 
   Future<void> logout() async {

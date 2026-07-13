@@ -5,10 +5,11 @@ import '../../domain/entities.dart';
 import '../../domain/repositories.dart';
 
 class HttpResortRepositoryImpl implements IResortRepository {
-  HttpResortRepositoryImpl([ApiClient? client])
+  HttpResortRepositoryImpl([ApiClient? client, this.propertyId])
       : _dio = (client ?? ApiClient.instance).dio;
 
   final Dio _dio;
+  final String? propertyId;
 
   dynamic _unwrap(Response response) {
     final envelope = ApiEnvelope.fromResponse(response);
@@ -159,9 +160,9 @@ class HttpResortRepositoryImpl implements IResortRepository {
   }
 
   @override
-  Future<void> addBooking(Booking booking) async {
-    await _dio.post('/admin/bookings', data: {
-      'propertyId': '1',
+  Future<Map<String, dynamic>> addBooking(Booking booking) async {
+    final response = await _dio.post('/admin/bookings', data: {
+      'propertyId': propertyId ?? '1',
       'guestName': booking.guestName,
       'guestEmail': booking.guestEmail,
       'guestPhone': booking.guestPhone,
@@ -173,6 +174,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
       'specialRequests': booking.housekeepingNotes,
       'discountAmount': booking.discountAmount,
     });
+    return unwrapMap(_unwrap(response));
   }
 
   @override
@@ -187,8 +189,6 @@ class HttpResortRepositoryImpl implements IResortRepository {
   }
 
   // ==================== Calendar Blocks ====================
-
-  static const _defaultPropertyId = '1';
 
   static String _blockTypeToBackend(String reason) {
     switch (reason) {
@@ -233,7 +233,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<void> addCalendarBlock(CalendarBlock block) async {
     await _dio.post('/admin/calendar/blocks', data: {
-      'propertyId': _defaultPropertyId,
+      'propertyId': propertyId ?? '1',
       'startDate': block.startDate,
       'endDate': block.endDate,
       'reason': block.notes ?? block.reason,
@@ -389,7 +389,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<void> addPricingRule(PricingSeasonRule rule) async {
     await _dio.post('/admin/pricing/rules', data: {
-      'propertyId': _defaultPropertyId,
+      'propertyId': propertyId ?? '1',
       'name': rule.name,
       'startDate': rule.startDate,
       'endDate': rule.endDate,
@@ -416,7 +416,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
         await _dio.post('/admin/pricing/rules', data: {
-          'propertyId': _defaultPropertyId,
+          'propertyId': propertyId ?? '1',
           ...body,
         });
       } else {

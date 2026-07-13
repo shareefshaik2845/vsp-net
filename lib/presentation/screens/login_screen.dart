@@ -6,11 +6,12 @@ import '../providers/state_provider.dart';
 import '../routing/app_router.dart';
 import '../routing/route_names.dart';
 import '../../core/theme.dart';
+import '../../core/rate_limiter.dart';
 import '../../domain/entities.dart';
 import '../widgets/vsp_nest_logo.dart';
 import '../../core/api_client.dart';
 import '../../core/snackbar_helper.dart';
-import '../../data/remote/auth_api_service.dart';
+import '../../data/remote/auth_api_service.dart' show AuthApiService, AuthFailure, AuthSuccess;
 
 UserRole? _mapBackendRole(String backendRole) {
   switch (backendRole) {
@@ -39,6 +40,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _rateLimiter = RateLimiter();
   bool _isLoading = false;
   @override
   void dispose() {
@@ -66,21 +68,35 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       return;
     }
 
+    if (!_rateLimiter.canAttempt) {
+      final wait = _rateLimiter.retryAfter;
+      if (wait.inSeconds > 0) {
+        SnackbarHelper.warning(
+          context,
+          'Too many attempts. Please wait ${wait.inSeconds}s and try again.',
+        );
+      }
+      return;
+    }
+
     setState(() => _isLoading = true);
 
     // Clear any stale tokens before login to avoid 403 from interceptor
     await ApiClient.instance.clearTokens();
 
-    final result = await AuthApiService().login(email, password);
+    final authResult = await AuthApiService().login(email, password);
 
     if (!mounted) return;
 
-    if (result == null) {
+    if (authResult is AuthFailure) {
+      _rateLimiter.recordAttempt();
       setState(() => _isLoading = false);
-      SnackbarHelper.error(context, 'Invalid email or password. Please try again.');
+      final failure = authResult as AuthFailure;
+      SnackbarHelper.error(context, failure.message);
       return;
     }
 
+    final result = (authResult as AuthSuccess).data;
     final targetRole = _mapBackendRole(result.user.role);
     if (targetRole == null) {
       setState(() => _isLoading = false);

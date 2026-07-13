@@ -14,20 +14,32 @@ class ValleyCalendarView extends ConsumerStatefulWidget {
 
 class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
   Map<String, dynamic>? _calendarData;
+  late final int _year;
+  late final int _month1;
+  late final int _month2;
+
+  static const _monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
 
   @override
   void initState() {
     super.initState();
+    final now = DateTime.now();
+    _year = now.year;
+    _month1 = now.month;
+    _month2 = now.month < 12 ? now.month + 1 : 1;
     _loadCalendar();
   }
 
   Future<void> _loadCalendar() async {
     try {
       final repo = ref.read(customerRepositoryProvider);
-      // Load June & July 2026 data
-      final june = await repo.fetchMonthlyCalendar('1', 6, 2026);
-      final july = await repo.fetchMonthlyCalendar('1', 7, 2026);
-      setState(() => _calendarData = {'6': june, '7': july});
+      final m1 = await repo.fetchMonthlyCalendar('1', _month1, _year);
+      final y2 = _month2 > _month1 ? _year : _year + 1;
+      final m2 = await repo.fetchMonthlyCalendar('1', _month2, y2);
+      setState(() => _calendarData = {_month1.toString(): m1, _month2.toString(): m2});
     } catch (_) {
       setState(() => _calendarData = {});
     }
@@ -73,21 +85,28 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
 
               LayoutBuilder(
                 builder: (context, constraints) {
+                  final name1 = '${_monthNames[_month1 - 1]} $_year';
+                  final name2 = '${_monthNames[_month2 - 1]} ${_month2 > _month1 ? _year : _year + 1}';
+                  final days1 = DateTime(_year, _month1 + 1, 0).day;
+                  final days2 = DateTime(_month2 > _month1 ? _year : _year + 1, _month2 + 1, 0).day;
+                  final pad1 = DateTime(_year, _month1, 1).weekday % 7;
+                  final pad2 = DateTime(_month2 > _month1 ? _year : _year + 1, _month2, 1).weekday % 7;
+
                   if (constraints.maxWidth > 750) {
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(child: _buildMonthCard(context, 'June 2026', 1, 30, bookings, blocks, 6)),
+                        Expanded(child: _buildMonthCard(context, name1, pad1, days1, bookings, blocks, _month1)),
                         const SizedBox(width: 24),
-                        Expanded(child: _buildMonthCard(context, 'July 2026', 3, 31, bookings, blocks, 7)),
+                        Expanded(child: _buildMonthCard(context, name2, pad2, days2, bookings, blocks, _month2)),
                       ],
                     );
                   } else {
                     return Column(
                       children: [
-                        _buildMonthCard(context, 'June 2026', 1, 30, bookings, blocks, 6),
+                        _buildMonthCard(context, name1, pad1, days1, bookings, blocks, _month1),
                         const SizedBox(height: 24),
-                        _buildMonthCard(context, 'July 2026', 3, 31, bookings, blocks, 7),
+                        _buildMonthCard(context, name2, pad2, days2, bookings, blocks, _month2),
                       ],
                     );
                   }

@@ -8,8 +8,8 @@ abstract class IAccountantRepository {
   Future<Map<String, dynamic>> processRefund(String id);
   Future<List<Booking>> fetchInvoices({String? propertyId, String? paymentStatus, String? search, int page = 1, int pageSize = 20});
   Future<Map<String, dynamic>> fetchInvoiceDetail(String id);
-  Future<void> downloadLedgerPdf(String propertyId, String from, String to);
-  Future<void> downloadLedgerExcel(String propertyId, String from, String to);
+  Future<String> downloadLedgerPdf(String propertyId, String from, String to);
+  Future<String> downloadLedgerExcel(String propertyId, String from, String to);
   Future<List<AppNotification>> fetchNotifications();
   Future<void> markNotificationAsRead(String id);
   Future<void> markAllNotificationsAsRead();

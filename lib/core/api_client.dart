@@ -3,15 +3,6 @@ import 'package:dio/dio.dart';
 import 'app_config.dart';
 import 'token_storage.dart';
 
-/// Thin wrapper around a shared [Dio] instance that:
-///  - points at the live backend's `/api/v1` base path
-///  - automatically attaches the JWT access token (if present) to every
-///    request via an `Authorization: Bearer <token>` header
-///  - persists the access/refresh tokens in secure storage across app
-///    restarts
-///
-/// This is intentionally a small, dependency-free singleton so any repo
-/// implementation (auth, resort, user, ...) can share one configured client.
 class ApiClient {
   ApiClient._internal()
       : dio = Dio(BaseOptions(
@@ -29,8 +20,41 @@ class ApiClient {
         }
         handler.next(options);
       },
+      onError: (error, handler) async {
+        if (error.response?.statusCode == 401 && !_isRefreshing) {
+          _isRefreshing = true;
+          try {
+            final refreshToken = await _storage.read(key: _refreshTokenKey);
+            if (refreshToken != null && refreshToken.isNotEmpty) {
+              final refreshResponse = await dio.post('/auth/refresh', data: {
+                'refreshToken': refreshToken,
+              });
+              final body = refreshResponse.data;
+              if (body is Map<String, dynamic> && body['success'] == true) {
+                final data = body['data'] as Map<String, dynamic>;
+                final newAccessToken = data['accessToken'] as String;
+                final newRefreshToken = data['refreshToken'] as String?;
+                await saveTokens(
+                  accessToken: newAccessToken,
+                  refreshToken: newRefreshToken,
+                );
+                error.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
+                final retryResponse = await dio.fetch(error.requestOptions);
+                return handler.resolve(retryResponse);
+              }
+            }
+          } catch (_) {
+          } finally {
+            _isRefreshing = false;
+          }
+          await clearTokens();
+        }
+        handler.next(error);
+      },
     ));
   }
+
+  bool _isRefreshing = false;
 
   static final ApiClient instance = ApiClient._internal();
 
@@ -56,8 +80,6 @@ class ApiClient {
   }
 }
 
-/// Standard `ApiResponse<T>` envelope shape returned by every backend
-/// endpoint: `{ success, data, error, message, pagination }`.
 class ApiEnvelope {
   final bool success;
   final dynamic data;
@@ -90,7 +112,6 @@ Map<String, dynamic> unwrapMap(dynamic data) {
   throw ApiException('Expected a map, got ${data.runtimeType}');
 }
 
-/// Thrown when a backend call fails (non-2xx, or `success: false`).
 class ApiException implements Exception {
   final String message;
   final int? statusCode;

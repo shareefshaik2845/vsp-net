@@ -16,26 +16,39 @@ class HttpAccountantResortAdapter implements IResortRepository {
       id: map['id'] as String? ?? '',
       name: map['name'] as String? ?? '',
       tagline: map['tagline'] as String? ?? '',
-      description: '',
+      description: map['description'] as String? ?? '',
       location: map['location'] as String? ?? '',
-      basePriceWeekday: 0,
-      basePriceWeekend: 0,
-      extraGuestCharge: 0,
-      cleaningFee: 0,
-      state: '',
-      city: '',
+      basePriceWeekday: (map['basePriceWeekday'] as num?)?.toDouble() ?? 0,
+      basePriceWeekend: (map['basePriceWeekend'] as num?)?.toDouble() ?? 0,
+      extraGuestCharge: (map['extraGuestCharge'] as num?)?.toDouble() ?? 0,
+      cleaningFee: (map['cleaningFee'] as num?)?.toDouble() ?? 0,
+      state: map['state'] as String? ?? '',
+      city: map['city'] as String? ?? '',
       image: map['image'] as String? ?? '',
-      gallery: [if (map['image'] != null) map['image'] as String],
-      amenities: const [],
-      rules: const [],
+      gallery: (map['gallery'] as List<dynamic>?)?.cast<String>() ?? [],
+      amenities: _parseAmenities(map['amenities']),
+      rules: (map['rules'] as List<dynamic>?)?.cast<String>() ?? [],
     );
+  }
+
+  List<Amenity> _parseAmenities(dynamic raw) {
+    if (raw == null) return [];
+    final list = raw as List<dynamic>;
+    return list.map((a) {
+      final m = a as Map<String, dynamic>;
+      return Amenity(
+        icon: m['icon'] as String? ?? '',
+        label: m['label'] as String? ?? '',
+        category: m['category'] as String? ?? '',
+      );
+    }).toList();
   }
 
   @override
   Future<List<Booking>> fetchBookings() => _accountantRepo.fetchInvoices();
 
   @override
-  Future<void> addBooking(Booking booking) {
+  Future<Map<String, dynamic>> addBooking(Booking booking) {
     throw UnsupportedError('Accountant: addBooking not available');
   }
 
@@ -141,7 +154,11 @@ class HttpAccountantResortAdapter implements IResortRepository {
   Future<void> clearNotifications() => _accountantRepo.markAllNotificationsAsRead();
 
   @override
-  Future<Map<String, dynamic>> fetchAnalyticsKpis() => _accountantRepo.fetchDashboardKpis('1');
+  Future<Map<String, dynamic>> fetchAnalyticsKpis() async {
+    final props = await _accountantRepo.fetchProperties();
+    final propertyId = props.isNotEmpty ? (props.first['id'] as String? ?? '1') : '1';
+    return _accountantRepo.fetchDashboardKpis(propertyId);
+  }
   @override
   Future<List<Map<String, dynamic>>> fetchAnalyticsSalesChart() => throw UnsupportedError('Accountant: fetchAnalyticsSalesChart not available');
   @override
