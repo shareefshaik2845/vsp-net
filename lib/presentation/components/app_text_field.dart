@@ -37,7 +37,8 @@ class AppTextField extends StatelessWidget {
         obscureText: obscureText,
         keyboardType: keyboardType,
         readOnly: readOnly,
-        style: GoogleFonts.inter(fontSize: 13, color: Colors.white.withValues(alpha: 0.9)),
+        style: GoogleFonts.inter(
+            fontSize: 13, color: Colors.white.withValues(alpha: 0.9)),
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: const TextStyle(color: Colors.white38),
@@ -65,7 +66,8 @@ class AppTextField extends StatelessWidget {
             borderRadius: AppRadius.lgBr,
             borderSide: const BorderSide(color: AppColors.error),
           ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       );
     }
@@ -101,7 +103,8 @@ class AppTextField extends StatelessWidget {
           borderRadius: AppRadius.lgBr,
           borderSide: const BorderSide(color: AppColors.error),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
     );
   }
@@ -135,7 +138,8 @@ class AppDarkTextField extends StatelessWidget {
       keyboardType: keyboardType,
       readOnly: onTap != null,
       onTap: onTap,
-      style: GoogleFonts.inter(fontSize: 12, color: Colors.white.withValues(alpha: 0.9)),
+      style: GoogleFonts.inter(
+          fontSize: 12, color: Colors.white.withValues(alpha: 0.9)),
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
@@ -158,7 +162,8 @@ class AppDarkTextField extends StatelessWidget {
           borderRadius: AppRadius.lgBr,
           borderSide: const BorderSide(color: AppColors.goldAccent),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       ),
     );
   }

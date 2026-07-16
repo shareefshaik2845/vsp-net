@@ -63,7 +63,9 @@ void main() {
       }
     });
 
-    test('backend mapping is surjective (all backend names have frontend names)', () {
+    test(
+        'backend mapping is surjective (all backend names have frontend names)',
+        () {
       for (final entry in _backendToResource.entries) {
         expect(_resourceToBackend[entry.value], equals(entry.key),
             reason: '${entry.key} <- ${entry.value} reverse lookup failed');
@@ -72,7 +74,8 @@ void main() {
 
     test('all backend names map to valid PermissionResource values', () {
       for (final frontendName in _backendToResource.values) {
-        expect(PermissionResource.values.any((e) => e.name == frontendName), isTrue,
+        expect(PermissionResource.values.any((e) => e.name == frontendName),
+            isTrue,
             reason: '$frontendName is not a valid PermissionResource');
       }
     });

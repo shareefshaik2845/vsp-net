@@ -19,8 +19,18 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
   late final int _month2;
 
   static const _monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
   ];
 
   @override
@@ -39,7 +49,8 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
       final m1 = await repo.fetchMonthlyCalendar('1', _month1, _year);
       final y2 = _month2 > _month1 ? _year : _year + 1;
       final m2 = await repo.fetchMonthlyCalendar('1', _month2, y2);
-      setState(() => _calendarData = {_month1.toString(): m1, _month2.toString(): m2});
+      setState(() =>
+          _calendarData = {_month1.toString(): m1, _month2.toString(): m2});
     } catch (_) {
       setState(() => _calendarData = {});
     }
@@ -51,7 +62,10 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
       if (error != null && error.isNotEmpty && context.mounted) {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(error), backgroundColor: Colors.red.shade700, behavior: SnackBarBehavior.floating));
+          ..showSnackBar(SnackBar(
+              content: Text(error),
+              backgroundColor: Colors.red.shade700,
+              behavior: SnackBarBehavior.floating));
         notifier.lastError = null;
       }
     } catch (_) {}
@@ -59,7 +73,10 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(bookingsProvider, (_, __) => _lastError(ref, context, ref.read(bookingsProvider.notifier)));
+    ref.listen(
+        bookingsProvider,
+        (_, __) =>
+            _lastError(ref, context, ref.read(bookingsProvider.notifier)));
     final bookings = ref.watch(bookingsProvider);
     final blocks = ref.watch(calendarBlocksProvider);
 
@@ -72,41 +89,52 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Valley Reservation Matrix', style: AppTextStyles.displayMedium),
+              Text('Valley Reservation Matrix',
+                  style: AppTextStyles.displayMedium),
               const SizedBox(height: 6),
               Text(
                 'Verify dates immediately. Double-click or tap cells to inspect scheduled bookings.',
                 style: AppTextStyles.bodyMd,
               ),
               const SizedBox(height: 24),
-
               _buildLegend(context),
               const SizedBox(height: 32),
-
               LayoutBuilder(
                 builder: (context, constraints) {
                   final name1 = '${_monthNames[_month1 - 1]} $_year';
-                  final name2 = '${_monthNames[_month2 - 1]} ${_month2 > _month1 ? _year : _year + 1}';
+                  final name2 =
+                      '${_monthNames[_month2 - 1]} ${_month2 > _month1 ? _year : _year + 1}';
                   final days1 = DateTime(_year, _month1 + 1, 0).day;
-                  final days2 = DateTime(_month2 > _month1 ? _year : _year + 1, _month2 + 1, 0).day;
+                  final days2 = DateTime(
+                          _month2 > _month1 ? _year : _year + 1, _month2 + 1, 0)
+                      .day;
                   final pad1 = DateTime(_year, _month1, 1).weekday % 7;
-                  final pad2 = DateTime(_month2 > _month1 ? _year : _year + 1, _month2, 1).weekday % 7;
+                  final pad2 = DateTime(
+                              _month2 > _month1 ? _year : _year + 1, _month2, 1)
+                          .weekday %
+                      7;
 
                   if (constraints.maxWidth > 750) {
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(child: _buildMonthCard(context, name1, pad1, days1, bookings, blocks, _month1)),
+                        Expanded(
+                            child: _buildMonthCard(context, name1, pad1, days1,
+                                bookings, blocks, _month1)),
                         const SizedBox(width: 24),
-                        Expanded(child: _buildMonthCard(context, name2, pad2, days2, bookings, blocks, _month2)),
+                        Expanded(
+                            child: _buildMonthCard(context, name2, pad2, days2,
+                                bookings, blocks, _month2)),
                       ],
                     );
                   } else {
                     return Column(
                       children: [
-                        _buildMonthCard(context, name1, pad1, days1, bookings, blocks, _month1),
+                        _buildMonthCard(context, name1, pad1, days1, bookings,
+                            blocks, _month1),
                         const SizedBox(height: 24),
-                        _buildMonthCard(context, name2, pad2, days2, bookings, blocks, _month2),
+                        _buildMonthCard(context, name2, pad2, days2, bookings,
+                            blocks, _month2),
                       ],
                     );
                   }
@@ -131,7 +159,8 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
         spacing: 16,
         runSpacing: 10,
         children: [
-          _legendItem('Available Night', Colors.white, border: const BorderSide(color: AppColors.lightBone)),
+          _legendItem('Available Night', Colors.white,
+              border: const BorderSide(color: AppColors.lightBone)),
           _legendItem('Booked Direct', AppColors.mossGreen),
           _legendItem('OTA Sync (Airbnb)', const Color(0xFF7A8B7B)),
           _legendItem('Pending Payment', AppColors.goldAccent),
@@ -151,29 +180,38 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
           decoration: BoxDecoration(
             color: color,
             shape: BoxShape.circle,
-            border: border != null ? Border.all(color: border.color, width: border.width) : null,
+            border: border != null
+                ? Border.all(color: border.color, width: border.width)
+                : null,
           ),
         ),
         const SizedBox(width: 8),
-        Text(label, style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.charcoal)),
+        Text(label,
+            style: GoogleFonts.inter(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: AppColors.charcoal)),
       ],
     );
   }
 
   Widget _buildMonthCard(
-    BuildContext context, 
-    String monthName, 
-    int padDays, 
-    int totalDays, 
-    List<Booking> bookings, 
+    BuildContext context,
+    String monthName,
+    int padDays,
+    int totalDays,
+    List<Booking> bookings,
     List<CalendarBlock> blocks,
     int monthNum,
   ) {
     final monthKey = monthNum.toString();
     final monthData = _calendarData?[monthKey] as Map<String, dynamic>?;
-    final apiAvailable = (monthData?['availableDates'] as List<dynamic>?)?.cast<String>() ?? [];
-    final apiBlocked = (monthData?['blockedDates'] as List<dynamic>?)?.cast<String>() ?? [];
-    final apiBooked = (monthData?['bookedDates'] as List<dynamic>?)?.cast<String>() ?? [];
+    final apiAvailable =
+        (monthData?['availableDates'] as List<dynamic>?)?.cast<String>() ?? [];
+    final apiBlocked =
+        (monthData?['blockedDates'] as List<dynamic>?)?.cast<String>() ?? [];
+    final apiBooked =
+        (monthData?['bookedDates'] as List<dynamic>?)?.cast<String>() ?? [];
     final minStay = monthData?['minStay'] as int?;
     final maxStay = monthData?['maxStay'] as int?;
 
@@ -189,14 +227,16 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
                 if (minStay != null || maxStay != null)
                   Text(
                     'Min ${minStay ?? '-'} / Max ${maxStay ?? '-'} nights',
-                    style: GoogleFonts.inter(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.w500),
+                    style: GoogleFonts.inter(
+                        fontSize: 10,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500),
                   ),
               ],
             ),
             const SizedBox(height: AppSpacing.lg),
             const Divider(color: AppColors.lightBone),
             const SizedBox(height: AppSpacing.md),
-            
             GridRow(
               children: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
                   .map((e) => Expanded(
@@ -214,7 +254,6 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
                   .toList(),
             ),
             const SizedBox(height: AppSpacing.md),
-
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -230,8 +269,9 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
                 }
 
                 final dayNum = idx - padDays + 1;
-                final dateStr = '${DateTime.now().year}-${monthNum.toString().padLeft(2, '0')}-${dayNum.toString().padLeft(2, '0')}';
-                
+                final dateStr =
+                    '${DateTime.now().year}-${monthNum.toString().padLeft(2, '0')}-${dayNum.toString().padLeft(2, '0')}';
+
                 // Use API data when available, fall back to local
                 bool isBlocked = false;
                 bool isBooked = false;
@@ -244,31 +284,42 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
                 } else {
                   final status = _getDayStatus(dateStr, bookings, blocks);
                   isBlocked = status == CalendarDayStatus.blocked;
-                  isBooked = status == CalendarDayStatus.booked || status == CalendarDayStatus.ota || status == CalendarDayStatus.pending;
+                  isBooked = status == CalendarDayStatus.booked ||
+                      status == CalendarDayStatus.ota ||
+                      status == CalendarDayStatus.pending;
                 }
 
                 for (final bl in blocks) {
-                  if (dateStr.compareTo(bl.startDate) >= 0 && dateStr.compareTo(bl.endDate) < 0) {
+                  if (dateStr.compareTo(bl.startDate) >= 0 &&
+                      dateStr.compareTo(bl.endDate) < 0) {
                     matchingBlock = bl;
                     break;
                   }
                 }
                 if (matchingBlock == null) {
                   for (final b in bookings) {
-                    if (dateStr.compareTo(b.startDate) >= 0 && dateStr.compareTo(b.endDate) < 0 && b.status != BookingStatus.cancelled) {
+                    if (dateStr.compareTo(b.startDate) >= 0 &&
+                        dateStr.compareTo(b.endDate) < 0 &&
+                        b.status != BookingStatus.cancelled) {
                       matchingBooking = b;
                       break;
                     }
                   }
                 }
 
-                final info = _buildDayInfo(dateStr, matchingBooking, matchingBlock);
-                CalendarDayStatus status = isBlocked ? CalendarDayStatus.blocked : (isBooked ? CalendarDayStatus.booked : CalendarDayStatus.available);
+                final info =
+                    _buildDayInfo(dateStr, matchingBooking, matchingBlock);
+                CalendarDayStatus status = isBlocked
+                    ? CalendarDayStatus.blocked
+                    : (isBooked
+                        ? CalendarDayStatus.booked
+                        : CalendarDayStatus.available);
 
                 Color cellColor = Colors.white;
                 Color textColor = AppColors.charcoal;
-                Border? border = Border.all(color: AppColors.lightBone.withValues(alpha: 0.5));
-                
+                Border? border = Border.all(
+                    color: AppColors.lightBone.withValues(alpha: 0.5));
+
                 switch (status) {
                   case CalendarDayStatus.booked:
                     cellColor = AppColors.mossGreen;
@@ -305,7 +356,12 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
                         borderRadius: BorderRadius.circular(10),
                         border: border,
                         boxShadow: status != CalendarDayStatus.available
-                            ? [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 4, offset: const Offset(0, 2))]
+                            ? [
+                                BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.04),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2))
+                              ]
                             : null,
                       ),
                       child: Center(
@@ -329,17 +385,23 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
     );
   }
 
-  CalendarDayStatus _getDayStatus(String dateStr, List<Booking> bookings, List<CalendarBlock> blocks) {
+  CalendarDayStatus _getDayStatus(
+      String dateStr, List<Booking> bookings, List<CalendarBlock> blocks) {
     for (final bl in blocks) {
-      if (dateStr.compareTo(bl.startDate) >= 0 && dateStr.compareTo(bl.endDate) < 0) {
+      if (dateStr.compareTo(bl.startDate) >= 0 &&
+          dateStr.compareTo(bl.endDate) < 0) {
         return CalendarDayStatus.blocked;
       }
     }
     for (final b in bookings) {
-      if (dateStr.compareTo(b.startDate) >= 0 && dateStr.compareTo(b.endDate) < 0) {
+      if (dateStr.compareTo(b.startDate) >= 0 &&
+          dateStr.compareTo(b.endDate) < 0) {
         if (b.status == BookingStatus.cancelled) continue;
-        if (b.status == BookingStatus.pendingPayment) return CalendarDayStatus.pending;
-        return b.source == BookingSource.direct ? CalendarDayStatus.booked : CalendarDayStatus.ota;
+        if (b.status == BookingStatus.pendingPayment)
+          return CalendarDayStatus.pending;
+        return b.source == BookingSource.direct
+            ? CalendarDayStatus.booked
+            : CalendarDayStatus.ota;
       }
     }
     return CalendarDayStatus.available;
@@ -361,12 +423,17 @@ class _ValleyCalendarViewState extends ConsumerState<ValleyCalendarView> {
       builder: (context) {
         return AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: AppRadius.xxlBr),
-          title: Text(dateStr, style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.bold, color: AppColors.mossGreen)),
-          content: Text(info, style: GoogleFonts.inter(fontSize: 13, height: 1.5)),
+          title: Text(dateStr,
+              style: GoogleFonts.playfairDisplay(
+                  fontWeight: FontWeight.bold, color: AppColors.mossGreen)),
+          content:
+              Text(info, style: GoogleFonts.inter(fontSize: 13, height: 1.5)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Close', style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: AppColors.mossGreen)),
+              child: Text('Close',
+                  style: GoogleFonts.inter(
+                      fontWeight: FontWeight.bold, color: AppColors.mossGreen)),
             ),
           ],
         );

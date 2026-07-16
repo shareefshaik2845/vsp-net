@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 
 import '../../core/api_client.dart';
@@ -15,7 +13,8 @@ class HttpAccountantRepositoryImpl implements IAccountantRepository {
   dynamic _unwrap(Response response) {
     final envelope = ApiEnvelope.fromResponse(response);
     if (!envelope.success) {
-      throw ApiException(envelope.error ?? envelope.message ?? 'Request failed');
+      throw ApiException(
+          envelope.error ?? envelope.message ?? 'Request failed');
     }
     return envelope.data;
   }
@@ -43,7 +42,8 @@ class HttpAccountantRepositoryImpl implements IAccountantRepository {
 
   @override
   Future<Map<String, dynamic>> fetchDashboardKpis(String propertyId) async {
-    final response = await _dio.get('/accountant/dashboard/kpis', queryParameters: {
+    final response =
+        await _dio.get('/accountant/dashboard/kpis', queryParameters: {
       if (propertyId.isNotEmpty) 'propertyId': propertyId,
     });
     return _asMap(_unwrap(response));
@@ -62,12 +62,20 @@ class HttpAccountantRepositoryImpl implements IAccountantRepository {
   }
 
   @override
-  Future<List<Booking>> fetchInvoices({String? propertyId, String? paymentStatus, String? search, int page = 1, int pageSize = 20}) async {
+  Future<List<Booking>> fetchInvoices(
+      {String? propertyId,
+      String? paymentStatus,
+      String? search,
+      int page = 1,
+      int pageSize = 20}) async {
     final params = <String, dynamic>{'page': page, 'pageSize': pageSize};
-    if (paymentStatus != null) params['status'] = paymentStatus;
+    if (paymentStatus != null) params['paymentStatus'] = paymentStatus;
     if (search != null) params['search'] = search;
-    final response = await _dio.get('/accountant/invoices', queryParameters: params);
-    return _asListMap(_unwrap(response)).map((json) => _bookingFromJson(json)).toList();
+    final response =
+        await _dio.get('/accountant/bookings', queryParameters: params);
+    return _asListMap(_unwrap(response))
+        .map((json) => _bookingFromJson(json))
+        .toList();
   }
 
   Booking _bookingFromJson(Map<String, dynamic> json) {
@@ -77,8 +85,8 @@ class HttpAccountantRepositoryImpl implements IAccountantRepository {
       guestName: json['guestName'] as String? ?? '',
       guestEmail: json['guestEmail'] as String? ?? '',
       guestPhone: json['guestPhone'] as String? ?? '',
-      startDate: json['startDate'] as String? ?? '',
-      endDate: json['endDate'] as String? ?? '',
+      startDate: (json['checkInDate'] ?? json['startDate']) as String? ?? '',
+      endDate: (json['checkOutDate'] ?? json['endDate']) as String? ?? '',
       guestsCount: json['guestsCount'] as int? ?? 1,
       nightsCount: json['nightsCount'] as int? ?? 1,
       source: _parseSource(json['source'] as String?),
@@ -131,33 +139,31 @@ class HttpAccountantRepositoryImpl implements IAccountantRepository {
   }
 
   @override
-  Future<String> downloadLedgerPdf(String propertyId, String from, String to) async {
-    final dir = Directory.systemTemp.createTempSync('vsp_ledger_');
-    final path = '${dir.path}/ledger_${propertyId}_${from}_$to.pdf';
-    await _dio.download(
+  Future<Map<String, dynamic>> downloadLedgerPdf(
+      String propertyId, String from, String to) async {
+    final response = await _dio.get(
       '/accountant/reports/ledger/pdf',
-      path,
       queryParameters: {'propertyId': propertyId, 'from': from, 'to': to},
     );
-    return path;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
-  Future<String> downloadLedgerExcel(String propertyId, String from, String to) async {
-    final dir = Directory.systemTemp.createTempSync('vsp_ledger_');
-    final path = '${dir.path}/ledger_${propertyId}_${from}_$to.xlsx';
-    await _dio.download(
+  Future<Map<String, dynamic>> downloadLedgerExcel(
+      String propertyId, String from, String to) async {
+    final response = await _dio.get(
       '/accountant/reports/ledger/excel',
-      path,
       queryParameters: {'propertyId': propertyId, 'from': from, 'to': to},
     );
-    return path;
+    return unwrapMap(_unwrap(response));
   }
 
   @override
   Future<List<AppNotification>> fetchNotifications() async {
     final response = await _dio.get('/accountant/notifications');
-    return _asListMap(_unwrap(response)).map((json) => _notifFromJson(json)).toList();
+    return _asListMap(_unwrap(response))
+        .map((json) => _notifFromJson(json))
+        .toList();
   }
 
   AppNotification _notifFromJson(Map<String, dynamic> json) {
@@ -189,12 +195,18 @@ class HttpAccountantRepositoryImpl implements IAccountantRepository {
   }
 
   @override
-  Future<List<Map<String, dynamic>>> fetchAccountantBookings({String? paymentStatus, String? refundStatus, String? search, int page = 1, int pageSize = 20}) async {
+  Future<List<Map<String, dynamic>>> fetchAccountantBookings(
+      {String? paymentStatus,
+      String? refundStatus,
+      String? search,
+      int page = 1,
+      int pageSize = 20}) async {
     final params = <String, dynamic>{'page': page, 'pageSize': pageSize};
     if (paymentStatus != null) params['paymentStatus'] = paymentStatus;
     if (refundStatus != null) params['refundStatus'] = refundStatus;
     if (search != null) params['search'] = search;
-    final response = await _dio.get('/accountant/bookings', queryParameters: params);
+    final response =
+        await _dio.get('/accountant/bookings', queryParameters: params);
     return _asListMap(_unwrap(response));
   }
 

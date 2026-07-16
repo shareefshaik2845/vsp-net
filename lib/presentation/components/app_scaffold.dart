@@ -28,15 +28,16 @@ class AppScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor:
+          backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
       appBar: appBar ??
           (title != null || showBackButton || actions != null
               ? AppBar(
-                  title: title != null ? Text(title!, style: AppTextStyles.titleMd) : null,
-                  leading: leading ??
-                      (showBackButton
-                          ? const BackButton()
-                          : null),
+                  title: title != null
+                      ? Text(title!, style: AppTextStyles.titleMd)
+                      : null,
+                  leading:
+                      leading ?? (showBackButton ? const BackButton() : null),
                   actions: actions,
                   automaticallyImplyLeading: showBackButton,
                 )

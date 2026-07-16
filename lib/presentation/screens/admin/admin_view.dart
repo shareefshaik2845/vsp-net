@@ -27,10 +27,13 @@ class _AdminViewState extends ConsumerState<AdminView> {
   void initState() {
     super.initState();
     final now = DateTime.now();
-    _blockStart = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    _blockStart =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
     final end = now.add(const Duration(days: 2));
-    _blockEnd = '${end.year}-${end.month.toString().padLeft(2, '0')}-${end.day.toString().padLeft(2, '0')}';
+    _blockEnd =
+        '${end.year}-${end.month.toString().padLeft(2, '0')}-${end.day.toString().padLeft(2, '0')}';
   }
+
   String _blockReason = 'maintenance';
   String? _blockError;
   String? _blockSuccess;
@@ -40,13 +43,18 @@ class _AdminViewState extends ConsumerState<AdminView> {
   final _couponDescController = TextEditingController();
   String _couponType = 'percentage'; // percentage, fixed
   double _couponValue = 10;
-  String _couponExpiry = DateTime.now().add(const Duration(days: 90)).toIso8601String().split('T').first;
+  String _couponExpiry = DateTime.now()
+      .add(const Duration(days: 90))
+      .toIso8601String()
+      .split('T')
+      .first;
   int _couponLimit = 50;
   double _couponMinSub = 25000;
   String? _couponFormError;
 
   // Bookings filter states
-  String _filterSource = 'all'; // all, direct, airbnb, bookingCom, agoda, makemytrip, goibibo
+  String _filterSource =
+      'all'; // all, direct, airbnb, bookingCom, agoda, makemytrip, goibibo
   String _filterStatus = 'all'; // all, confirmed, pendingPayment, cancelled
   String _filterQuery = '';
   final _searchController = TextEditingController();
@@ -80,11 +88,26 @@ class _AdminViewState extends ConsumerState<AdminView> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(bookingsProvider, (_, __) => _lastError(ref, context, ref.read(bookingsProvider.notifier)));
-    ref.listen(calendarBlocksProvider, (_, __) => _lastError(ref, context, ref.read(calendarBlocksProvider.notifier)));
-    ref.listen(couponsProvider, (_, __) => _lastError(ref, context, ref.read(couponsProvider.notifier)));
-    ref.listen(pricingRulesProvider, (_, __) => _lastError(ref, context, ref.read(pricingRulesProvider.notifier)));
-    ref.listen(otaSyncProvider, (_, __) => _lastError(ref, context, ref.read(otaSyncProvider.notifier)));
+    ref.listen(
+        bookingsProvider,
+        (_, __) =>
+            _lastError(ref, context, ref.read(bookingsProvider.notifier)));
+    ref.listen(
+        calendarBlocksProvider,
+        (_, __) => _lastError(
+            ref, context, ref.read(calendarBlocksProvider.notifier)));
+    ref.listen(
+        couponsProvider,
+        (_, __) =>
+            _lastError(ref, context, ref.read(couponsProvider.notifier)));
+    ref.listen(
+        pricingRulesProvider,
+        (_, __) =>
+            _lastError(ref, context, ref.read(pricingRulesProvider.notifier)));
+    ref.listen(
+        otaSyncProvider,
+        (_, __) =>
+            _lastError(ref, context, ref.read(otaSyncProvider.notifier)));
     final bookings = ref.watch(bookingsProvider);
     final blocks = ref.watch(calendarBlocksProvider);
     final coupons = ref.watch(couponsProvider);
@@ -96,8 +119,10 @@ class _AdminViewState extends ConsumerState<AdminView> {
     return Scaffold(
       backgroundColor: AppColors.stoneBg,
       body: propertyAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator(color: AppColors.mossGreen)),
-        error: (err, stack) => Center(child: Text('Error loading property: $err')),
+        loading: () => const Center(
+            child: CircularProgressIndicator(color: AppColors.mossGreen)),
+        error: (err, stack) =>
+            Center(child: Text('Error loading property: $err')),
         data: (property) {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),
@@ -127,12 +152,20 @@ class _AdminViewState extends ConsumerState<AdminView> {
   Widget _buildHeaderRibbon(PropertyDetails property) {
     final tabs = [
       {'id': 'kpis', 'label': 'Analytics Board', 'icon': Icons.trending_up},
-      {'id': 'blocks', 'label': 'Calendar Blocking', 'icon': Icons.calendar_month},
+      {
+        'id': 'blocks',
+        'label': 'Calendar Blocking',
+        'icon': Icons.calendar_month
+      },
       {'id': 'orders', 'label': 'Booking Matrix', 'icon': Icons.shopping_bag},
       {'id': 'tariffs', 'label': 'Tariffs / Seasonality', 'icon': Icons.tune},
       {'id': 'coupons', 'label': 'Coupons Editor', 'icon': Icons.local_offer},
       {'id': 'ota', 'label': 'OTA Synergy', 'icon': Icons.sync},
-      {'id': 'staff_ops', 'label': 'Resort Operations', 'icon': Icons.cleaning_services_outlined},
+      {
+        'id': 'staff_ops',
+        'label': 'Resort Operations',
+        'icon': Icons.cleaning_services_outlined
+      },
     ];
 
     return Container(
@@ -140,7 +173,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: AppRadius.xxlBr,
-        border: Border.all(color: AppColors.goldAccent.withValues(alpha: 0.15), width: 1.2),
+        border: Border.all(
+            color: AppColors.goldAccent.withValues(alpha: 0.15), width: 1.2),
         boxShadow: AppShadows.card,
       ),
       child: LayoutBuilder(
@@ -199,15 +233,19 @@ class _AdminViewState extends ConsumerState<AdminView> {
                           borderRadius: AppRadius.mdBr,
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 8),
                             decoration: BoxDecoration(
                               gradient: isSelected ? AppGradients.gold : null,
-                              color: isSelected ? null : AppColors.stoneBg.withValues(alpha: 0.5),
+                              color: isSelected
+                                  ? null
+                                  : AppColors.stoneBg.withValues(alpha: 0.5),
                               borderRadius: AppRadius.mdBr,
                               boxShadow: isSelected
                                   ? [
                                       BoxShadow(
-                                        color: AppColors.goldAccent.withValues(alpha: 0.15),
+                                        color: AppColors.goldAccent
+                                            .withValues(alpha: 0.15),
                                         blurRadius: 6,
                                         offset: const Offset(0, 3),
                                       )
@@ -220,7 +258,10 @@ class _AdminViewState extends ConsumerState<AdminView> {
                                 Icon(
                                   tab['icon'] as IconData,
                                   size: 14,
-                                  color: isSelected ? const Color(0xFF2C3627) : AppColors.charcoal.withValues(alpha: 0.6),
+                                  color: isSelected
+                                      ? const Color(0xFF2C3627)
+                                      : AppColors.charcoal
+                                          .withValues(alpha: 0.6),
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
@@ -228,7 +269,10 @@ class _AdminViewState extends ConsumerState<AdminView> {
                                   style: GoogleFonts.inter(
                                     fontSize: 11,
                                     fontWeight: FontWeight.bold,
-                                    color: isSelected ? const Color(0xFF2C3627) : AppColors.charcoal.withValues(alpha: 0.7),
+                                    color: isSelected
+                                        ? const Color(0xFF2C3627)
+                                        : AppColors.charcoal
+                                            .withValues(alpha: 0.7),
                                   ),
                                 ),
                               ],
@@ -253,15 +297,21 @@ class _AdminViewState extends ConsumerState<AdminView> {
                               borderRadius: AppRadius.mdBr,
                               child: AnimatedContainer(
                                 duration: const Duration(milliseconds: 200),
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 14, vertical: 10),
                                 decoration: BoxDecoration(
-                                  gradient: isSelected ? AppGradients.gold : null,
-                                  color: isSelected ? null : AppColors.stoneBg.withValues(alpha: 0.5),
+                                  gradient:
+                                      isSelected ? AppGradients.gold : null,
+                                  color: isSelected
+                                      ? null
+                                      : AppColors.stoneBg
+                                          .withValues(alpha: 0.5),
                                   borderRadius: AppRadius.mdBr,
                                   boxShadow: isSelected
                                       ? [
                                           BoxShadow(
-                                            color: AppColors.goldAccent.withValues(alpha: 0.15),
+                                            color: AppColors.goldAccent
+                                                .withValues(alpha: 0.15),
                                             blurRadius: 6,
                                             offset: const Offset(0, 3),
                                           )
@@ -274,7 +324,10 @@ class _AdminViewState extends ConsumerState<AdminView> {
                                     Icon(
                                       tab['icon'] as IconData,
                                       size: 16,
-                                      color: isSelected ? const Color(0xFF2C3627) : AppColors.charcoal.withValues(alpha: 0.6),
+                                      color: isSelected
+                                          ? const Color(0xFF2C3627)
+                                          : AppColors.charcoal
+                                              .withValues(alpha: 0.6),
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
@@ -282,7 +335,10 @@ class _AdminViewState extends ConsumerState<AdminView> {
                                       style: GoogleFonts.inter(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
-                                        color: isSelected ? const Color(0xFF2C3627) : AppColors.charcoal.withValues(alpha: 0.7),
+                                        color: isSelected
+                                            ? const Color(0xFF2C3627)
+                                            : AppColors.charcoal
+                                                .withValues(alpha: 0.7),
                                       ),
                                     ),
                                   ],
@@ -300,7 +356,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
     );
   }
 
-  Widget _buildPropertySelector(PropertyDetails currentProperty, bool isMobile) {
+  Widget _buildPropertySelector(
+      PropertyDetails currentProperty, bool isMobile) {
     return Container(
       width: isMobile ? double.infinity : null,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -325,10 +382,10 @@ class _AdminViewState extends ConsumerState<AdminView> {
             if (newProperty != null) {
               ref.read(propertyProvider.notifier).updateProperty(newProperty);
               ref.read(notificationsProvider.notifier).addNotification(
-                'Context Switched',
-                'Now managing ${newProperty.name}.',
-                'system',
-              );
+                    'Context Switched',
+                    'Now managing ${newProperty.name}.',
+                    'system',
+                  );
             }
           },
           items: ref.watch(resortsListProvider).map((PropertyDetails resort) {
@@ -355,7 +412,11 @@ class _AdminViewState extends ConsumerState<AdminView> {
     switch (_activeTab) {
       case 'kpis':
         return _buildAnalyticsBoard(
-          bookings, blocks, otaSyncs, coupons, dashboardAsync,
+          bookings,
+          blocks,
+          otaSyncs,
+          coupons,
+          dashboardAsync,
         );
       case 'blocks':
         return _buildCalendarBlocking(blocks);
@@ -378,7 +439,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
   List<double> _computeWeeklyRevenue(List<Booking> bookings, {int weeks = 6}) {
     final now = DateTime.now();
     final weekStarts = List.generate(weeks, (i) {
-      final day = now.subtract(Duration(days: now.weekday - 1 + (weeks - 1 - i) * 7));
+      final day =
+          now.subtract(Duration(days: now.weekday - 1 + (weeks - 1 - i) * 7));
       return DateTime(day.year, day.month, day.day);
     });
 
@@ -411,20 +473,28 @@ class _AdminViewState extends ConsumerState<AdminView> {
     List<Coupon> coupons,
     AsyncValue<AdminDashboardState> dashboardAsync,
   ) {
-    final activeBookings = bookings.where((b) => b.status != BookingStatus.cancelled).toList();
+    final activeBookings =
+        bookings.where((b) => b.status != BookingStatus.cancelled).toList();
     final activeBookingsCount = activeBookings.length;
-    final cancelledBookingsCount = bookings.where((b) => b.status == BookingStatus.cancelled).length;
+    final cancelledBookingsCount =
+        bookings.where((b) => b.status == BookingStatus.cancelled).length;
 
     const int totalDaysInScope = 61;
-    final int totalBookedDaysSum = activeBookings.fold(0, (sum, b) => sum + b.nightsCount);
-    final int totalCouponCountUsed = coupons.fold(0, (sum, c) => sum + c.usageCount);
+    final int totalBookedDaysSum =
+        activeBookings.fold(0, (sum, b) => sum + b.nightsCount);
+    final int totalCouponCountUsed =
+        coupons.fold(0, (sum, c) => sum + c.usageCount);
 
     return dashboardAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator(color: AppColors.mossGreen)),
+      loading: () => const Center(
+          child: CircularProgressIndicator(color: AppColors.mossGreen)),
       error: (err, stack) {
-        final fallbackRevenue = activeBookings.fold(0.0, (sum, b) => sum + b.totalAmount);
-        final fallbackAdvance = activeBookings.fold(0.0, (sum, b) => sum + b.advancePaidAmount);
-        final fallbackOccupancy = min(100, ((totalBookedDaysSum / totalDaysInScope) * 100).round());
+        final fallbackRevenue =
+            activeBookings.fold(0.0, (sum, b) => sum + b.totalAmount);
+        final fallbackAdvance =
+            activeBookings.fold(0.0, (sum, b) => sum + b.advancePaidAmount);
+        final fallbackOccupancy =
+            min(100, ((totalBookedDaysSum / totalDaysInScope) * 100).round());
         return _buildDashboardGrid(
           width: MediaQuery.of(context).size.width,
           bookings: bookings,
@@ -504,7 +574,11 @@ class _AdminViewState extends ConsumerState<AdminView> {
               badgeText: 'Revenue This Month',
               badgeBg: const Color(0xFFE8EAF6),
               badgeTextColor: const Color(0xFF3F51B5),
-              icon: const Text('₹', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF3F51B5))),
+              icon: const Text('₹',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF3F51B5))),
               iconBg: const Color(0xFFE8EAF6),
             ),
             _buildKpiCard(
@@ -543,9 +617,9 @@ class _AdminViewState extends ConsumerState<AdminView> {
             children: [
               Expanded(
                 flex: 8,
-                  child: Column(
-                    children: [
-                      _buildSalesPerformanceChart(bookings, width < 600),
+                child: Column(
+                  children: [
+                    _buildSalesPerformanceChart(bookings, width < 600),
                     const SizedBox(height: 20),
                     _buildUpcomingEvents(upcomingEvents),
                     const SizedBox(height: 20),
@@ -604,11 +678,12 @@ class _AdminViewState extends ConsumerState<AdminView> {
     required Color iconBg,
   }) {
     return Container(
-        padding: AppSpacing.allLg,
+      padding: AppSpacing.allLg,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: AppRadius.xxlBr,
-        border: Border.all(color: AppColors.goldAccent.withValues(alpha: 0.15), width: 1.2),
+        border: Border.all(
+            color: AppColors.goldAccent.withValues(alpha: 0.15), width: 1.2),
         boxShadow: AppShadows.card,
       ),
       child: Row(
@@ -639,7 +714,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
                     color: badgeBg,
                     borderRadius: BorderRadius.circular(6),
@@ -675,14 +751,23 @@ class _AdminViewState extends ConsumerState<AdminView> {
     final peakRev = bookings.fold(0.0, (sum, b) => sum + b.totalAmount);
     final peakValue = points.reduce((a, b) => a > b ? a : b);
     final peakIndex = points.indexOf(peakValue);
-    final peakWeekLabel = ['Wk 1 (Jun)', 'Wk 2 (Jun)', 'Wk 3 (Jun)', 'Wk 4 (Jun)', 'Wk 1 (Jul)', 'Wk 2 (Jul)'];
-    final peakLabel = peakIndex < peakWeekLabel.length ? peakWeekLabel[peakIndex] : 'Peak';
+    final peakWeekLabel = [
+      'Wk 1 (Jun)',
+      'Wk 2 (Jun)',
+      'Wk 3 (Jun)',
+      'Wk 4 (Jun)',
+      'Wk 1 (Jul)',
+      'Wk 2 (Jul)'
+    ];
+    final peakLabel =
+        peakIndex < peakWeekLabel.length ? peakWeekLabel[peakIndex] : 'Peak';
     return Container(
       padding: EdgeInsets.all(isMobile ? 16.0 : 24.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: AppRadius.xxlBr,
-        border: Border.all(color: AppColors.goldAccent.withValues(alpha: 0.15), width: 1.2),
+        border: Border.all(
+            color: AppColors.goldAccent.withValues(alpha: 0.15), width: 1.2),
         boxShadow: AppShadows.card,
       ),
       child: Column(
@@ -706,7 +791,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: AppColors.stoneBg,
                         borderRadius: AppRadius.smBr,
@@ -746,7 +832,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
                     ),
                     const SizedBox(width: 12),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: AppColors.stoneBg,
                         borderRadius: AppRadius.smBr,
@@ -836,14 +923,16 @@ class _AdminViewState extends ConsumerState<AdminView> {
     required int blocksCount,
     required List<OtaSyncStatus> otaChannels,
   }) {
-    final activeOtaCount = otaChannels.where((c) => c.status == 'success').length;
+    final activeOtaCount =
+        otaChannels.where((c) => c.status == 'success').length;
 
     return Container(
       padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
         color: AppColors.charcoal,
         borderRadius: AppRadius.xxlBr,
-        border: Border.all(color: AppColors.goldAccent.withValues(alpha: 0.25), width: 1.2),
+        border: Border.all(
+            color: AppColors.goldAccent.withValues(alpha: 0.25), width: 1.2),
         boxShadow: AppShadows.card,
       ),
       child: Column(
@@ -892,7 +981,9 @@ class _AdminViewState extends ConsumerState<AdminView> {
           const SizedBox(height: AppSpacing.md),
           _buildInsightRow('Blocked Dates ranges:', '$blocksCount active'),
           const SizedBox(height: AppSpacing.md),
-          _buildInsightRow('OTA Integrations:', '$activeOtaCount/${otaChannels.length} Synced', isGreen: true),
+          _buildInsightRow('OTA Integrations:',
+              '$activeOtaCount/${otaChannels.length} Synced',
+              isGreen: true),
         ],
       ),
     );
@@ -927,18 +1018,21 @@ class _AdminViewState extends ConsumerState<AdminView> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: AppRadius.xxlBr,
-        border: Border.all(color: AppColors.goldAccent.withValues(alpha: 0.15), width: 1.2),
+        border: Border.all(
+            color: AppColors.goldAccent.withValues(alpha: 0.15), width: 1.2),
         boxShadow: AppShadows.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Upcoming Events', style: AppTextStyles.titleLg.copyWith(fontSize: 16)),
+          Text('Upcoming Events',
+              style: AppTextStyles.titleLg.copyWith(fontSize: 16)),
           const SizedBox(height: AppSpacing.md),
           if (events.isEmpty)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
-              child: Text('No upcoming events scheduled.', style: TextStyle(color: Colors.grey, fontSize: 12)),
+              child: Text('No upcoming events scheduled.',
+                  style: TextStyle(color: Colors.grey, fontSize: 12)),
             )
           else
             ...events.map((e) {
@@ -955,7 +1049,9 @@ class _AdminViewState extends ConsumerState<AdminView> {
                       width: 4,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: status == 'CHECKED_IN' ? Colors.green : Colors.amber,
+                        color: status == 'CHECKED_IN'
+                            ? Colors.green
+                            : Colors.amber,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -964,22 +1060,36 @@ class _AdminViewState extends ConsumerState<AdminView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(guestName, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 13)),
-                          Text(propertyName, style: GoogleFonts.inter(fontSize: 11, color: Colors.grey)),
+                          Text(guestName,
+                              style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.bold, fontSize: 13)),
+                          Text(propertyName,
+                              style: GoogleFonts.inter(
+                                  fontSize: 11, color: Colors.grey)),
                           if (checkIn.isNotEmpty)
-                            Text('$checkIn → $checkOut', style: GoogleFonts.inter(fontSize: 10, color: Colors.grey)),
+                            Text('$checkIn → $checkOut',
+                                style: GoogleFonts.inter(
+                                    fontSize: 10, color: Colors.grey)),
                         ],
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: status == 'CHECKED_IN' ? Colors.green.shade50 : Colors.orange.shade50,
+                        color: status == 'CHECKED_IN'
+                            ? Colors.green.shade50
+                            : Colors.orange.shade50,
                         borderRadius: AppRadius.smBr,
                       ),
                       child: Text(
                         status.replaceAll('_', ' '),
-                        style: GoogleFonts.inter(fontSize: 8, fontWeight: FontWeight.bold, color: status == 'CHECKED_IN' ? Colors.green.shade800 : Colors.orange.shade800),
+                        style: GoogleFonts.inter(
+                            fontSize: 8,
+                            fontWeight: FontWeight.bold,
+                            color: status == 'CHECKED_IN'
+                                ? Colors.green.shade800
+                                : Colors.orange.shade800),
                       ),
                     ),
                   ],
@@ -997,18 +1107,21 @@ class _AdminViewState extends ConsumerState<AdminView> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: AppRadius.xxlBr,
-        border: Border.all(color: AppColors.goldAccent.withValues(alpha: 0.15), width: 1.2),
+        border: Border.all(
+            color: AppColors.goldAccent.withValues(alpha: 0.15), width: 1.2),
         boxShadow: AppShadows.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Recent Activity', style: AppTextStyles.titleLg.copyWith(fontSize: 16)),
+          Text('Recent Activity',
+              style: AppTextStyles.titleLg.copyWith(fontSize: 16)),
           const SizedBox(height: AppSpacing.md),
           if (activities.isEmpty)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
-              child: Text('No recent activity recorded.', style: TextStyle(color: Colors.grey, fontSize: 12)),
+              child: Text('No recent activity recorded.',
+                  style: TextStyle(color: Colors.grey, fontSize: 12)),
             )
           else
             ...activities.map((a) {
@@ -1022,17 +1135,28 @@ class _AdminViewState extends ConsumerState<AdminView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(
-                      type == 'booking' ? Icons.shopping_bag : type == 'payment' ? Icons.payment : Icons.info_outline,
+                      type == 'booking'
+                          ? Icons.shopping_bag
+                          : type == 'payment'
+                              ? Icons.payment
+                              : Icons.info_outline,
                       size: 16,
-                      color: type == 'booking' ? Colors.blue : type == 'payment' ? Colors.green : Colors.grey,
+                      color: type == 'booking'
+                          ? Colors.blue
+                          : type == 'payment'
+                              ? Colors.green
+                              : Colors.grey,
                     ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(description, style: GoogleFonts.inter(fontSize: 12)),
-                          Text('$action • ${_formatTimestamp(timestamp)}', style: GoogleFonts.inter(fontSize: 9, color: Colors.grey)),
+                          Text(description,
+                              style: GoogleFonts.inter(fontSize: 12)),
+                          Text('$action • ${_formatTimestamp(timestamp)}',
+                              style: GoogleFonts.inter(
+                                  fontSize: 9, color: Colors.grey)),
                         ],
                       ),
                     ),
@@ -1065,13 +1189,15 @@ class _AdminViewState extends ConsumerState<AdminView> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: AppRadius.xxlBr,
-        border: Border.all(color: AppColors.goldAccent.withValues(alpha: 0.15), width: 1.2),
+        border: Border.all(
+            color: AppColors.goldAccent.withValues(alpha: 0.15), width: 1.2),
         boxShadow: AppShadows.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Guest Satisfaction', style: AppTextStyles.titleLg.copyWith(fontSize: 16)),
+          Text('Guest Satisfaction',
+              style: AppTextStyles.titleLg.copyWith(fontSize: 16)),
           const SizedBox(height: AppSpacing.lg),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1081,13 +1207,18 @@ class _AdminViewState extends ConsumerState<AdminView> {
                 children: [
                   Text(
                     averageRating.toStringAsFixed(1),
-                    style: GoogleFonts.inter(fontSize: 36, fontWeight: FontWeight.bold, color: AppColors.charcoal),
+                    style: GoogleFonts.inter(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.charcoal),
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Row(
                     children: List.generate(5, (i) {
                       return Icon(
-                        i < averageRating.round() ? Icons.star : Icons.star_border,
+                        i < averageRating.round()
+                            ? Icons.star
+                            : Icons.star_border,
                         color: Colors.amber,
                         size: 16,
                       );
@@ -1100,9 +1231,14 @@ class _AdminViewState extends ConsumerState<AdminView> {
                 children: [
                   Text(
                     '$reviewsCount',
-                    style: GoogleFonts.inter(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.charcoal),
+                    style: GoogleFonts.inter(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.charcoal),
                   ),
-                  Text('Reviews', style: GoogleFonts.inter(fontSize: 11, color: Colors.grey)),
+                  Text('Reviews',
+                      style:
+                          GoogleFonts.inter(fontSize: 11, color: Colors.grey)),
                 ],
               ),
             ],
@@ -1165,13 +1301,15 @@ class _AdminViewState extends ConsumerState<AdminView> {
           Row(
             children: [
               Expanded(
-                child: _buildDatePickerField('Block Start Date', _blockStart, (val) {
+                child: _buildDatePickerField('Block Start Date', _blockStart,
+                    (val) {
                   setState(() => _blockStart = val);
                 }),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _buildDatePickerField('Block End Date', _blockEnd, (val) {
+                child:
+                    _buildDatePickerField('Block End Date', _blockEnd, (val) {
                   setState(() => _blockEnd = val);
                 }),
               ),
@@ -1204,7 +1342,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
             controller: _blockNotesController,
             maxLines: 3,
             decoration: const InputDecoration(
-              hintText: 'Write specific reasons (e.g. Filter cleaning, VIP personal retreat)',
+              hintText:
+                  'Write specific reasons (e.g. Filter cleaning, VIP personal retreat)',
             ),
             style: GoogleFonts.inter(fontSize: 12),
           ),
@@ -1220,12 +1359,14 @@ class _AdminViewState extends ConsumerState<AdminView> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.warning_amber, color: Colors.red.shade800, size: 16),
+                  Icon(Icons.warning_amber,
+                      color: Colors.red.shade800, size: 16),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       _blockError!,
-                      style: GoogleFonts.inter(color: Colors.red.shade800, fontSize: 12),
+                      style: GoogleFonts.inter(
+                          color: Colors.red.shade800, fontSize: 12),
                     ),
                   ),
                 ],
@@ -1242,7 +1383,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
               ),
               child: Text(
                 _blockSuccess!,
-                style: GoogleFonts.inter(color: Colors.green.shade800, fontSize: 12),
+                style: GoogleFonts.inter(
+                    color: Colors.green.shade800, fontSize: 12),
               ),
             ),
           const SizedBox(height: AppSpacing.sm),
@@ -1251,7 +1393,10 @@ class _AdminViewState extends ConsumerState<AdminView> {
             icon: const Icon(Icons.lock, size: 16, color: Colors.white),
             label: Text(
               'Commit Date Isolation',
-              style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.white),
+              style: GoogleFonts.inter(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                  color: Colors.white),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.mossGreen,
@@ -1264,7 +1409,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
     );
   }
 
-  Widget _buildDatePickerField(String label, String currentDate, Function(String) onDateSelected) {
+  Widget _buildDatePickerField(
+      String label, String currentDate, Function(String) onDateSelected) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1300,7 +1446,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
               },
             );
             if (picked != null) {
-              final formatted = '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
+              final formatted =
+                  '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
               onDateSelected(formatted);
             }
           },
@@ -1316,9 +1463,11 @@ class _AdminViewState extends ConsumerState<AdminView> {
               children: [
                 Text(
                   currentDate,
-                  style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.inter(
+                      fontSize: 12, fontWeight: FontWeight.bold),
                 ),
-                const Icon(Icons.calendar_today, size: 14, color: AppColors.mossGreen),
+                const Icon(Icons.calendar_today,
+                    size: 14, color: AppColors.mossGreen),
               ],
             ),
           ),
@@ -1358,9 +1507,13 @@ class _AdminViewState extends ConsumerState<AdminView> {
             child: Row(
               children: [
                 Icon(
-                  isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+                  isSelected
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_off,
                   size: 14,
-                  color: isSelected ? AppColors.mossGreen : AppColors.charcoal.withValues(alpha: 0.4),
+                  color: isSelected
+                      ? AppColors.mossGreen
+                      : AppColors.charcoal.withValues(alpha: 0.4),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
@@ -1368,8 +1521,10 @@ class _AdminViewState extends ConsumerState<AdminView> {
                     r.replaceAll('_', ' ').toUpperCase(),
                     style: GoogleFonts.inter(
                       fontSize: 10,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                      color: isSelected ? AppColors.mossGreen : AppColors.charcoal,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
+                      color:
+                          isSelected ? AppColors.mossGreen : AppColors.charcoal,
                     ),
                   ),
                 ),
@@ -1413,7 +1568,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
       final bEnd = DateTime.parse(b.endDate);
       if (!(end.isBefore(bStart) || start.isAfter(bEnd))) {
         setState(() {
-          _blockError = 'Overlap Alert: Booking ${b.id} (${b.guestName}) is already scheduled on these dates.';
+          _blockError =
+              'Overlap Alert: Booking ${b.id} (${b.guestName}) is already scheduled on these dates.';
         });
         return;
       }
@@ -1424,7 +1580,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
       final blEnd = DateTime.parse(bl.endDate);
       if (!(end.isBefore(blStart) || start.isAfter(blEnd))) {
         setState(() {
-          _blockError = 'Overlap Alert: Another calendar block is already placed in this range.';
+          _blockError =
+              'Overlap Alert: Another calendar block is already placed in this range.';
         });
         return;
       }
@@ -1441,14 +1598,15 @@ class _AdminViewState extends ConsumerState<AdminView> {
 
     ref.read(calendarBlocksProvider.notifier).addBlock(newBlock);
     ref.read(notificationsProvider.notifier).addNotification(
-      'Calendar Dates Isolated',
-      'Blocked dates $_blockStart to $_blockEnd due to $_blockReason.',
-      'system',
-    );
+          'Calendar Dates Isolated',
+          'Blocked dates $_blockStart to $_blockEnd due to $_blockReason.',
+          'system',
+        );
 
     setState(() {
       _blockNotesController.clear();
-      _blockSuccess = 'Calendar date block placed successfully! Dynamic availability locked.';
+      _blockSuccess =
+          'Calendar date block placed successfully! Dynamic availability locked.';
     });
   }
 
@@ -1487,7 +1645,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: blocks.length,
-              separatorBuilder: (context, index) => const Divider(color: AppColors.lightBone, height: 24),
+              separatorBuilder: (context, index) =>
+                  const Divider(color: AppColors.lightBone, height: 24),
               itemBuilder: (context, index) {
                 final block = blocks[index];
                 return Row(
@@ -1511,13 +1670,16 @@ class _AdminViewState extends ConsumerState<AdminView> {
                                 ),
                               ),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
                                 decoration: BoxDecoration(
                                   color: Colors.red.shade50,
                                   borderRadius: AppRadius.mdBr,
                                 ),
                                 child: Text(
-                                  block.reason.toUpperCase().replaceAll('_', ' '),
+                                  block.reason
+                                      .toUpperCase()
+                                      .replaceAll('_', ' '),
                                   style: GoogleFonts.inter(
                                     fontSize: 8,
                                     fontWeight: FontWeight.bold,
@@ -1548,14 +1710,19 @@ class _AdminViewState extends ConsumerState<AdminView> {
                     ),
                     IconButton(
                       onPressed: () {
-                        ref.read(calendarBlocksProvider.notifier).removeBlock(block.id);
-                        ref.read(notificationsProvider.notifier).addNotification(
-                          'Exclusion Restored',
-                          'Inventory unlocked from ${block.startDate} to ${block.endDate}.',
-                          'system',
-                        );
+                        ref
+                            .read(calendarBlocksProvider.notifier)
+                            .removeBlock(block.id);
+                        ref
+                            .read(notificationsProvider.notifier)
+                            .addNotification(
+                              'Exclusion Restored',
+                              'Inventory unlocked from ${block.startDate} to ${block.endDate}.',
+                              'system',
+                            );
                       },
-                      icon: const Icon(Icons.delete_outline, color: AppColors.charcoal),
+                      icon: const Icon(Icons.delete_outline,
+                          color: AppColors.charcoal),
                       hoverColor: Colors.red.shade50,
                     ),
                   ],
@@ -1571,18 +1738,19 @@ class _AdminViewState extends ConsumerState<AdminView> {
   Widget _buildBookingMatrix(List<Booking> bookings) {
     final filteredBookings = bookings.where((b) {
       final sourceStr = b.source.toJson().toLowerCase();
-      final matchSource = _filterSource == 'all' || 
+      final matchSource = _filterSource == 'all' ||
           (_filterSource == 'bookingCom' && sourceStr == 'bookingcom') ||
           (sourceStr == _filterSource.toLowerCase());
 
       final statusStr = b.status.name.toLowerCase();
-      final matchStatus = _filterStatus == 'all' || 
+      final matchStatus = _filterStatus == 'all' ||
           (statusStr == _filterStatus.toLowerCase()) ||
           (_filterStatus == 'pendingPayment' && statusStr == 'pendingpayment');
 
-      final matchQuery = b.guestName.toLowerCase().contains(_filterQuery.toLowerCase()) ||
-          b.id.toLowerCase().contains(_filterQuery.toLowerCase()) ||
-          b.guestEmail.toLowerCase().contains(_filterQuery.toLowerCase());
+      final matchQuery =
+          b.guestName.toLowerCase().contains(_filterQuery.toLowerCase()) ||
+              b.id.toLowerCase().contains(_filterQuery.toLowerCase()) ||
+              b.guestEmail.toLowerCase().contains(_filterQuery.toLowerCase());
 
       return matchSource && matchStatus && matchQuery;
     }).toList();
@@ -1597,7 +1765,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Central Bookings Management Desk', style: AppTextStyles.titleLg),
+          Text('Central Bookings Management Desk',
+              style: AppTextStyles.titleLg),
           const SizedBox(height: AppSpacing.xs),
           Text(
             'Track and filter incoming reservations from all channels dynamically.',
@@ -1637,46 +1806,62 @@ class _AdminViewState extends ConsumerState<AdminView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (isMobile) ...[
-                _buildDropdownFilter('Source Filter', _filterSource, {
-                  'all': 'All Sources',
-                  'direct': 'Direct Web',
-                  'airbnb': 'Airbnb.com',
-                  'bookingCom': 'Booking.com',
-                  'agoda': 'Agoda',
-                  'makemytrip': 'MakeMyTrip',
-                  'goibibo': 'Goibibo',
-                }, (val) => setState(() => _filterSource = val)),
+                _buildDropdownFilter(
+                    'Source Filter',
+                    _filterSource,
+                    {
+                      'all': 'All Sources',
+                      'direct': 'Direct Web',
+                      'airbnb': 'Airbnb.com',
+                      'bookingCom': 'Booking.com',
+                      'agoda': 'Agoda',
+                      'makemytrip': 'MakeMyTrip',
+                      'goibibo': 'Goibibo',
+                    },
+                    (val) => setState(() => _filterSource = val)),
                 const SizedBox(height: AppSpacing.md),
-                _buildDropdownFilter('Status Filter', _filterStatus, {
-                  'all': 'All Statuses',
-                  'confirmed': 'Confirmed',
-                  'pendingPayment': 'Pending Payment',
-                  'cancelled': 'Cancelled',
-                }, (val) => setState(() => _filterStatus = val)),
+                _buildDropdownFilter(
+                    'Status Filter',
+                    _filterStatus,
+                    {
+                      'all': 'All Statuses',
+                      'confirmed': 'Confirmed',
+                      'pendingPayment': 'Pending Payment',
+                      'cancelled': 'Cancelled',
+                    },
+                    (val) => setState(() => _filterStatus = val)),
                 const SizedBox(height: AppSpacing.md),
                 _buildSearchField(),
               ] else
                 Row(
                   children: [
                     Expanded(
-                      child: _buildDropdownFilter('Source Filter', _filterSource, {
-                        'all': 'All Sources',
-                        'direct': 'Direct Web',
-                        'airbnb': 'Airbnb.com',
-                        'bookingCom': 'Booking.com',
-                        'agoda': 'Agoda',
-                        'makemytrip': 'MakeMyTrip',
-                        'goibibo': 'Goibibo',
-                      }, (val) => setState(() => _filterSource = val)),
+                      child: _buildDropdownFilter(
+                          'Source Filter',
+                          _filterSource,
+                          {
+                            'all': 'All Sources',
+                            'direct': 'Direct Web',
+                            'airbnb': 'Airbnb.com',
+                            'bookingCom': 'Booking.com',
+                            'agoda': 'Agoda',
+                            'makemytrip': 'MakeMyTrip',
+                            'goibibo': 'Goibibo',
+                          },
+                          (val) => setState(() => _filterSource = val)),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: _buildDropdownFilter('Status Filter', _filterStatus, {
-                        'all': 'All Statuses',
-                        'confirmed': 'Confirmed',
-                        'pendingPayment': 'Pending Payment',
-                        'cancelled': 'Cancelled',
-                      }, (val) => setState(() => _filterStatus = val)),
+                      child: _buildDropdownFilter(
+                          'Status Filter',
+                          _filterStatus,
+                          {
+                            'all': 'All Statuses',
+                            'confirmed': 'Confirmed',
+                            'pendingPayment': 'Pending Payment',
+                            'cancelled': 'Cancelled',
+                          },
+                          (val) => setState(() => _filterStatus = val)),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -1692,13 +1877,15 @@ class _AdminViewState extends ConsumerState<AdminView> {
     );
   }
 
-  Widget _buildDropdownFilter(String label, String value, Map<String, String> options, Function(String) onChanged) {
+  Widget _buildDropdownFilter(String label, String value,
+      Map<String, String> options, Function(String) onChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label.toUpperCase(),
-          style: AppTextStyles.labelSm.copyWith(color: AppColors.charcoal.withValues(alpha: 0.5)),
+          style: AppTextStyles.labelSm
+              .copyWith(color: AppColors.charcoal.withValues(alpha: 0.5)),
         ),
         const SizedBox(height: 6),
         Container(
@@ -1713,7 +1900,10 @@ class _AdminViewState extends ConsumerState<AdminView> {
             child: DropdownButton<String>(
               value: value,
               isExpanded: true,
-              style: GoogleFonts.inter(fontSize: 12, color: AppColors.charcoal, fontWeight: FontWeight.w500),
+              style: GoogleFonts.inter(
+                  fontSize: 12,
+                  color: AppColors.charcoal,
+                  fontWeight: FontWeight.w500),
               icon: const Icon(Icons.arrow_drop_down, size: 18),
               onChanged: (val) {
                 if (val != null) onChanged(val);
@@ -1734,7 +1924,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
       children: [
         Text(
           'SEARCH RESERVATION',
-          style: AppTextStyles.labelSm.copyWith(color: AppColors.charcoal.withValues(alpha: 0.5)),
+          style: AppTextStyles.labelSm
+              .copyWith(color: AppColors.charcoal.withValues(alpha: 0.5)),
         ),
         const SizedBox(height: 6),
         SizedBox(
@@ -1745,7 +1936,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
             style: GoogleFonts.inter(fontSize: 12),
             decoration: InputDecoration(
               hintText: 'Search by guest name, reference ID...',
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               fillColor: Colors.white,
               prefixIcon: const Icon(Icons.search, size: 16),
               suffixIcon: _filterQuery.isNotEmpty
@@ -1782,10 +1974,12 @@ class _AdminViewState extends ConsumerState<AdminView> {
             5: FlexColumnWidth(1.5), // Overall Status
             6: FlexColumnWidth(2.0), // Actions
           },
-          border: const TableBorder.symmetric(inside: BorderSide(color: AppColors.lightBone, width: 0.5)),
+          border: const TableBorder.symmetric(
+              inside: BorderSide(color: AppColors.lightBone, width: 0.5)),
           children: [
             TableRow(
-              decoration: BoxDecoration(color: AppColors.stoneBg.withValues(alpha: 0.3)),
+              decoration: BoxDecoration(
+                  color: AppColors.stoneBg.withValues(alpha: 0.3)),
               children: [
                 _buildTableHeader('Reference ID'),
                 _buildTableHeader('Guest Information'),
@@ -1803,7 +1997,9 @@ class _AdminViewState extends ConsumerState<AdminView> {
                     i == 3
                         ? const Padding(
                             padding: EdgeInsets.all(24.0),
-                            child: Text('No matching records found.', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                            child: Text('No matching records found.',
+                                style: TextStyle(
+                                    color: Colors.grey, fontSize: 12)),
                           )
                         : const SizedBox.shrink()
                 ],
@@ -1813,54 +2009,86 @@ class _AdminViewState extends ConsumerState<AdminView> {
                 return TableRow(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 14),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0, vertical: 14),
                       child: Text(
                         b.id,
-                        style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: AppColors.mossGreen, fontSize: 12),
+                        style: GoogleFonts.inter(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.mossGreen,
+                            fontSize: 12),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 14),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0, vertical: 14),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(b.guestName, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.charcoal)),
+                          Text(b.guestName,
+                              style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                  color: AppColors.charcoal)),
                           const SizedBox(height: 2),
-                          Text('${b.guestPhone} • ${b.guestEmail}', style: GoogleFonts.inter(fontSize: 10, color: Colors.grey)),
+                          Text('${b.guestPhone} • ${b.guestEmail}',
+                              style: GoogleFonts.inter(
+                                  fontSize: 10, color: Colors.grey)),
                         ],
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 14),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0, vertical: 14),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${b.startDate} to ${b.endDate}', style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 11)),
-                          Text('${b.nightsCount} Nights ({b.guestsCount} guests)', style: GoogleFonts.inter(fontSize: 9, color: Colors.grey)),
+                          Text('${b.startDate} to ${b.endDate}',
+                              style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.w600, fontSize: 11)),
+                          Text(
+                              '${b.nightsCount} Nights ({b.guestsCount} guests)',
+                              style: GoogleFonts.inter(
+                                  fontSize: 9, color: Colors.grey)),
                         ],
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 14),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0, vertical: 14),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 3),
                         decoration: BoxDecoration(
-                          color: b.source == BookingSource.direct ? Colors.amber.shade50 : Colors.blue.shade50,
+                          color: b.source == BookingSource.direct
+                              ? Colors.amber.shade50
+                              : Colors.blue.shade50,
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
                           b.source.toJson().toUpperCase(),
-                          style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.bold, color: b.source == BookingSource.direct ? Colors.amber.shade900 : Colors.blue.shade800),
+                          style: GoogleFonts.inter(
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                              color: b.source == BookingSource.direct
+                                  ? Colors.amber.shade900
+                                  : Colors.blue.shade800),
                         ),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 14),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0, vertical: 14),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('₹${b.totalAmount.toStringAsFixed(0)}', style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 12)),
-                          Text('Paid: ₹${b.advancePaidAmount.toStringAsFixed(0)}', style: GoogleFonts.inter(fontSize: 9, color: Colors.grey)),
+                          Text('₹${b.totalAmount.toStringAsFixed(0)}',
+                              style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.bold, fontSize: 12)),
+                          Text(
+                              'Paid: ₹${b.advancePaidAmount.toStringAsFixed(0)}',
+                              style: GoogleFonts.inter(
+                                  fontSize: 9, color: Colors.grey)),
                           Text(
                             b.paymentStatus.name.toUpperCase(),
                             style: GoogleFonts.inter(
@@ -1877,9 +2105,11 @@ class _AdminViewState extends ConsumerState<AdminView> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 14),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0, vertical: 14),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: b.status == BookingStatus.confirmed
                               ? Colors.green.shade50
@@ -1903,7 +2133,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0, vertical: 10),
                       child: _buildBookingActions(b),
                     ),
                   ],
@@ -1920,7 +2151,10 @@ class _AdminViewState extends ConsumerState<AdminView> {
       padding: const EdgeInsets.all(12.0),
       child: Text(
         text.toUpperCase(),
-        style: GoogleFonts.spaceGrotesk(fontSize: 9, fontWeight: FontWeight.bold, color: AppColors.charcoal.withValues(alpha: 0.5)),
+        style: GoogleFonts.spaceGrotesk(
+            fontSize: 9,
+            fontWeight: FontWeight.bold,
+            color: AppColors.charcoal.withValues(alpha: 0.5)),
       ),
     );
   }
@@ -1936,33 +2170,51 @@ class _AdminViewState extends ConsumerState<AdminView> {
             onTap: () {
               ref.read(bookingsProvider.notifier).confirmPayment(b.id);
               ref.read(notificationsProvider.notifier).addNotification(
-                'Payment Authorized',
-                'Authorized check-in payment of ₹${b.totalAmount.toStringAsFixed(0)} for ${b.guestName}.',
-                'payment',
-              );
-              SnackbarHelper.success(context, 'Payment authorized successfully.');
+                    'Payment Authorized',
+                    'Authorized check-in payment of ₹${b.totalAmount.toStringAsFixed(0)} for ${b.guestName}.',
+                    'payment',
+                  );
+              SnackbarHelper.success(
+                  context, 'Payment authorized successfully.');
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-              decoration: BoxDecoration(color: Colors.green.shade50, borderRadius: BorderRadius.circular(6), border: Border.all(color: Colors.green.shade200)),
-              child: Text('Authorize Pay', style: GoogleFonts.inter(fontSize: 9, color: Colors.green.shade900, fontWeight: FontWeight.bold)),
+              decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: Colors.green.shade200)),
+              child: Text('Authorize Pay',
+                  style: GoogleFonts.inter(
+                      fontSize: 9,
+                      color: Colors.green.shade900,
+                      fontWeight: FontWeight.bold)),
             ),
           ),
         if (b.status != BookingStatus.cancelled)
           InkWell(
             onTap: () {
-              ref.read(bookingsProvider.notifier).cancelBooking(b.id, 'Cancelled via Admin Console', 100);
+              ref
+                  .read(bookingsProvider.notifier)
+                  .cancelBooking(b.id, 'Cancelled via Admin Console', 100);
               ref.read(notificationsProvider.notifier).addNotification(
-                'Reservation Revoked',
-                'Cancelled booking ${b.id} and scheduled full refund.',
-                'system',
-              );
-              SnackbarHelper.success(context, 'Reservation revoked and refund scheduled.');
+                    'Reservation Revoked',
+                    'Cancelled booking ${b.id} and scheduled full refund.',
+                    'system',
+                  );
+              SnackbarHelper.success(
+                  context, 'Reservation revoked and refund scheduled.');
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-              decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(6), border: Border.all(color: Colors.red.shade200)),
-              child: Text('Revoke', style: GoogleFonts.inter(fontSize: 9, color: Colors.red.shade900, fontWeight: FontWeight.bold)),
+              decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: Colors.red.shade200)),
+              child: Text('Revoke',
+                  style: GoogleFonts.inter(
+                      fontSize: 9,
+                      color: Colors.red.shade900,
+                      fontWeight: FontWeight.bold)),
             ),
           ),
         InkWell(
@@ -1971,10 +2223,14 @@ class _AdminViewState extends ConsumerState<AdminView> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text('Housekeeping & Guest Notes', style: AppTextStyles.titleLg),
-                  content: Text(b.housekeepingNotes ?? 'No custom housekeeping details uploaded.'),
+                  title: Text('Housekeeping & Guest Notes',
+                      style: AppTextStyles.titleLg),
+                  content: Text(b.housekeepingNotes ??
+                      'No custom housekeeping details uploaded.'),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close')),
+                    TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Close')),
                   ],
                 );
               },
@@ -1982,7 +2238,11 @@ class _AdminViewState extends ConsumerState<AdminView> {
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: Text('Notes', style: GoogleFonts.inter(fontSize: 10, color: Colors.blue.shade700, decoration: TextDecoration.underline)),
+            child: Text('Notes',
+                style: GoogleFonts.inter(
+                    fontSize: 10,
+                    color: Colors.blue.shade700,
+                    decoration: TextDecoration.underline)),
           ),
         ),
       ],
@@ -1991,13 +2251,17 @@ class _AdminViewState extends ConsumerState<AdminView> {
 
   Widget _buildBookingMobileList(List<Booking> list) {
     if (list.isEmpty) {
-      return const Center(child: Padding(padding: EdgeInsets.all(24.0), child: Text('No matching records found.')));
+      return const Center(
+          child: Padding(
+              padding: EdgeInsets.all(24.0),
+              child: Text('No matching records found.')));
     }
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: list.length,
-      separatorBuilder: (c, idx) => const Divider(color: AppColors.lightBone, height: 24),
+      separatorBuilder: (c, idx) =>
+          const Divider(color: AppColors.lightBone, height: 24),
       itemBuilder: (context, idx) {
         final b = list[idx];
         return Column(
@@ -2006,23 +2270,38 @@ class _AdminViewState extends ConsumerState<AdminView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(b.id, style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: AppColors.mossGreen, fontSize: 13)),
+                Text(b.id,
+                    style: GoogleFonts.inter(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.mossGreen,
+                        fontSize: 13)),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: b.source == BookingSource.direct ? Colors.amber.shade50 : Colors.blue.shade50,
+                    color: b.source == BookingSource.direct
+                        ? Colors.amber.shade50
+                        : Colors.blue.shade50,
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     b.source.toJson().toUpperCase(),
-                    style: GoogleFonts.inter(fontSize: 8, fontWeight: FontWeight.bold, color: b.source == BookingSource.direct ? Colors.amber.shade900 : Colors.blue.shade800),
+                    style: GoogleFonts.inter(
+                        fontSize: 8,
+                        fontWeight: FontWeight.bold,
+                        color: b.source == BookingSource.direct
+                            ? Colors.amber.shade900
+                            : Colors.blue.shade800),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 6),
-            Text(b.guestName, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 14)),
-            Text('${b.guestPhone} • ${b.guestEmail}', style: GoogleFonts.inter(fontSize: 11, color: Colors.grey)),
+            Text(b.guestName,
+                style: GoogleFonts.inter(
+                    fontWeight: FontWeight.bold, fontSize: 14)),
+            Text('${b.guestPhone} • ${b.guestEmail}',
+                style: GoogleFonts.inter(fontSize: 11, color: Colors.grey)),
             const SizedBox(height: AppSpacing.sm),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2031,9 +2310,15 @@ class _AdminViewState extends ConsumerState<AdminView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('DATES / NIGHTS', style: GoogleFonts.spaceGrotesk(fontSize: 9, color: Colors.grey)),
-                      Text('${b.startDate} to ${b.endDate}', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w600)),
-                      Text('${b.nightsCount} Nights', style: GoogleFonts.inter(fontSize: 10, color: Colors.grey)),
+                      Text('DATES / NIGHTS',
+                          style: GoogleFonts.spaceGrotesk(
+                              fontSize: 9, color: Colors.grey)),
+                      Text('${b.startDate} to ${b.endDate}',
+                          style: GoogleFonts.inter(
+                              fontSize: 11, fontWeight: FontWeight.w600)),
+                      Text('${b.nightsCount} Nights',
+                          style: GoogleFonts.inter(
+                              fontSize: 10, color: Colors.grey)),
                     ],
                   ),
                 ),
@@ -2042,8 +2327,12 @@ class _AdminViewState extends ConsumerState<AdminView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text('TOTAL AMOUNT', style: GoogleFonts.spaceGrotesk(fontSize: 9, color: Colors.grey)),
-                      Text('₹${b.totalAmount.toStringAsFixed(0)}', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold)),
+                      Text('TOTAL AMOUNT',
+                          style: GoogleFonts.spaceGrotesk(
+                              fontSize: 9, color: Colors.grey)),
+                      Text('₹${b.totalAmount.toStringAsFixed(0)}',
+                          style: GoogleFonts.inter(
+                              fontSize: 12, fontWeight: FontWeight.bold)),
                       FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
@@ -2073,7 +2362,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
   }
 
   // --- 4. TARIFFS & SEASONALITY ---
-  Widget _buildTariffsView(PropertyDetails property, List<PricingSeasonRule> pricingRules) {
+  Widget _buildTariffsView(
+      PropertyDetails property, List<PricingSeasonRule> pricingRules) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isVertical = constraints.maxWidth < 900;
@@ -2166,7 +2456,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
     );
   }
 
-  Widget _buildNumberInputField(String label, double value, Function(double) onChanged) {
+  Widget _buildNumberInputField(
+      String label, double value, Function(double) onChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -2223,7 +2514,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: pricingRules.length,
-            separatorBuilder: (c, idx) => const Divider(color: AppColors.lightBone, height: 20),
+            separatorBuilder: (c, idx) =>
+                const Divider(color: AppColors.lightBone, height: 20),
             itemBuilder: (context, idx) {
               final rule = pricingRules[idx];
               return LayoutBuilder(
@@ -2232,20 +2524,31 @@ class _AdminViewState extends ConsumerState<AdminView> {
                   final info = Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(rule.name, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 13)),
+                      Text(rule.name,
+                          style: GoogleFonts.inter(
+                              fontWeight: FontWeight.bold, fontSize: 13)),
                       const SizedBox(height: 2),
                       Text(
                         'Applies Month Limits: check-ins between ${rule.startDate} and ${rule.endDate}',
-                        style: GoogleFonts.inter(fontSize: 10, color: Colors.grey),
+                        style:
+                            GoogleFonts.inter(fontSize: 10, color: Colors.grey),
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       Wrap(
                         spacing: 12,
                         runSpacing: 4,
                         children: [
-                          Text('Multiplier: ${rule.multiplier}x', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.mossGreen)),
-                          Text('Weekday: ₹${rule.weekdayPrice.toStringAsFixed(0)}', style: GoogleFonts.inter(fontSize: 11)),
-                          Text('Weekend: ₹${rule.weekendPrice.toStringAsFixed(0)}', style: GoogleFonts.inter(fontSize: 11)),
+                          Text('Multiplier: ${rule.multiplier}x',
+                              style: GoogleFonts.inter(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.mossGreen)),
+                          Text(
+                              'Weekday: ₹${rule.weekdayPrice.toStringAsFixed(0)}',
+                              style: GoogleFonts.inter(fontSize: 11)),
+                          Text(
+                              'Weekend: ₹${rule.weekendPrice.toStringAsFixed(0)}',
+                              style: GoogleFonts.inter(fontSize: 11)),
                         ],
                       ),
                     ],
@@ -2262,14 +2565,20 @@ class _AdminViewState extends ConsumerState<AdminView> {
                               title: const Text('Delete Rule'),
                               content: Text('Delete "${rule.name}"?'),
                               actions: [
-                                TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+                                TextButton(
+                                    onPressed: () => Navigator.pop(ctx),
+                                    child: const Text('Cancel')),
                                 TextButton(
                                   onPressed: () {
-                                    ref.read(pricingRulesProvider.notifier).deleteRule(rule.id);
+                                    ref
+                                        .read(pricingRulesProvider.notifier)
+                                        .deleteRule(rule.id);
                                     Navigator.pop(ctx);
-                                    SnackbarHelper.success(context, '${rule.name} deleted.');
+                                    SnackbarHelper.success(
+                                        context, '${rule.name} deleted.');
                                   },
-                                  child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                  child: const Text('Delete',
+                                      style: TextStyle(color: Colors.red)),
                                 ),
                               ],
                             ),
@@ -2277,14 +2586,17 @@ class _AdminViewState extends ConsumerState<AdminView> {
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Icon(Icons.delete_outline, size: 18, color: Colors.red.shade300),
+                          child: Icon(Icons.delete_outline,
+                              size: 18, color: Colors.red.shade300),
                         ),
                       ),
                       Switch(
                         value: rule.isActive,
                         activeColor: AppColors.mossGreen,
                         onChanged: (val) {
-                          ref.read(pricingRulesProvider.notifier).toggleRuleActive(rule.id);
+                          ref
+                              .read(pricingRulesProvider.notifier)
+                              .toggleRuleActive(rule.id);
                         },
                       ),
                     ],
@@ -2297,23 +2609,34 @@ class _AdminViewState extends ConsumerState<AdminView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(rule.name, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 13)),
+                            Text(rule.name,
+                                style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.bold, fontSize: 13)),
                             button,
                           ],
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         Text(
                           'Applies Month Limits: check-ins between ${rule.startDate} and ${rule.endDate}',
-                          style: GoogleFonts.inter(fontSize: 10, color: Colors.grey),
+                          style: GoogleFonts.inter(
+                              fontSize: 10, color: Colors.grey),
                         ),
                         const SizedBox(height: 6),
                         Wrap(
                           spacing: 12,
                           runSpacing: 4,
                           children: [
-                            Text('Multiplier: ${rule.multiplier}x', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.mossGreen)),
-                            Text('Weekday: ₹${rule.weekdayPrice.toStringAsFixed(0)}', style: GoogleFonts.inter(fontSize: 11)),
-                            Text('Weekend: ₹${rule.weekendPrice.toStringAsFixed(0)}', style: GoogleFonts.inter(fontSize: 11)),
+                            Text('Multiplier: ${rule.multiplier}x',
+                                style: GoogleFonts.inter(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.mossGreen)),
+                            Text(
+                                'Weekday: ₹${rule.weekdayPrice.toStringAsFixed(0)}',
+                                style: GoogleFonts.inter(fontSize: 11)),
+                            Text(
+                                'Weekend: ₹${rule.weekendPrice.toStringAsFixed(0)}',
+                                style: GoogleFonts.inter(fontSize: 11)),
                           ],
                         ),
                       ],
@@ -2392,13 +2715,18 @@ class _AdminViewState extends ConsumerState<AdminView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('COUPON CODE', style: GoogleFonts.spaceGrotesk(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey)),
+                    Text('COUPON CODE',
+                        style: GoogleFonts.spaceGrotesk(
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey)),
                     const SizedBox(height: 6),
                     SizedBox(
                       height: 40,
                       child: TextField(
                         controller: _couponCodeController,
-                        style: GoogleFonts.spaceGrotesk(fontSize: 12, fontWeight: FontWeight.bold),
+                        style: GoogleFonts.spaceGrotesk(
+                            fontSize: 12, fontWeight: FontWeight.bold),
                         decoration: const InputDecoration(
                           hintText: 'e.g. MONSOON20',
                           contentPadding: EdgeInsets.symmetric(horizontal: 10),
@@ -2413,7 +2741,11 @@ class _AdminViewState extends ConsumerState<AdminView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('COUPON SCHEMA', style: GoogleFonts.spaceGrotesk(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey)),
+                    Text('COUPON SCHEMA',
+                        style: GoogleFonts.spaceGrotesk(
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey)),
                     const SizedBox(height: 6),
                     Container(
                       height: 40,
@@ -2427,13 +2759,20 @@ class _AdminViewState extends ConsumerState<AdminView> {
                         child: DropdownButton<String>(
                           value: _couponType,
                           isExpanded: true,
-                          style: GoogleFonts.inter(fontSize: 11, color: AppColors.charcoal, fontWeight: FontWeight.w500),
+                          style: GoogleFonts.inter(
+                              fontSize: 11,
+                              color: AppColors.charcoal,
+                              fontWeight: FontWeight.w500),
                           onChanged: (val) {
                             if (val != null) setState(() => _couponType = val);
                           },
                           items: const [
-                            DropdownMenuItem(value: 'percentage', child: Text('Percentage Discount')),
-                            DropdownMenuItem(value: 'fixed', child: Text('Fixed INR Deduction')),
+                            DropdownMenuItem(
+                                value: 'percentage',
+                                child: Text('Percentage Discount')),
+                            DropdownMenuItem(
+                                value: 'fixed',
+                                child: Text('Fixed INR Deduction')),
                           ],
                         ),
                       ),
@@ -2450,7 +2789,11 @@ class _AdminViewState extends ConsumerState<AdminView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('VALUE AMOUNT', style: GoogleFonts.spaceGrotesk(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey)),
+                    Text('VALUE AMOUNT',
+                        style: GoogleFonts.spaceGrotesk(
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey)),
                     const SizedBox(height: 6),
                     SizedBox(
                       height: 40,
@@ -2458,8 +2801,11 @@ class _AdminViewState extends ConsumerState<AdminView> {
                         initialValue: _couponValue.toStringAsFixed(0),
                         keyboardType: TextInputType.number,
                         style: GoogleFonts.inter(fontSize: 12),
-                        decoration: const InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10)),
-                        onChanged: (val) => setState(() => _couponValue = double.tryParse(val) ?? 0.0),
+                        decoration: const InputDecoration(
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 10)),
+                        onChanged: (val) => setState(
+                            () => _couponValue = double.tryParse(val) ?? 0.0),
                       ),
                     ),
                   ],
@@ -2467,7 +2813,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _buildDatePickerField('Expiry Date', _couponExpiry, (val) => setState(() => _couponExpiry = val)),
+                child: _buildDatePickerField('Expiry Date', _couponExpiry,
+                    (val) => setState(() => _couponExpiry = val)),
               ),
             ],
           ),
@@ -2478,7 +2825,11 @@ class _AdminViewState extends ConsumerState<AdminView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('USAGE LIMIT CAP', style: GoogleFonts.spaceGrotesk(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey)),
+                    Text('USAGE LIMIT CAP',
+                        style: GoogleFonts.spaceGrotesk(
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey)),
                     const SizedBox(height: 6),
                     SizedBox(
                       height: 40,
@@ -2486,8 +2837,11 @@ class _AdminViewState extends ConsumerState<AdminView> {
                         initialValue: _couponLimit.toString(),
                         keyboardType: TextInputType.number,
                         style: GoogleFonts.inter(fontSize: 12),
-                        decoration: const InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10)),
-                        onChanged: (val) => setState(() => _couponLimit = int.tryParse(val) ?? 0),
+                        decoration: const InputDecoration(
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 10)),
+                        onChanged: (val) => setState(
+                            () => _couponLimit = int.tryParse(val) ?? 0),
                       ),
                     ),
                   ],
@@ -2498,7 +2852,11 @@ class _AdminViewState extends ConsumerState<AdminView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('MIN BOOKING CAP', style: GoogleFonts.spaceGrotesk(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey)),
+                    Text('MIN BOOKING CAP',
+                        style: GoogleFonts.spaceGrotesk(
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey)),
                     const SizedBox(height: 6),
                     SizedBox(
                       height: 40,
@@ -2506,8 +2864,11 @@ class _AdminViewState extends ConsumerState<AdminView> {
                         initialValue: _couponMinSub.toStringAsFixed(0),
                         keyboardType: TextInputType.number,
                         style: GoogleFonts.inter(fontSize: 12),
-                        decoration: const InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10)),
-                        onChanged: (val) => setState(() => _couponMinSub = double.tryParse(val) ?? 0.0),
+                        decoration: const InputDecoration(
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 10)),
+                        onChanged: (val) => setState(
+                            () => _couponMinSub = double.tryParse(val) ?? 0.0),
                       ),
                     ),
                   ],
@@ -2516,7 +2877,11 @@ class _AdminViewState extends ConsumerState<AdminView> {
             ],
           ),
           const SizedBox(height: AppSpacing.lg),
-          Text('COUPON DESCRIPTION', style: GoogleFonts.spaceGrotesk(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey)),
+          Text('COUPON DESCRIPTION',
+              style: GoogleFonts.spaceGrotesk(
+                  fontSize: 9,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey)),
           const SizedBox(height: 6),
           SizedBox(
             height: 40,
@@ -2534,8 +2899,10 @@ class _AdminViewState extends ConsumerState<AdminView> {
             Container(
               padding: const EdgeInsets.all(10),
               margin: const EdgeInsets.only(bottom: 12),
-              decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: AppRadius.smBr),
-              child: Text(_couponFormError!, style: TextStyle(color: Colors.red.shade800, fontSize: 11)),
+              decoration: BoxDecoration(
+                  color: Colors.red.shade50, borderRadius: AppRadius.smBr),
+              child: Text(_couponFormError!,
+                  style: TextStyle(color: Colors.red.shade800, fontSize: 11)),
             ),
           ElevatedButton(
             onPressed: _handleCreateCoupon,
@@ -2544,7 +2911,9 @@ class _AdminViewState extends ConsumerState<AdminView> {
               minimumSize: const Size(double.infinity, 44),
               shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
             ),
-            child: Text('Add Coupon to Registry', style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text('Add Coupon to Registry',
+                style: GoogleFonts.inter(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -2583,10 +2952,10 @@ class _AdminViewState extends ConsumerState<AdminView> {
 
     ref.read(couponsProvider.notifier).addCoupon(newCoupon);
     ref.read(notificationsProvider.notifier).addNotification(
-      'New Promotion Added',
-      'Created code $code offering dynamic savings on checkout.',
-      'system',
-    );
+          'New Promotion Added',
+          'Created code $code offering dynamic savings on checkout.',
+          'system',
+        );
 
     setState(() {
       _couponCodeController.clear();
@@ -2622,7 +2991,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: coupons.length,
-            separatorBuilder: (c, idx) => const Divider(color: AppColors.lightBone, height: 20),
+            separatorBuilder: (c, idx) =>
+                const Divider(color: AppColors.lightBone, height: 20),
             itemBuilder: (context, idx) {
               final cp = coupons[idx];
               return Row(
@@ -2633,12 +3003,19 @@ class _AdminViewState extends ConsumerState<AdminView> {
                       children: [
                         Row(
                           children: [
-                            Text(cp.code, style: GoogleFonts.spaceGrotesk(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.charcoal)),
+                            Text(cp.code,
+                                style: GoogleFonts.spaceGrotesk(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.charcoal)),
                             const SizedBox(width: 8),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
-                                color: cp.isActive ? Colors.green.shade50 : AppColors.stoneBg,
+                                color: cp.isActive
+                                    ? Colors.green.shade50
+                                    : AppColors.stoneBg,
                                 borderRadius: AppRadius.smBr,
                               ),
                               child: Text(
@@ -2646,18 +3023,25 @@ class _AdminViewState extends ConsumerState<AdminView> {
                                 style: GoogleFonts.inter(
                                   fontSize: 8,
                                   fontWeight: FontWeight.bold,
-                                  color: cp.isActive ? Colors.green.shade800 : Colors.grey,
+                                  color: cp.isActive
+                                      ? Colors.green.shade800
+                                      : Colors.grey,
                                 ),
                               ),
                             ),
                           ],
                         ),
                         const SizedBox(height: AppSpacing.xs),
-                        Text(cp.description, style: GoogleFonts.inter(fontSize: 11, color: AppColors.charcoal.withValues(alpha: 0.6))),
+                        Text(cp.description,
+                            style: GoogleFonts.inter(
+                                fontSize: 11,
+                                color:
+                                    AppColors.charcoal.withValues(alpha: 0.6))),
                         const SizedBox(height: AppSpacing.xs),
                         Text(
                           'Usage: ${cp.usageCount} / ${cp.usageLimit} • Min Booking Value: ₹${cp.minBookingValue.toStringAsFixed(0)} • Expires: ${cp.expiryDate}',
-                          style: GoogleFonts.inter(fontSize: 9, color: Colors.grey),
+                          style: GoogleFonts.inter(
+                              fontSize: 9, color: Colors.grey),
                         ),
                       ],
                     ),
@@ -2671,14 +3055,20 @@ class _AdminViewState extends ConsumerState<AdminView> {
                           title: const Text('Delete Coupon'),
                           content: Text('Delete coupon "${cp.code}"?'),
                           actions: [
-                            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+                            TextButton(
+                                onPressed: () => Navigator.pop(ctx),
+                                child: const Text('Cancel')),
                             TextButton(
                               onPressed: () {
-                                ref.read(couponsProvider.notifier).deleteCoupon(cp.id);
+                                ref
+                                    .read(couponsProvider.notifier)
+                                    .deleteCoupon(cp.id);
                                 Navigator.pop(ctx);
-                                SnackbarHelper.success(context, 'Coupon ${cp.code} deleted.');
+                                SnackbarHelper.success(
+                                    context, 'Coupon ${cp.code} deleted.');
                               },
-                              child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                              child: const Text('Delete',
+                                  style: TextStyle(color: Colors.red)),
                             ),
                           ],
                         ),
@@ -2686,14 +3076,17 @@ class _AdminViewState extends ConsumerState<AdminView> {
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Icon(Icons.delete_outline, size: 18, color: Colors.red.shade300),
+                      child: Icon(Icons.delete_outline,
+                          size: 18, color: Colors.red.shade300),
                     ),
                   ),
                   Switch(
                     value: cp.isActive,
                     activeThumbColor: AppColors.mossGreen,
                     onChanged: (val) {
-                      ref.read(couponsProvider.notifier).toggleCouponActive(cp.id);
+                      ref
+                          .read(couponsProvider.notifier)
+                          .toggleCouponActive(cp.id);
                     },
                   ),
                 ],
@@ -2729,7 +3122,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
           LayoutBuilder(
             builder: (context, constraints) {
               final double width = constraints.maxWidth;
-              final int crossAxisCount = width > 1000 ? 3 : (width > 600 ? 2 : 1);
+              final int crossAxisCount =
+                  width > 1000 ? 3 : (width > 600 ? 2 : 1);
               return GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -2750,12 +3144,16 @@ class _AdminViewState extends ConsumerState<AdminView> {
                     decoration: BoxDecoration(
                       color: isConflict
                           ? const Color(0xFFFFF8E1).withValues(alpha: 0.3)
-                          : (isError ? const Color(0xFFFFEBEE).withValues(alpha: 0.3) : AppColors.stoneBg.withValues(alpha: 0.3)),
+                          : (isError
+                              ? const Color(0xFFFFEBEE).withValues(alpha: 0.3)
+                              : AppColors.stoneBg.withValues(alpha: 0.3)),
                       borderRadius: AppRadius.lgBr,
                       border: Border.all(
                         color: isConflict
                             ? Colors.amber.shade300
-                            : (isError ? Colors.red.shade200 : AppColors.lightBone),
+                            : (isError
+                                ? Colors.red.shade200
+                                : AppColors.lightBone),
                       ),
                     ),
                     child: Column(
@@ -2770,14 +3168,19 @@ class _AdminViewState extends ConsumerState<AdminView> {
                               children: [
                                 Text(
                                   '🏕  ${ch.channelName}',
-                                  style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 13),
+                                  style: GoogleFonts.inter(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 2),
                                   decoration: BoxDecoration(
                                     color: ch.status == 'success'
                                         ? Colors.green.shade50
-                                        : (isConflict ? Colors.amber.shade50 : Colors.red.shade50),
+                                        : (isConflict
+                                            ? Colors.amber.shade50
+                                            : Colors.red.shade50),
                                     borderRadius: AppRadius.smBr,
                                   ),
                                   child: Text(
@@ -2787,7 +3190,9 @@ class _AdminViewState extends ConsumerState<AdminView> {
                                       fontWeight: FontWeight.bold,
                                       color: ch.status == 'success'
                                           ? Colors.green.shade800
-                                          : (isConflict ? Colors.amber.shade800 : Colors.red.shade800),
+                                          : (isConflict
+                                              ? Colors.amber.shade800
+                                              : Colors.red.shade800),
                                     ),
                                   ),
                                 ),
@@ -2796,27 +3201,38 @@ class _AdminViewState extends ConsumerState<AdminView> {
                             const SizedBox(height: AppSpacing.sm),
                             Text(
                               'Last synchronisation checklist:',
-                              style: GoogleFonts.inter(fontSize: 10, color: Colors.grey),
+                              style: GoogleFonts.inter(
+                                  fontSize: 10, color: Colors.grey),
                             ),
                             Text(
                               ch.lastSyncTime.contains('T')
                                   ? '${ch.lastSyncTime.split('T')[0]} ${ch.lastSyncTime.split('T')[1].substring(0, 5)}'
                                   : ch.lastSyncTime,
-                              style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.charcoal.withValues(alpha: 0.7)),
+                              style: GoogleFonts.inter(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.charcoal
+                                      .withValues(alpha: 0.7)),
                             ),
                             if (ch.conflictsCount > 0) ...[
                               const SizedBox(height: 6),
                               Container(
                                 padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(color: Colors.amber.shade50, borderRadius: BorderRadius.circular(4)),
+                                decoration: BoxDecoration(
+                                    color: Colors.amber.shade50,
+                                    borderRadius: BorderRadius.circular(4)),
                                 child: Row(
                                   children: [
-                                    Icon(Icons.warning, size: 10, color: Colors.amber.shade800),
+                                    Icon(Icons.warning,
+                                        size: 10, color: Colors.amber.shade800),
                                     const SizedBox(width: 4),
                                     Expanded(
                                       child: Text(
                                         '${ch.conflictsCount} overlap conflict flagged.',
-                                        style: TextStyle(color: Colors.amber.shade900, fontSize: 8, fontWeight: FontWeight.bold),
+                                        style: TextStyle(
+                                            color: Colors.amber.shade900,
+                                            fontSize: 8,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                   ],
@@ -2830,19 +3246,29 @@ class _AdminViewState extends ConsumerState<AdminView> {
                           children: [
                             InkWell(
                               onTap: () {
-                                ref.read(otaSyncProvider.notifier).toggleSync(ch.id);
+                                ref
+                                    .read(otaSyncProvider.notifier)
+                                    .toggleSync(ch.id);
                               },
                               child: Row(
                                 children: [
                                   Icon(
-                                    ch.syncEnabled ? Icons.toggle_on : Icons.toggle_off,
-                                    color: ch.syncEnabled ? Colors.green : Colors.grey,
+                                    ch.syncEnabled
+                                        ? Icons.toggle_on
+                                        : Icons.toggle_off,
+                                    color: ch.syncEnabled
+                                        ? Colors.green
+                                        : Colors.grey,
                                     size: 28,
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    ch.syncEnabled ? 'Sync Enabled' : 'Disabled',
-                                    style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.bold),
+                                    ch.syncEnabled
+                                        ? 'Sync Enabled'
+                                        : 'Disabled',
+                                    style: GoogleFonts.inter(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ],
                               ),
@@ -2850,8 +3276,11 @@ class _AdminViewState extends ConsumerState<AdminView> {
                             ElevatedButton(
                               onPressed: ch.syncEnabled
                                   ? () {
-                                      ref.read(otaSyncProvider.notifier).triggerSyncSuccess(ch.id);
-                                      SnackbarHelper.success(context, 'Synchronized ${ch.channelName} feeds.');
+                                      ref
+                                          .read(otaSyncProvider.notifier)
+                                          .triggerSyncSuccess(ch.id);
+                                      SnackbarHelper.success(context,
+                                          'Synchronized ${ch.channelName} feeds.');
                                     }
                                   : null,
                               style: ElevatedButton.styleFrom(
@@ -2859,14 +3288,21 @@ class _AdminViewState extends ConsumerState<AdminView> {
                                 surfaceTintColor: Colors.white,
                                 foregroundColor: AppColors.charcoal,
                                 elevation: 0,
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                                shape: RoundedRectangleBorder(borderRadius: AppRadius.smBr, side: const BorderSide(color: AppColors.lightBone)),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 8),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: AppRadius.smBr,
+                                    side: const BorderSide(
+                                        color: AppColors.lightBone)),
                               ),
                               child: Row(
                                 children: [
                                   const Icon(Icons.refresh, size: 12),
                                   const SizedBox(width: 4),
-                                  Text('Sync Now', style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.bold)),
+                                  Text('Sync Now',
+                                      style: GoogleFonts.inter(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold)),
                                 ],
                               ),
                             ),
@@ -2964,5 +3400,6 @@ class SalesChartPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant SalesChartPainter oldDelegate) => oldDelegate.points != points;
+  bool shouldRepaint(covariant SalesChartPainter oldDelegate) =>
+      oldDelegate.points != points;
 }

@@ -37,7 +37,8 @@ class AppStatsCard extends StatelessWidget {
               color: (iconColor ?? AppColors.mossGreen).withValues(alpha: 0.1),
               borderRadius: AppRadius.mdBr,
             ),
-            child: Icon(icon, color: iconColor ?? AppColors.mossGreen, size: 22),
+            child:
+                Icon(icon, color: iconColor ?? AppColors.mossGreen, size: 22),
           ),
           const SizedBox(width: 14),
           Expanded(

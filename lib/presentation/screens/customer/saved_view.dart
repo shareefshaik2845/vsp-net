@@ -78,7 +78,8 @@ class SavedView extends ConsumerWidget {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: AppRadius.xxlBr,
-                          border: Border.all(color: AppColors.lightBone, width: 1.5),
+                          border: Border.all(
+                              color: AppColors.lightBone, width: 1.5),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withValues(alpha: 0.03),
@@ -91,8 +92,11 @@ class SavedView extends ConsumerWidget {
                           borderRadius: AppRadius.xxlBr,
                           child: InkWell(
                             onTap: () {
-                              ref.read(propertyProvider.notifier).updateProperty(resort);
-                              ref.read(activeTabProvider.notifier).state = 'explore';
+                              ref
+                                  .read(propertyProvider.notifier)
+                                  .updateProperty(resort);
+                              ref.read(activeTabProvider.notifier).state =
+                                  'explore';
                             },
                             child: Row(
                               children: [
@@ -105,9 +109,11 @@ class SavedView extends ConsumerWidget {
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 4.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12.0, horizontal: 4.0),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           resort.city.toUpperCase(),
@@ -121,7 +127,8 @@ class SavedView extends ConsumerWidget {
                                         const SizedBox(height: 4),
                                         Text(
                                           resort.name,
-                                          style: AppTextStyles.titleSm.copyWith(color: AppColors.mossGreen),
+                                          style: AppTextStyles.titleSm.copyWith(
+                                              color: AppColors.mossGreen),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -131,7 +138,8 @@ class SavedView extends ConsumerWidget {
                                           style: GoogleFonts.inter(
                                             fontSize: 13,
                                             fontWeight: FontWeight.bold,
-                                            color: AppColors.charcoal.withValues(alpha: 0.8),
+                                            color: AppColors.charcoal
+                                                .withValues(alpha: 0.8),
                                           ),
                                         ),
                                       ],
@@ -145,7 +153,9 @@ class SavedView extends ConsumerWidget {
                                     size: 22,
                                   ),
                                   onPressed: () {
-                                    ref.read(savedPropertiesProvider.notifier).toggleSave(resort);
+                                    ref
+                                        .read(savedPropertiesProvider.notifier)
+                                        .toggleSave(resort);
                                   },
                                 ),
                                 const SizedBox(width: 12),

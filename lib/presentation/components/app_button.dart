@@ -74,7 +74,8 @@ class AppButton extends StatelessWidget {
           padding: pad,
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
-          textStyle: GoogleFonts.inter(fontSize: fontSize, fontWeight: FontWeight.bold),
+          textStyle: GoogleFonts.inter(
+              fontSize: fontSize, fontWeight: FontWeight.bold),
         ),
         child: loading
             ? SizedBox(
@@ -132,7 +133,8 @@ class AppButton extends StatelessWidget {
           side: BorderSide(color: color ?? AppColors.lightBone),
           padding: pad,
           shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
-          textStyle: GoogleFonts.inter(fontSize: fontSize, fontWeight: FontWeight.w600),
+          textStyle: GoogleFonts.inter(
+              fontSize: fontSize, fontWeight: FontWeight.w600),
         ),
         child: loading
             ? SizedBox(
@@ -149,7 +151,11 @@ class AppButton extends StatelessWidget {
   }
 
   Widget _buildTextButton() {
-    final fontSize = switch (size) { AppButtonSize.sm => 11.0, AppButtonSize.lg => 14.0, _ => 12.0 };
+    final fontSize = switch (size) {
+      AppButtonSize.sm => 11.0,
+      AppButtonSize.lg => 14.0,
+      _ => 12.0
+    };
 
     return _wrap(
       TextButton(
@@ -157,7 +163,8 @@ class AppButton extends StatelessWidget {
         style: TextButton.styleFrom(
           foregroundColor: color ?? AppColors.mossGreen,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          textStyle: GoogleFonts.inter(fontSize: fontSize, fontWeight: FontWeight.w600),
+          textStyle: GoogleFonts.inter(
+              fontSize: fontSize, fontWeight: FontWeight.w600),
         ),
         child: _buildLabel(fontSize),
       ),

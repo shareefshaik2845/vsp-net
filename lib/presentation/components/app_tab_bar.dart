@@ -41,7 +41,10 @@ class AppTabBar extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (tab.icon != null) ...[
-                  Icon(tab.icon, size: 16, color: isSelected ? AppColors.white : AppColors.mossGreen),
+                  Icon(tab.icon,
+                      size: 16,
+                      color:
+                          isSelected ? AppColors.white : AppColors.mossGreen),
                   const SizedBox(width: 6),
                 ],
                 Text(

@@ -51,7 +51,8 @@ class AppSpacing {
 
   // Edge insets
   static const EdgeInsets pageH = EdgeInsets.symmetric(horizontal: lg);
-  static const EdgeInsets pageHV = EdgeInsets.symmetric(horizontal: lg, vertical: md);
+  static const EdgeInsets pageHV =
+      EdgeInsets.symmetric(horizontal: lg, vertical: md);
   static const EdgeInsets allLg = EdgeInsets.all(lg);
   static const EdgeInsets allMd = EdgeInsets.all(md);
 }
@@ -88,10 +89,16 @@ class AppShadows {
     BoxShadow(color: Color(0x1A000000), blurRadius: 6, offset: Offset(0, 2)),
   ];
   static List<BoxShadow> glowGold = [
-    BoxShadow(color: AppColors.goldAccent.withValues(alpha: 0.15), blurRadius: 6, offset: Offset(0, 2)),
+    BoxShadow(
+        color: AppColors.goldAccent.withValues(alpha: 0.15),
+        blurRadius: 6,
+        offset: Offset(0, 2)),
   ];
   static List<BoxShadow> glowGoldHover = [
-    BoxShadow(color: AppColors.goldAccent.withValues(alpha: 0.3), blurRadius: 16, offset: Offset(0, 4)),
+    BoxShadow(
+        color: AppColors.goldAccent.withValues(alpha: 0.3),
+        blurRadius: 16,
+        offset: Offset(0, 4)),
   ];
 }
 
@@ -100,7 +107,12 @@ class AppGradients {
   static const LinearGradient gold = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [AppColors.goldLight, AppColors.goldAccent, AppColors.goldAccent, AppColors.goldDark],
+    colors: [
+      AppColors.goldLight,
+      AppColors.goldAccent,
+      AppColors.goldAccent,
+      AppColors.goldDark
+    ],
   );
   static const LinearGradient darkEmerald = LinearGradient(
     begin: Alignment.topLeft,
@@ -119,47 +131,76 @@ class AppTextStyles {
 
   // Display / Headings — Playfair Display
   static TextStyle displayLarge = GoogleFonts.playfairDisplay(
-    fontSize: 32, fontWeight: FontWeight.bold, color: AppColors.mossGreen,
+    fontSize: 32,
+    fontWeight: FontWeight.bold,
+    color: AppColors.mossGreen,
   );
   static TextStyle displayMedium = GoogleFonts.playfairDisplay(
-    fontSize: 26, fontWeight: FontWeight.bold, color: AppColors.mossGreen,
+    fontSize: 26,
+    fontWeight: FontWeight.bold,
+    color: AppColors.mossGreen,
   );
   static TextStyle titleXl = GoogleFonts.playfairDisplay(
-    fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.mossGreen,
+    fontSize: 22,
+    fontWeight: FontWeight.bold,
+    color: AppColors.mossGreen,
   );
   static TextStyle titleLg = GoogleFonts.playfairDisplay(
-    fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.mossGreen,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: AppColors.mossGreen,
   );
   static TextStyle titleMd = GoogleFonts.playfairDisplay(
-    fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.mossGreen,
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: AppColors.mossGreen,
   );
   static TextStyle titleSm = GoogleFonts.playfairDisplay(
-    fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.mossGreen,
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    color: AppColors.mossGreen,
   );
 
   // Body — Inter
   static TextStyle bodyLg = GoogleFonts.inter(
-    fontSize: 15, fontWeight: FontWeight.w500, color: AppColors.charcoal,
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+    color: AppColors.charcoal,
   );
   static TextStyle bodyMd = GoogleFonts.inter(
-    fontSize: 13, fontWeight: FontWeight.normal, color: AppColors.charcoal.withValues(alpha: 0.8),
+    fontSize: 13,
+    fontWeight: FontWeight.normal,
+    color: AppColors.charcoal.withValues(alpha: 0.8),
   );
   static TextStyle bodySm = GoogleFonts.inter(
-    fontSize: 12, fontWeight: FontWeight.normal, color: AppColors.charcoal.withValues(alpha: 0.7),
+    fontSize: 12,
+    fontWeight: FontWeight.normal,
+    color: AppColors.charcoal.withValues(alpha: 0.7),
   );
   static TextStyle bodyXs = GoogleFonts.inter(
-    fontSize: 11, fontWeight: FontWeight.normal, color: AppColors.charcoal.withValues(alpha: 0.6),
+    fontSize: 11,
+    fontWeight: FontWeight.normal,
+    color: AppColors.charcoal.withValues(alpha: 0.6),
   );
 
   // Label / Caption — Space Grotesk
   static TextStyle labelLg = GoogleFonts.spaceGrotesk(
-    fontSize: 13, fontWeight: FontWeight.bold, letterSpacing: 1.2, color: AppColors.charcoal.withValues(alpha: 0.5),
+    fontSize: 13,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 1.2,
+    color: AppColors.charcoal.withValues(alpha: 0.5),
   );
   static TextStyle labelMd = GoogleFonts.spaceGrotesk(
-    fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.2, color: AppColors.charcoal.withValues(alpha: 0.5),
+    fontSize: 11,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 1.2,
+    color: AppColors.charcoal.withValues(alpha: 0.5),
   );
   static TextStyle labelSm = GoogleFonts.spaceGrotesk(
-    fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1.2, color: AppColors.charcoal.withValues(alpha: 0.5),
+    fontSize: 9,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 1.2,
+    color: AppColors.charcoal.withValues(alpha: 0.5),
   );
 
   // Helper to create colored variants
@@ -216,7 +257,8 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.stoneBg.withValues(alpha: 0.3),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         border: OutlineInputBorder(
           borderRadius: AppRadius.lgBr,
           borderSide: const BorderSide(color: AppColors.lightBone, width: 1),
@@ -238,7 +280,8 @@ class AppTheme {
           borderSide: const BorderSide(color: AppColors.error, width: 1.5),
         ),
         labelStyle: AppTextStyles.bodySm,
-        hintStyle: GoogleFonts.inter(fontSize: 12, color: AppColors.charcoal.withValues(alpha: 0.4)),
+        hintStyle: GoogleFonts.inter(
+            fontSize: 12, color: AppColors.charcoal.withValues(alpha: 0.4)),
       ),
 
       // Elevated Button
@@ -249,7 +292,8 @@ class AppTheme {
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
-          textStyle: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold),
+          textStyle:
+              GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold),
         ),
       ),
 
@@ -260,7 +304,8 @@ class AppTheme {
           side: const BorderSide(color: AppColors.lightBone),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
-          textStyle: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600),
+          textStyle:
+              GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600),
         ),
       ),
 
@@ -269,7 +314,8 @@ class AppTheme {
         style: TextButton.styleFrom(
           foregroundColor: AppColors.mossGreen,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          textStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
+          textStyle:
+              GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
         ),
       ),
 
@@ -292,8 +338,10 @@ class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.stoneBg,
         selectedColor: AppColors.mossGreen,
-        labelStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
-        secondaryLabelStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
+        labelStyle:
+            GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
+        secondaryLabelStyle:
+            GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         shape: RoundedRectangleBorder(borderRadius: AppRadius.smBr),
       ),
@@ -345,27 +393,33 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         iconTheme: const IconThemeData(color: AppColors.goldAccent),
-        titleTextStyle: AppTextStyles.titleMd.copyWith(color: AppColors.goldAccent),
+        titleTextStyle:
+            AppTextStyles.titleMd.copyWith(color: AppColors.goldAccent),
         shape: const _BottomBorderShape(),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: Colors.white.withValues(alpha: 0.04),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         border: OutlineInputBorder(
           borderRadius: AppRadius.lgBr,
-          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1), width: 1),
+          borderSide:
+              BorderSide(color: Colors.white.withValues(alpha: 0.1), width: 1),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: AppRadius.lgBr,
-          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1), width: 1),
+          borderSide:
+              BorderSide(color: Colors.white.withValues(alpha: 0.1), width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadius.lgBr,
           borderSide: const BorderSide(color: AppColors.goldAccent, width: 1.5),
         ),
-        labelStyle: GoogleFonts.inter(fontSize: 12, color: Colors.white.withValues(alpha: 0.6)),
-        hintStyle: GoogleFonts.inter(fontSize: 12, color: Colors.white.withValues(alpha: 0.3)),
+        labelStyle: GoogleFonts.inter(
+            fontSize: 12, color: Colors.white.withValues(alpha: 0.6)),
+        hintStyle: GoogleFonts.inter(
+            fontSize: 12, color: Colors.white.withValues(alpha: 0.3)),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -374,7 +428,8 @@ class AppTheme {
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
-          textStyle: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold),
+          textStyle:
+              GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -383,7 +438,8 @@ class AppTheme {
           side: BorderSide(color: AppColors.goldAccent.withValues(alpha: 0.4)),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
-          textStyle: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600),
+          textStyle:
+              GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600),
         ),
       ),
       progressIndicatorTheme: const ProgressIndicatorThemeData(
@@ -409,7 +465,8 @@ class AppTheme {
     return BoxDecoration(
       color: tint.withValues(alpha: opacity),
       borderRadius: borderRadius,
-      border: Border.all(color: borderTint.withValues(alpha: borderOpacity), width: 1),
+      border: Border.all(
+          color: borderTint.withValues(alpha: borderOpacity), width: 1),
     );
   }
 
@@ -426,15 +483,18 @@ class _BottomBorderShape extends OutlinedBorder {
   @override
   Path getInnerPath(Rect rect, {TextDirection? textDirection}) => Path();
   @override
-  Path getOuterPath(Rect rect, {TextDirection? textDirection}) => Path()..addRect(rect);
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) =>
+      Path()..addRect(rect);
   @override
   void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
     final paint = Paint()
       ..color = AppColors.lightBone
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
-    canvas.drawLine(Offset(rect.left, rect.bottom), Offset(rect.right, rect.bottom), paint);
+    canvas.drawLine(
+        Offset(rect.left, rect.bottom), Offset(rect.right, rect.bottom), paint);
   }
+
   @override
   OutlinedBorder scale(double t) => this;
 }

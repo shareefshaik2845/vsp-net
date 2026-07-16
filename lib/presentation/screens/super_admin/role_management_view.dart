@@ -38,11 +38,16 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
 
   String _backendId(UserRole role) {
     switch (role) {
-      case UserRole.superAdmin: return 'SUPER_ADMIN';
-      case UserRole.admin: return 'ADMIN';
-      case UserRole.staff: return 'STAFF';
-      case UserRole.accountant: return 'ACCOUNTANT';
-      case UserRole.customer: return 'CUSTOMER';
+      case UserRole.superAdmin:
+        return 'SUPER_ADMIN';
+      case UserRole.admin:
+        return 'ADMIN';
+      case UserRole.staff:
+        return 'STAFF';
+      case UserRole.accountant:
+        return 'ACCOUNTANT';
+      case UserRole.customer:
+        return 'CUSTOMER';
     }
   }
 
@@ -75,7 +80,11 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
   void _selectRole(UserRole role) {
     final existing = _findRole(role);
     final permissions = existing != null
-        ? existing.permissions.map((p) => RolePermission(resource: p.resource, actions: List<PermissionAction>.from(p.actions))).toList()
+        ? existing.permissions
+            .map((p) => RolePermission(
+                resource: p.resource,
+                actions: List<PermissionAction>.from(p.actions)))
+            .toList()
         : <RolePermission>[];
     setState(() {
       _selectedRoleValue = role;
@@ -100,7 +109,8 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
           current[idx] = RolePermission(resource: resource, actions: updated);
         }
       } else {
-        current[idx] = RolePermission(resource: resource, actions: [...existing, action]);
+        current[idx] =
+            RolePermission(resource: resource, actions: [...existing, action]);
       }
     } else {
       current.add(RolePermission(resource: resource, actions: [action]));
@@ -109,7 +119,9 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
   }
 
   Future<void> _saveChanges() async {
-    if (_selectedRoleValue == null || _dirtyPermissions == null || _isSuperAdmin) return;
+    if (_selectedRoleValue == null ||
+        _dirtyPermissions == null ||
+        _isSuperAdmin) return;
     final updated = RoleDefinition(
       id: _backendId(_selectedRoleValue!),
       displayName: '',
@@ -121,7 +133,8 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
         await widget.onRemoteSave!(updated);
       }
       if (!context.mounted) return;
-      SnackbarHelper.success(context, '${_labelFor(_selectedRoleValue!)} permissions saved.');
+      SnackbarHelper.success(
+          context, '${_labelFor(_selectedRoleValue!)} permissions saved.');
     } catch (e) {
       if (!context.mounted) return;
       SnackbarHelper.error(context, 'Failed to save permissions: $e');
@@ -131,11 +144,15 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
   bool _hasChanges() {
     if (_selectedRoleValue == null || _dirtyPermissions == null) return false;
     if (_selectedRole == null) return _dirtyPermissions!.isNotEmpty;
-    if (_selectedRole!.permissions.length != _dirtyPermissions!.length) return true;
+    if (_selectedRole!.permissions.length != _dirtyPermissions!.length)
+      return true;
     for (final p in _dirtyPermissions!) {
-      final original = _selectedRole!.permissions.where((x) => x.resource == p.resource);
-      final origActions = original.isNotEmpty ? original.first.actions : <PermissionAction>[];
-      if (p.actions.length != origActions.length || !p.actions.every((a) => origActions.contains(a))) {
+      final original =
+          _selectedRole!.permissions.where((x) => x.resource == p.resource);
+      final origActions =
+          original.isNotEmpty ? original.first.actions : <PermissionAction>[];
+      if (p.actions.length != origActions.length ||
+          !p.actions.every((a) => origActions.contains(a))) {
         return true;
       }
     }
@@ -154,7 +171,10 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: AppColors.lightBone),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 4)),
         ],
       ),
       child: Column(
@@ -162,7 +182,8 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
         children: [
           Row(
             children: [
-              const Icon(Icons.admin_panel_settings_outlined, color: AppColors.mossGreen, size: 22),
+              const Icon(Icons.admin_panel_settings_outlined,
+                  color: AppColors.mossGreen, size: 22),
               const SizedBox(width: 8),
               Text(
                 'Roles & Permissions',
@@ -177,7 +198,8 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
           const SizedBox(height: 8),
           Text(
             'Select a role to view and edit its permissions. Click Save to apply changes.',
-            style: GoogleFonts.inter(fontSize: 11, color: AppColors.charcoal.withValues(alpha: 0.5)),
+            style: GoogleFonts.inter(
+                fontSize: 11, color: AppColors.charcoal.withValues(alpha: 0.5)),
           ),
           const SizedBox(height: 16),
           const Divider(color: AppColors.lightBone),
@@ -195,27 +217,43 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
               child: DropdownButton<UserRole>(
                 value: _selectedRoleValue,
                 isExpanded: true,
-                hint: Text('Select a role', style: GoogleFonts.inter(fontSize: 13, color: AppColors.charcoal)),
-                style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.charcoal),
-                items: UserRole.values.map((role) => DropdownMenuItem(
-                  value: role,
-                  child: Row(
-                    children: [
-                      _roleIcon(role.name),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(_labelFor(role), style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
-                            if (_descriptionFor(role).isNotEmpty)
-                              Text(_descriptionFor(role), style: GoogleFonts.inter(fontSize: 9, color: AppColors.charcoal.withValues(alpha: 0.5)), overflow: TextOverflow.ellipsis),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                )).toList(),
+                hint: Text('Select a role',
+                    style: GoogleFonts.inter(
+                        fontSize: 13, color: AppColors.charcoal)),
+                style: GoogleFonts.inter(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.charcoal),
+                items: UserRole.values
+                    .map((role) => DropdownMenuItem(
+                          value: role,
+                          child: Row(
+                            children: [
+                              _roleIcon(role.name),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(_labelFor(role),
+                                        style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13),
+                                        overflow: TextOverflow.ellipsis),
+                                    if (_descriptionFor(role).isNotEmpty)
+                                      Text(_descriptionFor(role),
+                                          style: GoogleFonts.inter(
+                                              fontSize: 9,
+                                              color: AppColors.charcoal
+                                                  .withValues(alpha: 0.5)),
+                                          overflow: TextOverflow.ellipsis),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ))
+                    .toList(),
                 onChanged: (role) {
                   if (role != null) _selectRole(role);
                 },
@@ -226,7 +264,8 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
           const SizedBox(height: 20),
 
           if (_selectedRoleValue == null)
-            const Center(child: Padding(
+            const Center(
+                child: Padding(
               padding: EdgeInsets.all(40),
               child: Text('Select a role above to configure permissions.'),
             ))
@@ -239,23 +278,35 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton.icon(
-                  onPressed: _hasChanges() ? () => _selectRole(_selectedRoleValue!) : null,
+                  onPressed: _hasChanges()
+                      ? () => _selectRole(_selectedRoleValue!)
+                      : null,
                   icon: const Icon(Icons.refresh, size: 16),
-                  label: Text('Reset', style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 12)),
-                  style: TextButton.styleFrom(foregroundColor: AppColors.charcoal.withValues(alpha: 0.6)),
+                  label: Text('Reset',
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.bold, fontSize: 12)),
+                  style: TextButton.styleFrom(
+                      foregroundColor:
+                          AppColors.charcoal.withValues(alpha: 0.6)),
                 ),
                 const SizedBox(width: 12),
                 ElevatedButton.icon(
                   onPressed: _hasChanges() ? _saveChanges : null,
                   icon: const Icon(Icons.save_outlined, size: 16),
-                  label: Text('Save Changes', style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 12)),
+                  label: Text('Save Changes',
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.bold, fontSize: 12)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.mossGreen,
                     foregroundColor: Colors.white,
-                    disabledBackgroundColor: AppColors.mossGreen.withValues(alpha: 0.3),
-                    disabledForegroundColor: Colors.white.withValues(alpha: 0.5),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    disabledBackgroundColor:
+                        AppColors.mossGreen.withValues(alpha: 0.3),
+                    disabledForegroundColor:
+                        Colors.white.withValues(alpha: 0.5),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 12),
                   ),
                 ),
               ],
@@ -266,7 +317,8 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
     );
   }
 
-  Widget _buildSuperAdminReadonly(List<PermissionResource> allResources, List<PermissionAction> allActions) {
+  Widget _buildSuperAdminReadonly(List<PermissionResource> allResources,
+      List<PermissionAction> allActions) {
     final role = _selectedRole;
     if (role == null) return const SizedBox.shrink();
     return Container(
@@ -288,12 +340,19 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      role.displayName.isNotEmpty ? role.displayName : _labelFor(_selectedRoleValue!),
-                      style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.charcoal),
+                      role.displayName.isNotEmpty
+                          ? role.displayName
+                          : _labelFor(_selectedRoleValue!),
+                      style: GoogleFonts.inter(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.charcoal),
                     ),
                     Text(
                       'Super Admin has full system access. Permissions are locked and cannot be modified.',
-                      style: GoogleFonts.inter(fontSize: 10, color: AppColors.charcoal.withValues(alpha: 0.5)),
+                      style: GoogleFonts.inter(
+                          fontSize: 10,
+                          color: AppColors.charcoal.withValues(alpha: 0.5)),
                     ),
                   ],
                 ),
@@ -309,23 +368,37 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
               dataRowMaxHeight: 32,
               columnSpacing: 8,
               columns: [
-                const DataColumn(label: Text('Resource', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+                const DataColumn(
+                    label: Text('Resource',
+                        style: TextStyle(
+                            fontSize: 10, fontWeight: FontWeight.bold))),
                 ...allActions.map((action) => DataColumn(
-                  label: Text(action.name[0].toUpperCase(), style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-                )),
+                      label: Text(action.name[0].toUpperCase(),
+                          style: const TextStyle(
+                              fontSize: 10, fontWeight: FontWeight.bold)),
+                    )),
               ],
               rows: allResources.map((resource) {
-                final perm = role.permissions.where((p) => p.resource == resource);
-                final actions = perm.isNotEmpty ? perm.first.actions : <PermissionAction>[];
+                final perm =
+                    role.permissions.where((p) => p.resource == resource);
+                final actions =
+                    perm.isNotEmpty ? perm.first.actions : <PermissionAction>[];
                 return DataRow(cells: [
-                  DataCell(Text(resource.name, style: GoogleFonts.inter(fontSize: 10, color: AppColors.charcoal.withValues(alpha: 0.7)))),
+                  DataCell(Text(resource.name,
+                      style: GoogleFonts.inter(
+                          fontSize: 10,
+                          color: AppColors.charcoal.withValues(alpha: 0.7)))),
                   ...allActions.map((action) => DataCell(
-                    Icon(
-                      actions.contains(action) ? Icons.check_circle : Icons.remove_circle_outline,
-                      size: 16,
-                      color: actions.contains(action) ? Colors.green : Colors.grey.shade300,
-                    ),
-                  )),
+                        Icon(
+                          actions.contains(action)
+                              ? Icons.check_circle
+                              : Icons.remove_circle_outline,
+                          size: 16,
+                          color: actions.contains(action)
+                              ? Colors.green
+                              : Colors.grey.shade300,
+                        ),
+                      )),
                 ]);
               }).toList(),
             ),
@@ -335,7 +408,8 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
     );
   }
 
-  Widget _buildPermissionsGrid(List<PermissionResource> allResources, List<PermissionAction> allActions) {
+  Widget _buildPermissionsGrid(List<PermissionResource> allResources,
+      List<PermissionAction> allActions) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
@@ -344,16 +418,24 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
         dataRowMaxHeight: 32,
         columnSpacing: 8,
         columns: [
-          const DataColumn(label: Text('Resource', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+          const DataColumn(
+              label: Text('Resource',
+                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
           ...allActions.map((action) => DataColumn(
-            label: Text(action.name[0].toUpperCase(), style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-          )),
+                label: Text(action.name[0].toUpperCase(),
+                    style: const TextStyle(
+                        fontSize: 10, fontWeight: FontWeight.bold)),
+              )),
         ],
         rows: allResources.map((resource) {
           final perm = _dirtyPermissions!.where((p) => p.resource == resource);
-          final actions = perm.isNotEmpty ? perm.first.actions : <PermissionAction>[];
+          final actions =
+              perm.isNotEmpty ? perm.first.actions : <PermissionAction>[];
           return DataRow(cells: [
-            DataCell(Text(resource.name, style: GoogleFonts.inter(fontSize: 10, color: AppColors.charcoal.withValues(alpha: 0.7)))),
+            DataCell(Text(resource.name,
+                style: GoogleFonts.inter(
+                    fontSize: 10,
+                    color: AppColors.charcoal.withValues(alpha: 0.7)))),
             ...allActions.map((action) {
               final checked = actions.contains(action);
               return DataCell(
@@ -399,7 +481,9 @@ class _RoleManagementViewState extends ConsumerState<RoleManagementView> {
     }
     return Container(
       padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(10)),
       child: Icon(icon, size: 18, color: color),
     );
   }

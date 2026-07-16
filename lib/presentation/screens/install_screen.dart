@@ -6,7 +6,8 @@ import '../routing/route_names.dart';
 import '../../core/snackbar_helper.dart';
 import '../../core/theme.dart';
 import '../widgets/vsp_nest_logo.dart';
-import '../../data/remote/auth_api_service.dart' show AuthApiService, AuthFailure;
+import '../../data/remote/auth_api_service.dart'
+    show AuthApiService, AuthFailure;
 
 class InstallationScreen extends ConsumerStatefulWidget {
   const InstallationScreen({super.key});
@@ -42,7 +43,8 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
     if (name.isEmpty) return 'Please enter your name.';
     if (name.length < 2) return 'Name must be at least 2 characters.';
     if (email.isEmpty) return 'Please enter an email address.';
-    if (!email.contains('@') || !email.contains('.')) return 'Enter a valid email address.';
+    if (!email.contains('@') || !email.contains('.'))
+      return 'Enter a valid email address.';
     if (password.isEmpty) return 'Please enter a password.';
     if (password.length < 6) return 'Password must be at least 6 characters.';
     if (password != confirm) return 'Passwords do not match.';
@@ -97,7 +99,8 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.06),
             borderRadius: BorderRadius.circular(32),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.12), width: 1.2),
+            border: Border.all(
+                color: Colors.white.withValues(alpha: 0.12), width: 1.2),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.25),
@@ -128,7 +131,6 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
                 ),
               ),
               const SizedBox(height: 28),
-
               Text(
                 'SUPER ADMIN CREDENTIALS',
                 style: GoogleFonts.spaceGrotesk(
@@ -139,17 +141,18 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-
-              _buildField('Full Name', 'Enter your full name', _nameController, Icons.person_outline, false),
+              _buildField('Full Name', 'Enter your full name', _nameController,
+                  Icons.person_outline, false),
               const SizedBox(height: 12),
-              _buildField('Email Address', 'Enter email address', _emailController, Icons.email_outlined, false),
+              _buildField('Email Address', 'Enter email address',
+                  _emailController, Icons.email_outlined, false),
               const SizedBox(height: 12),
-              _buildField('Password', 'Create a password', _passwordController, Icons.lock_outline, true),
+              _buildField('Password', 'Create a password', _passwordController,
+                  Icons.lock_outline, true),
               const SizedBox(height: 12),
-              _buildField('Confirm Password', 'Confirm your password', _confirmController, Icons.lock_outline, true),
-
+              _buildField('Confirm Password', 'Confirm your password',
+                  _confirmController, Icons.lock_outline, true),
               const SizedBox(height: 28),
-
               InkWell(
                 onTap: _isLoading ? null : _handleSetup,
                 borderRadius: BorderRadius.circular(16),
@@ -243,7 +246,9 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
               left: 16,
               child: SafeArea(
                 child: IconButton(
-                  icon: Icon(Icons.arrow_back_ios_new, color: AppColors.goldAccent.withValues(alpha: 0.8), size: 20),
+                  icon: Icon(Icons.arrow_back_ios_new,
+                      color: AppColors.goldAccent.withValues(alpha: 0.8),
+                      size: 20),
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
@@ -251,7 +256,8 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
             Center(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0, vertical: 40.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -288,12 +294,19 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
     );
   }
 
-  Widget _buildField(String label, String hint, TextEditingController controller, IconData icon, bool obscure) {
+  Widget _buildField(String label, String hint,
+      TextEditingController controller, IconData icon, bool obscure) {
     return TextField(
       controller: controller,
-      obscureText: obscure && (icon == Icons.lock_outline && controller == _passwordController ? _obscurePassword : _obscureConfirm),
-      keyboardType: label == 'Email Address' ? TextInputType.emailAddress : TextInputType.text,
-      style: GoogleFonts.inter(fontSize: 12, color: Colors.white.withValues(alpha: 0.9)),
+      obscureText: obscure &&
+          (icon == Icons.lock_outline && controller == _passwordController
+              ? _obscurePassword
+              : _obscureConfirm),
+      keyboardType: label == 'Email Address'
+          ? TextInputType.emailAddress
+          : TextInputType.text,
+      style: GoogleFonts.inter(
+          fontSize: 12, color: Colors.white.withValues(alpha: 0.9)),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
@@ -301,7 +314,9 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
         suffixIcon: obscure
             ? IconButton(
                 icon: Icon(
-                  (controller == _passwordController ? _obscurePassword : _obscureConfirm)
+                  (controller == _passwordController
+                          ? _obscurePassword
+                          : _obscureConfirm)
                       ? Icons.visibility_off_outlined
                       : Icons.visibility_outlined,
                   size: 16,
@@ -332,7 +347,8 @@ class _InstallationScreenState extends ConsumerState<InstallationScreen> {
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: AppColors.goldAccent),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       ),
     );
   }

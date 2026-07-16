@@ -51,82 +51,90 @@ class HttpCustomerResortAdapter implements IResortRepository {
   Future<Map<String, dynamic>> addBooking(Booking booking) async {
     return await _customerRepo.createBooking({
       'propertyId': booking.resortName,
-      'startDate': booking.startDate,
-      'endDate': booking.endDate,
+      'checkInDate': booking.startDate,
+      'checkOutDate': booking.endDate,
       'guestsCount': booking.guestsCount,
-      'guestName': booking.guestName,
-      'guestEmail': booking.guestEmail,
-      'guestPhone': booking.guestPhone,
-      'housekeepingNotes': booking.housekeepingNotes,
-      'baseAmount': booking.baseAmount,
-      'extraGuestAmount': booking.extraGuestAmount,
-      'cleaningAmount': booking.cleaningAmount,
-      'discountAmount': booking.discountAmount,
-      'taxAmount': booking.taxAmount,
-      'totalAmount': booking.totalAmount,
-      'advancePaidAmount': booking.advancePaidAmount,
-      'balanceAmount': booking.balanceAmount,
-      'source': booking.source.toJson(),
+      'specialRequests': booking.housekeepingNotes,
+      'couponCode': booking.couponApplied,
     });
   }
 
   @override
   Future<void> updateBooking(Booking booking) async {
-    if (booking.status == BookingStatus.cancelled && booking.cancellationReason != null) {
-      await _customerRepo.cancelBooking(booking.id, booking.cancellationReason!);
+    if (booking.status == BookingStatus.cancelled &&
+        booking.cancellationReason != null) {
+      await _customerRepo.cancelBooking(
+          booking.id, booking.cancellationReason!);
     }
   }
 
   @override
-  Future<List<CalendarBlock>> fetchCalendarBlocks() => throw UnsupportedError('Customer: fetchCalendarBlocks not available');
+  Future<List<CalendarBlock>> fetchCalendarBlocks() =>
+      throw UnsupportedError('Customer: fetchCalendarBlocks not available');
 
   @override
-  Future<void> addCalendarBlock(CalendarBlock block) => throw UnsupportedError('Customer: addCalendarBlock not available');
+  Future<void> addCalendarBlock(CalendarBlock block) =>
+      throw UnsupportedError('Customer: addCalendarBlock not available');
 
   @override
-  Future<void> removeCalendarBlock(String id) => throw UnsupportedError('Customer: removeCalendarBlock not available');
+  Future<void> removeCalendarBlock(String id) =>
+      throw UnsupportedError('Customer: removeCalendarBlock not available');
 
   @override
-  Future<List<Coupon>> fetchCoupons() => throw UnsupportedError('Customer: fetchCoupons not available');
+  Future<List<Coupon>> fetchCoupons() =>
+      throw UnsupportedError('Customer: fetchCoupons not available');
 
   @override
-  Future<Map<String, dynamic>> fetchCouponDetail(String id) => throw UnsupportedError('Customer: fetchCouponDetail not available');
+  Future<Map<String, dynamic>> fetchCouponDetail(String id) =>
+      throw UnsupportedError('Customer: fetchCouponDetail not available');
 
   @override
-  Future<void> addCoupon(Coupon coupon) => throw UnsupportedError('Customer: addCoupon not available');
+  Future<void> addCoupon(Coupon coupon) =>
+      throw UnsupportedError('Customer: addCoupon not available');
 
   @override
-  Future<void> updateCoupon(Coupon coupon) => throw UnsupportedError('Customer: updateCoupon not available');
+  Future<void> updateCoupon(Coupon coupon) =>
+      throw UnsupportedError('Customer: updateCoupon not available');
 
   @override
-  Future<void> deleteCoupon(String id) => throw UnsupportedError('Customer: deleteCoupon not available');
+  Future<void> deleteCoupon(String id) =>
+      throw UnsupportedError('Customer: deleteCoupon not available');
 
   @override
-  Future<List<RoomStatus>> fetchRoomStatuses() => throw UnsupportedError('Customer: fetchRoomStatuses not available');
+  Future<List<RoomStatus>> fetchRoomStatuses() =>
+      throw UnsupportedError('Customer: fetchRoomStatuses not available');
 
   @override
-  Future<void> updateRoomStatus(RoomStatus status) => throw UnsupportedError('Customer: updateRoomStatus not available');
+  Future<void> updateRoomStatus(RoomStatus status) =>
+      throw UnsupportedError('Customer: updateRoomStatus not available');
 
   @override
-  Future<List<PricingSeasonRule>> fetchPricingRules() => throw UnsupportedError('Customer: fetchPricingRules not available');
+  Future<List<PricingSeasonRule>> fetchPricingRules() =>
+      throw UnsupportedError('Customer: fetchPricingRules not available');
 
   @override
-  Future<void> addPricingRule(PricingSeasonRule rule) => throw UnsupportedError('Customer: addPricingRule not available');
+  Future<void> addPricingRule(PricingSeasonRule rule) =>
+      throw UnsupportedError('Customer: addPricingRule not available');
 
   @override
-  Future<void> updatePricingRule(PricingSeasonRule rule) => throw UnsupportedError('Customer: updatePricingRule not available');
+  Future<void> updatePricingRule(PricingSeasonRule rule) =>
+      throw UnsupportedError('Customer: updatePricingRule not available');
 
   @override
-  Future<void> deletePricingRule(String id) => throw UnsupportedError('Customer: deletePricingRule not available');
+  Future<void> deletePricingRule(String id) =>
+      throw UnsupportedError('Customer: deletePricingRule not available');
 
   @override
-  Future<List<OtaSyncStatus>> fetchOtaSyncStatuses() => throw UnsupportedError('Customer: fetchOtaSyncStatuses not available');
+  Future<List<OtaSyncStatus>> fetchOtaSyncStatuses() =>
+      throw UnsupportedError('Customer: fetchOtaSyncStatuses not available');
 
   @override
-  Future<void> updateOtaSyncStatus(OtaSyncStatus status) => throw UnsupportedError('Customer: updateOtaSyncStatus not available');
+  Future<void> updateOtaSyncStatus(OtaSyncStatus status) =>
+      throw UnsupportedError('Customer: updateOtaSyncStatus not available');
 
   @override
-  Future<List<AppNotification>> fetchNotifications() => _customerRepo.fetchNotifications();
+  Future<List<AppNotification>> fetchNotifications() =>
+      _customerRepo.fetchNotifications();
 
   @override
   Future<void> addNotification(AppNotification notification) async {
@@ -134,7 +142,8 @@ class HttpCustomerResortAdapter implements IResortRepository {
   }
 
   @override
-  Future<void> markNotificationAsRead(String id) => _customerRepo.markNotificationAsRead(id);
+  Future<void> markNotificationAsRead(String id) =>
+      _customerRepo.markNotificationAsRead(id);
 
   @override
   Future<void> clearNotifications() {
@@ -142,31 +151,47 @@ class HttpCustomerResortAdapter implements IResortRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> fetchAnalyticsKpis() => throw UnsupportedError('Customer: fetchAnalyticsKpis not available');
+  Future<Map<String, dynamic>> fetchAnalyticsKpis() =>
+      throw UnsupportedError('Customer: fetchAnalyticsKpis not available');
   @override
-  Future<List<Map<String, dynamic>>> fetchAnalyticsSalesChart() => throw UnsupportedError('Customer: fetchAnalyticsSalesChart not available');
+  Future<List<Map<String, dynamic>>> fetchAnalyticsSalesChart() =>
+      throw UnsupportedError(
+          'Customer: fetchAnalyticsSalesChart not available');
   @override
-  Future<List<Map<String, dynamic>>> fetchAnalyticsMetricsInsights() => throw UnsupportedError('Customer: fetchAnalyticsMetricsInsights not available');
+  Future<List<Map<String, dynamic>>> fetchAnalyticsMetricsInsights() =>
+      throw UnsupportedError(
+          'Customer: fetchAnalyticsMetricsInsights not available');
   @override
-  Future<void> activateProperty(String id, bool active) => throw UnsupportedError('Customer: activateProperty not available');
+  Future<void> activateProperty(String id, bool active) =>
+      throw UnsupportedError('Customer: activateProperty not available');
   @override
-  Future<Map<String, dynamic>> fetchBookingDetail(String id) => _customerRepo.fetchBookingDetail(id);
+  Future<Map<String, dynamic>> fetchBookingDetail(String id) =>
+      _customerRepo.fetchBookingDetail(id);
   @override
-  Future<List<Map<String, dynamic>>> fetchBookingNotes(String bookingId) => throw UnsupportedError('Customer: fetchBookingNotes not available');
+  Future<List<Map<String, dynamic>>> fetchBookingNotes(String bookingId) =>
+      throw UnsupportedError('Customer: fetchBookingNotes not available');
   @override
   Future<void> authorizePayment(String bookingId) async {
-    await _customerRepo.initiatePayment({'bookingId': bookingId, 'paymentMethod': 'credit_card'});
+    await _customerRepo.initiatePayment(
+        {'bookingId': bookingId, 'paymentMethod': 'credit_card'});
   }
+
   @override
-  Future<void> revokeBooking(String bookingId, {String? reason}) => throw UnsupportedError('Customer: revokeBooking not available');
+  Future<void> revokeBooking(String bookingId, {String? reason}) =>
+      throw UnsupportedError('Customer: revokeBooking not available');
   @override
-  Future<Map<String, dynamic>> fetchBasePricing() => throw UnsupportedError('Customer: fetchBasePricing not available');
+  Future<Map<String, dynamic>> fetchBasePricing() =>
+      throw UnsupportedError('Customer: fetchBasePricing not available');
   @override
-  Future<void> updateBasePricing(Map<String, dynamic> pricing) => throw UnsupportedError('Customer: updateBasePricing not available');
+  Future<void> updateBasePricing(Map<String, dynamic> pricing) =>
+      throw UnsupportedError('Customer: updateBasePricing not available');
   @override
-  Future<void> toggleSeasonalRule(String id) => throw UnsupportedError('Customer: toggleSeasonalRule not available');
+  Future<void> toggleSeasonalRule(String id) =>
+      throw UnsupportedError('Customer: toggleSeasonalRule not available');
   @override
-  Future<void> toggleCoupon(String id) => throw UnsupportedError('Customer: toggleCoupon not available');
+  Future<void> toggleCoupon(String id) =>
+      throw UnsupportedError('Customer: toggleCoupon not available');
   @override
-  Future<List<Map<String, dynamic>>> fetchPropertiesRaw() => throw UnsupportedError('Customer: fetchPropertiesRaw not available');
+  Future<List<Map<String, dynamic>>> fetchPropertiesRaw() =>
+      throw UnsupportedError('Customer: fetchPropertiesRaw not available');
 }

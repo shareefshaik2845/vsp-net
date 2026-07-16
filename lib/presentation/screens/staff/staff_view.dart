@@ -16,7 +16,7 @@ class StaffView extends ConsumerStatefulWidget {
 
 class _StaffViewState extends ConsumerState<StaffView> {
   String _activeGroup = 'roster'; // roster, housekeeping
-  
+
   // Dialog edit states
   String _editStatus = 'clean';
   final _notesController = TextEditingController();
@@ -37,7 +37,10 @@ class _StaffViewState extends ConsumerState<StaffView> {
       if (error != null && error.isNotEmpty && context.mounted) {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(error), backgroundColor: Colors.red.shade700, behavior: SnackBarBehavior.floating));
+          ..showSnackBar(SnackBar(
+              content: Text(error),
+              backgroundColor: Colors.red.shade700,
+              behavior: SnackBarBehavior.floating));
         notifier.lastError = null;
       }
     } catch (_) {}
@@ -91,11 +94,15 @@ class _StaffViewState extends ConsumerState<StaffView> {
                     Row(
                       children: ['clean', 'cleaning', 'dirty'].map((st) {
                         final isSelected = _editStatus == st;
-                        Color btnColor = isSelected ? AppColors.mossGreen : AppColors.stoneBg;
-                        Color txtColor = isSelected ? Colors.white : AppColors.charcoal;
+                        Color btnColor = isSelected
+                            ? AppColors.mossGreen
+                            : AppColors.stoneBg;
+                        Color txtColor =
+                            isSelected ? Colors.white : AppColors.charcoal;
                         return Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
                             child: InkWell(
                               onTap: () {
                                 setDialogState(() {
@@ -109,7 +116,9 @@ class _StaffViewState extends ConsumerState<StaffView> {
                                   color: btnColor,
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
-                                    color: isSelected ? Colors.transparent : AppColors.lightBone,
+                                    color: isSelected
+                                        ? Colors.transparent
+                                        : AppColors.lightBone,
                                   ),
                                 ),
                                 alignment: Alignment.center,
@@ -161,7 +170,8 @@ class _StaffViewState extends ConsumerState<StaffView> {
                       style: AppTextStyles.bodySm,
                       maxLines: 3,
                       decoration: const InputDecoration(
-                        hintText: 'Towels laid, aromatherapy diffuser lit, private spa oils replenished...',
+                        hintText:
+                            'Towels laid, aromatherapy diffuser lit, private spa oils replenished...',
                       ),
                     ),
                   ],
@@ -194,8 +204,12 @@ class _StaffViewState extends ConsumerState<StaffView> {
                     ref.read(staffRoomsProvider.notifier).updateStatus(
                           room.id,
                           _editStatus,
-                          assignedStaff: _staffController.text.trim().isEmpty ? null : _staffController.text,
-                          notes: _notesController.text.trim().isEmpty ? null : _notesController.text,
+                          assignedStaff: _staffController.text.trim().isEmpty
+                              ? null
+                              : _staffController.text,
+                          notes: _notesController.text.trim().isEmpty
+                              ? null
+                              : _notesController.text,
                         );
 
                     if (hks == HousekeepingStatus.clean) {
@@ -207,11 +221,13 @@ class _StaffViewState extends ConsumerState<StaffView> {
                     }
 
                     Navigator.pop(context);
-                    SnackbarHelper.success(context, 'Updated condition logs for ${room.name}.');
+                    SnackbarHelper.success(
+                        context, 'Updated condition logs for ${room.name}.');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.mossGreen,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                   ),
                   child: Text(
                     'Commit Changes',
@@ -231,7 +247,10 @@ class _StaffViewState extends ConsumerState<StaffView> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(bookingsProvider, (_, __) => _lastError(ref, context, ref.read(bookingsProvider.notifier)));
+    ref.listen(
+        bookingsProvider,
+        (_, __) =>
+            _lastError(ref, context, ref.read(bookingsProvider.notifier)));
     final staffRoomsAsync = ref.watch(staffRoomsProvider);
     final bookings = ref.watch(bookingsProvider);
     final propertyAsync = ref.watch(propertyProvider);
@@ -247,21 +266,30 @@ class _StaffViewState extends ConsumerState<StaffView> {
 
     final rooms = staffRoomsAsync.valueOrNull ?? [];
 
-    final arrivalsToday = bookings.where((b) => b.startDate == _todayStr && b.status != BookingStatus.cancelled).toList();
-    final departuresToday = bookings.where((b) => b.endDate == _todayStr && b.status != BookingStatus.cancelled).toList();
+    final arrivalsToday = bookings
+        .where((b) =>
+            b.startDate == _todayStr && b.status != BookingStatus.cancelled)
+        .toList();
+    final departuresToday = bookings
+        .where((b) =>
+            b.endDate == _todayStr && b.status != BookingStatus.cancelled)
+        .toList();
     final activeLodgers = bookings.where((b) {
       if (b.status == BookingStatus.cancelled) return false;
       try {
         final start = DateTime.parse(b.startDate);
         final end = DateTime.parse(b.endDate);
         final checkpoint = DateTime.parse(_todayStr);
-        return (checkpoint.isAtSameMomentAs(start) || checkpoint.isAfter(start)) && checkpoint.isBefore(end);
+        return (checkpoint.isAtSameMomentAs(start) ||
+                checkpoint.isAfter(start)) &&
+            checkpoint.isBefore(end);
       } catch (e) {
         return false;
       }
     }).toList();
 
-    final pendingCount = rooms.where((r) => r.status != HousekeepingStatus.clean).length;
+    final pendingCount =
+        rooms.where((r) => r.status != HousekeepingStatus.clean).length;
 
     if (widget.isEmbedded) {
       return LayoutBuilder(
@@ -274,28 +302,41 @@ class _StaffViewState extends ConsumerState<StaffView> {
                   ? Row(
                       children: [
                         Expanded(
-                          child: _buildGroupToggleButton('roster', Icons.people_outline, 'Guest Transit manifest', isMobile: true),
+                          child: _buildGroupToggleButton('roster',
+                              Icons.people_outline, 'Guest Transit manifest',
+                              isMobile: true),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: _buildGroupToggleButton('housekeeping', Icons.assignment_outlined, 'Housekeeping status board ($pendingCount Pending)', isMobile: true),
+                          child: _buildGroupToggleButton(
+                              'housekeeping',
+                              Icons.assignment_outlined,
+                              'Housekeeping status board ($pendingCount Pending)',
+                              isMobile: true),
                         ),
                       ],
                     )
                   : Row(
                       children: [
                         Expanded(
-                          child: _buildGroupToggleButton('roster', Icons.people_outline, 'Guest Transit manifest', isMobile: false),
+                          child: _buildGroupToggleButton('roster',
+                              Icons.people_outline, 'Guest Transit manifest',
+                              isMobile: false),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: _buildGroupToggleButton('housekeeping', Icons.assignment_outlined, 'Housekeeping status board ($pendingCount Pending)', isMobile: false),
+                          child: _buildGroupToggleButton(
+                              'housekeeping',
+                              Icons.assignment_outlined,
+                              'Housekeeping status board ($pendingCount Pending)',
+                              isMobile: false),
                         ),
                       ],
                     ),
               const SizedBox(height: 24),
               _activeGroup == 'roster'
-                  ? _buildRosterView(arrivalsToday, departuresToday, activeLodgers, isMobile)
+                  ? _buildRosterView(
+                      arrivalsToday, departuresToday, activeLodgers, isMobile)
                   : _buildHousekeepingView(rooms, isMobile),
             ],
           );
@@ -316,7 +357,8 @@ class _StaffViewState extends ConsumerState<StaffView> {
                 _buildHeaderRibbon(isMobile, pendingCount, activeResort),
                 const SizedBox(height: 24),
                 _activeGroup == 'roster'
-                    ? _buildRosterView(arrivalsToday, departuresToday, activeLodgers, isMobile)
+                    ? _buildRosterView(
+                        arrivalsToday, departuresToday, activeLodgers, isMobile)
                     : _buildHousekeepingView(rooms, isMobile),
               ],
             ),
@@ -326,10 +368,10 @@ class _StaffViewState extends ConsumerState<StaffView> {
     );
   }
 
-  Widget _buildHeaderRibbon(bool isMobile, int pendingCount, PropertyDetails? activeResort) {
-    final resortName = activeResort != null 
-        ? activeResort.name
-        : 'Resort Villa';
+  Widget _buildHeaderRibbon(
+      bool isMobile, int pendingCount, PropertyDetails? activeResort) {
+    final resortName =
+        activeResort != null ? activeResort.name : 'Resort Villa';
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.xl),
@@ -387,22 +429,34 @@ class _StaffViewState extends ConsumerState<StaffView> {
               ? Row(
                   children: [
                     Expanded(
-                      child: _buildGroupToggleButton('roster', Icons.people_outline, 'Guest Transit manifest', isMobile: true),
+                      child: _buildGroupToggleButton('roster',
+                          Icons.people_outline, 'Guest Transit manifest',
+                          isMobile: true),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: _buildGroupToggleButton('housekeeping', Icons.assignment_outlined, 'Housekeeping status board ($pendingCount Pending)', isMobile: true),
+                      child: _buildGroupToggleButton(
+                          'housekeeping',
+                          Icons.assignment_outlined,
+                          'Housekeeping status board ($pendingCount Pending)',
+                          isMobile: true),
                     ),
                   ],
                 )
               : Row(
                   children: [
                     Expanded(
-                      child: _buildGroupToggleButton('roster', Icons.people_outline, 'Guest Transit manifest', isMobile: false),
+                      child: _buildGroupToggleButton('roster',
+                          Icons.people_outline, 'Guest Transit manifest',
+                          isMobile: false),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: _buildGroupToggleButton('housekeeping', Icons.assignment_outlined, 'Housekeeping status board ($pendingCount Pending)', isMobile: false),
+                      child: _buildGroupToggleButton(
+                          'housekeeping',
+                          Icons.assignment_outlined,
+                          'Housekeeping status board ($pendingCount Pending)',
+                          isMobile: false),
                     ),
                   ],
                 ),
@@ -411,7 +465,8 @@ class _StaffViewState extends ConsumerState<StaffView> {
     );
   }
 
-  Widget _buildGroupToggleButton(String group, IconData icon, String label, {required bool isMobile}) {
+  Widget _buildGroupToggleButton(String group, IconData icon, String label,
+      {required bool isMobile}) {
     final isActive = _activeGroup == group;
     return InkWell(
       onTap: () {
@@ -432,8 +487,13 @@ class _StaffViewState extends ConsumerState<StaffView> {
             width: 1.0,
           ),
           boxShadow: isActive
-            ? [BoxShadow(color: const Color(0xFF3B2314).withValues(alpha: 0.2), blurRadius: 8, offset: const Offset(0, 4))]
-            : null,
+              ? [
+                  BoxShadow(
+                      color: const Color(0xFF3B2314).withValues(alpha: 0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4))
+                ]
+              : null,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -441,7 +501,9 @@ class _StaffViewState extends ConsumerState<StaffView> {
             Icon(
               icon,
               size: 16,
-              color: isActive ? Colors.white : AppColors.charcoal.withValues(alpha: 0.6),
+              color: isActive
+                  ? Colors.white
+                  : AppColors.charcoal.withValues(alpha: 0.6),
             ),
             const SizedBox(width: 8),
             Flexible(
@@ -450,7 +512,9 @@ class _StaffViewState extends ConsumerState<StaffView> {
                 style: GoogleFonts.inter(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
-                  color: isActive ? Colors.white : AppColors.charcoal.withValues(alpha: 0.8),
+                  color: isActive
+                      ? Colors.white
+                      : AppColors.charcoal.withValues(alpha: 0.8),
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -462,10 +526,12 @@ class _StaffViewState extends ConsumerState<StaffView> {
     );
   }
 
-  Widget _buildPropertySelector(PropertyDetails currentProperty, bool isMobile) {
+  Widget _buildPropertySelector(
+      PropertyDetails currentProperty, bool isMobile) {
     return Container(
       width: isMobile ? double.infinity : null,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 4),
+      padding:
+          const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 4),
       decoration: BoxDecoration(
         color: AppColors.mossGreen.withValues(alpha: 0.1),
         borderRadius: AppRadius.mdBr,
@@ -487,10 +553,10 @@ class _StaffViewState extends ConsumerState<StaffView> {
             if (newProperty != null) {
               ref.read(propertyProvider.notifier).updateProperty(newProperty);
               ref.read(notificationsProvider.notifier).addNotification(
-                'Context Switched',
-                'Now managing ${newProperty.name}.',
-                'system',
-              );
+                    'Context Switched',
+                    'Now managing ${newProperty.name}.',
+                    'system',
+                  );
             }
           },
           items: ref.watch(resortsListProvider).map((PropertyDetails resort) {
@@ -503,7 +569,6 @@ class _StaffViewState extends ConsumerState<StaffView> {
       ),
     );
   }
-
 
   Widget _buildRosterView(
     List<Booking> arrivals,
@@ -554,7 +619,8 @@ class _StaffViewState extends ConsumerState<StaffView> {
                   color: Colors.green.shade50,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(Icons.south_west, size: 14, color: Colors.green.shade800),
+                child: Icon(Icons.south_west,
+                    size: 14, color: Colors.green.shade800),
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -591,7 +657,8 @@ class _StaffViewState extends ConsumerState<StaffView> {
                   padding: AppSpacing.allLg,
                   decoration: BoxDecoration(
                     color: Colors.green.shade50.withValues(alpha: 0.2),
-                    border: Border.all(color: Colors.green.shade100.withValues(alpha: 0.6)),
+                    border: Border.all(
+                        color: Colors.green.shade100.withValues(alpha: 0.6)),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Column(
@@ -611,7 +678,8 @@ class _StaffViewState extends ConsumerState<StaffView> {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
                               color: AppColors.charcoal,
                               borderRadius: BorderRadius.circular(6),
@@ -643,13 +711,16 @@ class _StaffViewState extends ConsumerState<StaffView> {
                           color: AppColors.charcoal.withValues(alpha: 0.6),
                         ),
                       ),
-                      if (b.housekeepingNotes != null && b.housekeepingNotes!.isNotEmpty) ...[
+                      if (b.housekeepingNotes != null &&
+                          b.housekeepingNotes!.isNotEmpty) ...[
                         const SizedBox(height: 8),
                         Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            border: Border.all(color: Colors.green.shade100.withValues(alpha: 0.6)),
+                            border: Border.all(
+                                color: Colors.green.shade100
+                                    .withValues(alpha: 0.6)),
                             borderRadius: AppRadius.mdBr,
                           ),
                           child: Row(
@@ -699,7 +770,8 @@ class _StaffViewState extends ConsumerState<StaffView> {
                   color: Colors.blue.shade50,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(Icons.north_east, size: 14, color: Colors.blue.shade800),
+                child: Icon(Icons.north_east,
+                    size: 14, color: Colors.blue.shade800),
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -736,7 +808,8 @@ class _StaffViewState extends ConsumerState<StaffView> {
                   padding: AppSpacing.allLg,
                   decoration: BoxDecoration(
                     color: Colors.blue.shade50.withValues(alpha: 0.2),
-                    border: Border.all(color: Colors.blue.shade100.withValues(alpha: 0.6)),
+                    border: Border.all(
+                        color: Colors.blue.shade100.withValues(alpha: 0.6)),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Column(
@@ -756,7 +829,8 @@ class _StaffViewState extends ConsumerState<StaffView> {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
                               color: Colors.blue.shade900,
                               borderRadius: BorderRadius.circular(6),
@@ -855,7 +929,8 @@ class _StaffViewState extends ConsumerState<StaffView> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: list.length,
-              separatorBuilder: (context, index) => const Divider(color: Colors.white12, height: 24),
+              separatorBuilder: (context, index) =>
+                  const Divider(color: Colors.white12, height: 24),
               itemBuilder: (context, index) {
                 final b = list[index];
                 return Column(
@@ -876,7 +951,8 @@ class _StaffViewState extends ConsumerState<StaffView> {
                         ),
                         Text(
                           b.id,
-                          style: AppTextStyles.labelSm.copyWith(color: AppColors.goldAccent),
+                          style: AppTextStyles.labelSm
+                              .copyWith(color: AppColors.goldAccent),
                         ),
                       ],
                     ),
@@ -931,15 +1007,18 @@ class _StaffViewState extends ConsumerState<StaffView> {
           LayoutBuilder(
             builder: (context, constraints) {
               final double width = constraints.maxWidth;
-              final int crossAxisCount = width > 1100 ? 4 : (width > 600 ? 2 : 1);
-              
+              final int crossAxisCount =
+                  width > 1100 ? 4 : (width > 600 ? 2 : 1);
+
               if (crossAxisCount == 1) {
                 return ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: rooms.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.lg),
-                  itemBuilder: (context, index) => _buildRoomCard(rooms[index], isList: true),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: AppSpacing.lg),
+                  itemBuilder: (context, index) =>
+                      _buildRoomCard(rooms[index], isList: true),
                 );
               } else {
                 return GridView.builder(
@@ -952,7 +1031,8 @@ class _StaffViewState extends ConsumerState<StaffView> {
                     childAspectRatio: 1.4,
                   ),
                   itemCount: rooms.length,
-                  itemBuilder: (context, index) => _buildRoomCard(rooms[index], isList: false),
+                  itemBuilder: (context, index) =>
+                      _buildRoomCard(rooms[index], isList: false),
                 );
               }
             },
@@ -1019,7 +1099,8 @@ class _StaffViewState extends ConsumerState<StaffView> {
         ),
         const SizedBox(height: 8),
         Text(
-          room.notes ?? 'No custom preparation notes set yet. Click Adjust status to allocate.',
+          room.notes ??
+              'No custom preparation notes set yet. Click Adjust status to allocate.',
           maxLines: isList ? 5 : 3,
           overflow: TextOverflow.ellipsis,
           style: GoogleFonts.inter(
