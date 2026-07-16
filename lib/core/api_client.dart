@@ -38,7 +38,8 @@ class ApiClient {
                   accessToken: newAccessToken,
                   refreshToken: newRefreshToken,
                 );
-                error.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
+                error.requestOptions.headers['Authorization'] =
+                    'Bearer $newAccessToken';
                 final retryResponse = await dio.fetch(error.requestOptions);
                 return handler.resolve(retryResponse);
               }
@@ -64,7 +65,8 @@ class ApiClient {
   static const String _accessTokenKey = 'vsp_access_token';
   static const String _refreshTokenKey = 'vsp_refresh_token';
 
-  Future<void> saveTokens({required String accessToken, String? refreshToken}) async {
+  Future<void> saveTokens(
+      {required String accessToken, String? refreshToken}) async {
     await _storage.write(key: _accessTokenKey, value: accessToken);
     if (refreshToken != null) {
       await _storage.write(key: _refreshTokenKey, value: refreshToken);

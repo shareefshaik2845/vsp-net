@@ -12,7 +12,8 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  ConsumerState<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() =>
+      _ForgotPasswordScreenState();
 }
 
 class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
@@ -61,7 +62,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     _rateLimiter.recordAttempt(success: true);
 
     if (context.mounted) {
-      SnackbarHelper.success(context, 'If an account exists, a reset link has been sent.');
+      SnackbarHelper.success(
+          context, 'If an account exists, a reset link has been sent.');
       Navigator.pop(context);
     }
   }
@@ -81,7 +83,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.06),
             borderRadius: BorderRadius.circular(32),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.12), width: 1.2),
+            border: Border.all(
+                color: Colors.white.withValues(alpha: 0.12), width: 1.2),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.25),
@@ -112,7 +115,6 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 ),
               ),
               const SizedBox(height: 28),
-
               Text(
                 'EMAIL ADDRESS',
                 style: GoogleFonts.spaceGrotesk(
@@ -123,35 +125,38 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-
               TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
-                style: GoogleFonts.inter(fontSize: 12, color: Colors.white.withValues(alpha: 0.9)),
+                style: GoogleFonts.inter(
+                    fontSize: 12, color: Colors.white.withValues(alpha: 0.9)),
                 decoration: InputDecoration(
                   hintText: 'Enter email address',
-                  hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
-                  prefixIcon: const Icon(Icons.email_outlined, size: 16, color: AppColors.goldAccent),
+                  hintStyle:
+                      TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+                  prefixIcon: const Icon(Icons.email_outlined,
+                      size: 16, color: AppColors.goldAccent),
                   filled: true,
                   fillColor: Colors.white.withValues(alpha: 0.04),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+                    borderSide:
+                        BorderSide(color: Colors.white.withValues(alpha: 0.1)),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+                    borderSide:
+                        BorderSide(color: Colors.white.withValues(alpha: 0.1)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
                     borderSide: const BorderSide(color: AppColors.goldAccent),
                   ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
               ),
-
               const SizedBox(height: 28),
-
               InkWell(
                 onTap: _isLoading ? null : _handleReset,
                 borderRadius: BorderRadius.circular(16),
@@ -191,9 +196,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         ),
                 ),
               ),
-
               const SizedBox(height: 12),
-
               Center(
                 child: TextButton(
                   onPressed: () => Navigator.pop(context),
@@ -259,7 +262,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             Center(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0, vertical: 40.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

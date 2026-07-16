@@ -31,7 +31,8 @@ class AppDialog {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: Text(cancelLabel, style: GoogleFonts.inter(color: AppColors.grey600)),
+            child: Text(cancelLabel,
+                style: GoogleFonts.inter(color: AppColors.grey600)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -41,7 +42,8 @@ class AppDialog {
             ),
             onPressed: () => Navigator.of(ctx).pop(true),
             child: Text(confirmLabel,
-                style: GoogleFonts.inter(color: AppColors.white, fontWeight: FontWeight.bold)),
+                style: GoogleFonts.inter(
+                    color: AppColors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -70,7 +72,8 @@ class AppDialog {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                 child: Text(title, style: AppTextStyles.titleLg),
               ),
               const Divider(color: AppColors.lightBone),
@@ -96,7 +99,8 @@ class AppDialog {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('OK', style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+            child: Text('OK',
+                style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
           ),
         ],
       ),

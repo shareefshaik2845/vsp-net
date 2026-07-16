@@ -1,2 +1,1 @@
-void configureSslPinning() {
-}
+void configureSslPinning() {}

@@ -29,7 +29,11 @@ abstract class ISuperAdminRepository {
 
   // ── User Management ──
   Future<List<Map<String, dynamic>>> fetchUsers(
-      {String? role, String? status, String? search, int page = 1, int pageSize = 20});
+      {String? role,
+      String? status,
+      String? search,
+      int page = 1,
+      int pageSize = 20});
   Future<Map<String, dynamic>> fetchUserDetail(String id);
   Future<void> createUser(Map<String, dynamic> user);
   Future<void> updateUser(String id, Map<String, dynamic> user);
@@ -38,8 +42,8 @@ abstract class ISuperAdminRepository {
   // ── Approval Workflow ──
   Future<List<Map<String, dynamic>>> fetchApprovals();
   Future<List<Map<String, dynamic>>> fetchPendingApprovals();
-  Future<void> resolveApproval(
-      String id, String status, {String? rejectionReason});
+  Future<void> resolveApproval(String id, String status,
+      {String? rejectionReason});
 
   // ── RBAC ──
   Future<List<RoleDefinition>> fetchRoles();

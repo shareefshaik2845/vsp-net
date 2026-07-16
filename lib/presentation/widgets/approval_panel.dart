@@ -31,12 +31,14 @@ class ApprovalPanel extends ConsumerWidget {
                   : m['status'] == 'rejected'
                       ? ApprovalStatus.rejected
                       : ApprovalStatus.pending,
-              createdAt: DateTime.tryParse(m['createdAt'] as String? ?? '') ?? DateTime.now(),
+              createdAt: DateTime.tryParse(m['createdAt'] as String? ?? '') ??
+                  DateTime.now(),
               resolvedAt: DateTime.tryParse(m['resolvedAt'] as String? ?? ''),
               rejectionReason: m['rejectionReason'] as String?,
             ))
         .toList();
-    final pending = approvals.where((a) => a.status == ApprovalStatus.pending).toList();
+    final pending =
+        approvals.where((a) => a.status == ApprovalStatus.pending).toList();
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -45,7 +47,10 @@ class ApprovalPanel extends ConsumerWidget {
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: AppColors.lightBone),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 4)),
         ],
       ),
       child: Column(
@@ -53,7 +58,8 @@ class ApprovalPanel extends ConsumerWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.approval_outlined, color: AppColors.mossGreen, size: 22),
+              const Icon(Icons.approval_outlined,
+                  color: AppColors.mossGreen, size: 22),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -67,7 +73,8 @@ class ApprovalPanel extends ConsumerWidget {
               ),
               if (pending.isNotEmpty)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.orange.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(100),
@@ -92,7 +99,8 @@ class ApprovalPanel extends ConsumerWidget {
               child: Center(
                 child: Column(
                   children: [
-                    Icon(Icons.check_circle_outline, size: 40, color: Colors.green.shade300),
+                    Icon(Icons.check_circle_outline,
+                        size: 40, color: Colors.green.shade300),
                     const SizedBox(height: 8),
                     Text(
                       'No pending approvals',
@@ -132,7 +140,8 @@ class ApprovalPanel extends ConsumerWidget {
                   color: Colors.orange.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.pending_outlined, size: 16, color: Colors.orange),
+                child: const Icon(Icons.pending_outlined,
+                    size: 16, color: Colors.orange),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -163,20 +172,23 @@ class ApprovalPanel extends ConsumerWidget {
             children: [
               OutlinedButton.icon(
                 onPressed: () {
-                  onResolve?.call(req.id, 'rejected', reason: 'Rejected by admin');
+                  onResolve?.call(req.id, 'rejected',
+                      reason: 'Rejected by admin');
                   ref.read(notificationsProvider.notifier).addNotification(
-                    'Approval Rejected',
-                    '${req.action} on ${req.resourceType} was rejected.',
-                    'system',
-                  );
+                        'Approval Rejected',
+                        '${req.action} on ${req.resourceType} was rejected.',
+                        'system',
+                      );
                 },
                 icon: const Icon(Icons.close, size: 14),
                 label: Text('Reject', style: GoogleFonts.inter(fontSize: 11)),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.red.shade600,
                   side: BorderSide(color: Colors.red.shade200),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 ),
               ),
               const SizedBox(width: 8),
@@ -184,18 +196,20 @@ class ApprovalPanel extends ConsumerWidget {
                 onPressed: () {
                   onResolve?.call(req.id, 'approved');
                   ref.read(notificationsProvider.notifier).addNotification(
-                    'Approval Granted',
-                    '${req.action} on ${req.resourceType} was approved.',
-                    'system',
-                  );
+                        'Approval Granted',
+                        '${req.action} on ${req.resourceType} was approved.',
+                        'system',
+                      );
                 },
                 icon: const Icon(Icons.check, size: 14),
                 label: Text('Approve', style: GoogleFonts.inter(fontSize: 11)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.mossGreen,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 ),
               ),
             ],

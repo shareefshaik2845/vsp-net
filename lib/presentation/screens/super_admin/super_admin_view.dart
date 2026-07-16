@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io' show File;
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -49,7 +50,10 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
       if (error != null && error.isNotEmpty && context.mounted) {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(error), backgroundColor: Colors.red.shade700, behavior: SnackBarBehavior.floating));
+          ..showSnackBar(SnackBar(
+              content: Text(error),
+              backgroundColor: Colors.red.shade700,
+              behavior: SnackBarBehavior.floating));
         notifier.lastError = null;
       }
     } catch (_) {}
@@ -57,12 +61,30 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(superAdminUsersProvider, (_, __) => _lastError(ref, context, ref.read(superAdminUsersProvider.notifier)));
-    ref.listen(superAdminRolesProvider, (_, __) => _lastError(ref, context, ref.read(superAdminRolesProvider.notifier)));
-    ref.listen(superAdminApprovalsProvider, (_, __) => _lastError(ref, context, ref.read(superAdminApprovalsProvider.notifier)));
-    ref.listen(superAdminSettingsProvider, (_, __) => _lastError(ref, context, ref.read(superAdminSettingsProvider.notifier)));
-    ref.listen(superAdminAnalyticsProvider, (_, __) => _lastError(ref, context, ref.read(superAdminAnalyticsProvider.notifier)));
-    ref.listen(superAdminAuditLogsProvider, (_, __) => _lastError(ref, context, ref.read(superAdminAuditLogsProvider.notifier)));
+    ref.listen(
+        superAdminUsersProvider,
+        (_, __) => _lastError(
+            ref, context, ref.read(superAdminUsersProvider.notifier)));
+    ref.listen(
+        superAdminRolesProvider,
+        (_, __) => _lastError(
+            ref, context, ref.read(superAdminRolesProvider.notifier)));
+    ref.listen(
+        superAdminApprovalsProvider,
+        (_, __) => _lastError(
+            ref, context, ref.read(superAdminApprovalsProvider.notifier)));
+    ref.listen(
+        superAdminSettingsProvider,
+        (_, __) => _lastError(
+            ref, context, ref.read(superAdminSettingsProvider.notifier)));
+    ref.listen(
+        superAdminAnalyticsProvider,
+        (_, __) => _lastError(
+            ref, context, ref.read(superAdminAnalyticsProvider.notifier)));
+    ref.listen(
+        superAdminAuditLogsProvider,
+        (_, __) => _lastError(
+            ref, context, ref.read(superAdminAuditLogsProvider.notifier)));
     final bookings = ref.watch(superAdminBookingsProvider);
     final propertyAsync = ref.watch(propertyProvider);
     final activeResort = propertyAsync.valueOrNull;
@@ -190,11 +212,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
         'label': 'Roles & Permissions',
         'icon': Icons.admin_panel_settings_outlined
       },
-      {
-        'id': 'auditLogs',
-        'label': 'Audit Logs',
-        'icon': Icons.history_rounded
-      },
+      {'id': 'auditLogs', 'label': 'Audit Logs', 'icon': Icons.history_rounded},
       {
         'id': 'notifications',
         'label': 'Notifications',
@@ -380,8 +398,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.goldAccent,
                   foregroundColor: AppColors.mossGreen,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: AppRadius.mdBr),
+                  shape: RoundedRectangleBorder(borderRadius: AppRadius.mdBr),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   elevation: 0,
@@ -559,8 +576,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDialogState) => AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: AppRadius.xlBr),
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.xlBr),
           title: Row(
             children: [
               const Icon(Icons.edit_outlined,
@@ -587,8 +603,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   decoration: InputDecoration(
                     labelText: 'Full Name',
                     prefixIcon: const Icon(Icons.person_outline, size: 18),
-                    border: OutlineInputBorder(
-                        borderRadius: AppRadius.mdBr),
+                    border: OutlineInputBorder(borderRadius: AppRadius.mdBr),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -599,8 +614,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   decoration: InputDecoration(
                     labelText: 'Email Address',
                     prefixIcon: const Icon(Icons.email_outlined, size: 18),
-                    border: OutlineInputBorder(
-                        borderRadius: AppRadius.mdBr),
+                    border: OutlineInputBorder(borderRadius: AppRadius.mdBr),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -611,8 +625,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   decoration: InputDecoration(
                     labelText: 'New Password (leave blank to keep current)',
                     prefixIcon: const Icon(Icons.lock_outline, size: 18),
-                    border: OutlineInputBorder(
-                        borderRadius: AppRadius.mdBr),
+                    border: OutlineInputBorder(borderRadius: AppRadius.mdBr),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -621,8 +634,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   decoration: InputDecoration(
                     labelText: 'Role',
                     prefixIcon: const Icon(Icons.badge_outlined, size: 18),
-                    border: OutlineInputBorder(
-                        borderRadius: AppRadius.mdBr),
+                    border: OutlineInputBorder(borderRadius: AppRadius.mdBr),
                   ),
                   items: UserRole.values
                       .map((role) => DropdownMenuItem(
@@ -647,8 +659,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.mossGreen,
-                shape: RoundedRectangleBorder(
-                    borderRadius: AppRadius.mdBr),
+                shape: RoundedRectangleBorder(borderRadius: AppRadius.mdBr),
               ),
               onPressed: () async {
                 final name = nameController.text.trim();
@@ -730,8 +741,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
-              shape: RoundedRectangleBorder(
-                  borderRadius: AppRadius.mdBr),
+              shape: RoundedRectangleBorder(borderRadius: AppRadius.mdBr),
             ),
             onPressed: () async {
               try {
@@ -770,8 +780,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDialogState) => AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: AppRadius.xlBr),
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.xlBr),
           title: Row(
             children: [
               const Icon(Icons.person_add_alt_1,
@@ -798,8 +807,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   decoration: InputDecoration(
                     labelText: 'Full Name',
                     prefixIcon: const Icon(Icons.person_outline, size: 18),
-                    border: OutlineInputBorder(
-                        borderRadius: AppRadius.mdBr),
+                    border: OutlineInputBorder(borderRadius: AppRadius.mdBr),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -810,8 +818,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   decoration: InputDecoration(
                     labelText: 'Email Address',
                     prefixIcon: const Icon(Icons.email_outlined, size: 18),
-                    border: OutlineInputBorder(
-                        borderRadius: AppRadius.mdBr),
+                    border: OutlineInputBorder(borderRadius: AppRadius.mdBr),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -822,8 +829,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   decoration: InputDecoration(
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.lock_outline, size: 18),
-                    border: OutlineInputBorder(
-                        borderRadius: AppRadius.mdBr),
+                    border: OutlineInputBorder(borderRadius: AppRadius.mdBr),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -832,8 +838,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   decoration: InputDecoration(
                     labelText: 'Role',
                     prefixIcon: const Icon(Icons.badge_outlined, size: 18),
-                    border: OutlineInputBorder(
-                        borderRadius: AppRadius.mdBr),
+                    border: OutlineInputBorder(borderRadius: AppRadius.mdBr),
                   ),
                   items: UserRole.values
                       .map((role) => DropdownMenuItem(
@@ -858,8 +863,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.mossGreen,
-                shape: RoundedRectangleBorder(
-                    borderRadius: AppRadius.mdBr),
+                shape: RoundedRectangleBorder(borderRadius: AppRadius.mdBr),
               ),
               onPressed: () async {
                 final name = nameController.text.trim();
@@ -922,8 +926,12 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
     final activeResort = propertyAsync.valueOrNull;
     final settingsAsync = ref.watch(superAdminSettingsProvider);
     final settings = settingsAsync;
-    final apiTaxRate = settings['taxRate'] is int ? settings['taxRate'] as int : ref.watch(taxRateProvider);
-    final apiDepositRate = settings['depositRate'] is int ? settings['depositRate'] as int : ref.watch(depositRateProvider);
+    final apiTaxRate = settings['taxRate'] is int
+        ? settings['taxRate'] as int
+        : ref.watch(taxRateProvider);
+    final apiDepositRate = settings['depositRate'] is int
+        ? settings['depositRate'] as int
+        : ref.watch(depositRateProvider);
     return Container(
       padding: EdgeInsets.all(AppSpacing.xxl),
       decoration: BoxDecoration(
@@ -1041,30 +1049,34 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
               children: [
                 SizedBox(
                   width: itemWidth,
-                    child: _buildInputConfig(
-                      label: 'LUXURY GST RATE',
-                      value: apiTaxRate,
-                      hint: 'Applied as tax rule multiplier.',
-                      min: 5,
-                      max: 28,
-                      onChanged: (val) {
-                        ref.read(superAdminSettingsProvider.notifier).updateSettings({...settings, 'taxRate': val});
-                      },
-                    ),
+                  child: _buildInputConfig(
+                    label: 'LUXURY GST RATE',
+                    value: apiTaxRate,
+                    hint: 'Applied as tax rule multiplier.',
+                    min: 5,
+                    max: 28,
+                    onChanged: (val) {
+                      ref
+                          .read(superAdminSettingsProvider.notifier)
+                          .updateSettings({...settings, 'taxRate': val});
+                    },
                   ),
-                  SizedBox(
-                    width: itemWidth,
-                    child: _buildInputConfig(
-                      label: 'MINIMUM ADVANCE DEPOSIT',
-                      value: apiDepositRate,
-                      hint: 'Lowest deposit factor to block dates.',
-                      min: 10,
-                      max: 100,
-                      onChanged: (val) {
-                        ref.read(superAdminSettingsProvider.notifier).updateSettings({...settings, 'depositRate': val});
-                      },
-                    ),
+                ),
+                SizedBox(
+                  width: itemWidth,
+                  child: _buildInputConfig(
+                    label: 'MINIMUM ADVANCE DEPOSIT',
+                    value: apiDepositRate,
+                    hint: 'Lowest deposit factor to block dates.',
+                    min: 10,
+                    max: 100,
+                    onChanged: (val) {
+                      ref
+                          .read(superAdminSettingsProvider.notifier)
+                          .updateSettings({...settings, 'depositRate': val});
+                    },
                   ),
+                ),
               ],
             );
           }),
@@ -1156,9 +1168,8 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   'Base: ₹${resort.basePriceWeekday.toInt()}/night',
                   style: GoogleFonts.spaceGrotesk(
                     fontSize: 10,
-                    color: isActive
-                        ? AppColors.goldAccent
-                        : AppColors.mossGreen,
+                    color:
+                        isActive ? AppColors.goldAccent : AppColors.mossGreen,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -1471,6 +1482,17 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
     );
   }
 
+  Widget _previewImage(String path, {double? height, double? width}) {
+    if (kIsWeb) {
+      return Image.network(path,
+          height: height, width: width, fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => const SizedBox());
+    }
+    return Image.file(File(path),
+        height: height, width: width, fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => const SizedBox());
+  }
+
   void _showAddResortDialog(BuildContext context) {
     final nameController = TextEditingController();
     final taglineController = TextEditingController();
@@ -1497,8 +1519,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
           builder: (context, setDialogState) {
             return AlertDialog(
               backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: AppRadius.xxlBr),
+              shape: RoundedRectangleBorder(borderRadius: AppRadius.xxlBr),
               title: Row(
                 children: [
                   const Icon(Icons.add_home_work_rounded,
@@ -1546,8 +1567,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                           style: GoogleFonts.spaceGrotesk(
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
-                              color:
-                                  AppColors.charcoal.withValues(alpha: 0.5),
+                              color: AppColors.charcoal.withValues(alpha: 0.5),
                               letterSpacing: 1.0)),
                       const SizedBox(height: AppSpacing.sm),
                       Row(
@@ -1558,8 +1578,8 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                                 style: GoogleFonts.inter(fontSize: 12)),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: AppColors.mossGreen,
-                              side: const BorderSide(
-                                  color: AppColors.mossGreen),
+                              side:
+                                  const BorderSide(color: AppColors.mossGreen),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                             ),
@@ -1586,11 +1606,8 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                           padding: const EdgeInsets.only(bottom: 12),
                           child: ClipRRect(
                             borderRadius: AppRadius.smBr,
-                            child: Image.file(File(pickedCoverImage!.path),
-                                height: 120,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => const SizedBox()),
+                            child: _previewImage(pickedCoverImage!.path,
+                                height: 120, width: double.infinity),
                           ),
                         ),
 
@@ -1600,8 +1617,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                           style: GoogleFonts.spaceGrotesk(
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
-                              color:
-                                  AppColors.charcoal.withValues(alpha: 0.5),
+                              color: AppColors.charcoal.withValues(alpha: 0.5),
                               letterSpacing: 1.0)),
                       const SizedBox(height: AppSpacing.sm),
                       Row(
@@ -1613,8 +1629,8 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                                 style: GoogleFonts.inter(fontSize: 12)),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: AppColors.mossGreen,
-                              side: const BorderSide(
-                                  color: AppColors.mossGreen),
+                              side:
+                                  const BorderSide(color: AppColors.mossGreen),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                             ),
@@ -1656,10 +1672,8 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                                   children: [
                                     ClipRRect(
                                       borderRadius: AppRadius.smBr,
-                                      child: Image.file(File(img.path),
-                                          width: 60,
-                                          height: 60,
-                                          fit: BoxFit.cover),
+                                      child: _previewImage(img.path,
+                                          width: 60, height: 60),
                                     ),
                                     Positioned(
                                       top: -4,
@@ -1713,8 +1727,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                           style: GoogleFonts.spaceGrotesk(
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
-                              color:
-                                  AppColors.charcoal.withValues(alpha: 0.5),
+                              color: AppColors.charcoal.withValues(alpha: 0.5),
                               letterSpacing: 1.0)),
                       const SizedBox(height: AppSpacing.sm),
                       Row(
@@ -1756,8 +1769,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                           style: GoogleFonts.spaceGrotesk(
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
-                              color:
-                                  AppColors.charcoal.withValues(alpha: 0.5),
+                              color: AppColors.charcoal.withValues(alpha: 0.5),
                               letterSpacing: 1.0)),
                       const SizedBox(height: AppSpacing.sm),
                       Row(
@@ -1820,8 +1832,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                           style: GoogleFonts.spaceGrotesk(
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
-                              color:
-                                  AppColors.charcoal.withValues(alpha: 0.5),
+                              color: AppColors.charcoal.withValues(alpha: 0.5),
                               letterSpacing: 1.0)),
                       const SizedBox(height: AppSpacing.sm),
                       Row(
@@ -1955,16 +1966,18 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                         'rules': jsonEncode(rules),
                       };
                       if (pickedCoverImage != null) {
-                        data['image'] = await MultipartFile.fromFile(
-                          pickedCoverImage!.path,
+                        data['image'] = MultipartFile.fromBytes(
+                          await pickedCoverImage!.readAsBytes(),
                           filename: pickedCoverImage!.name,
                         );
                       }
                       if (pickedGalleryImages.isNotEmpty) {
                         data['gallery'] = await Future.wait(
                           pickedGalleryImages.map(
-                            (x) => MultipartFile.fromFile(x.path,
-                                filename: x.name),
+                            (x) async => MultipartFile.fromBytes(
+                              await x.readAsBytes(),
+                              filename: x.name,
+                            ),
                           ),
                         );
                       }
@@ -1986,8 +1999,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.mossGreen,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: AppRadius.mdBr),
+                    shape: RoundedRectangleBorder(borderRadius: AppRadius.mdBr),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 12),
                   ),
@@ -2058,8 +2070,8 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                   borderSide: const BorderSide(color: AppColors.lightBone)),
               focusedBorder: OutlineInputBorder(
                   borderRadius: AppRadius.mdBr,
-                  borderSide: const BorderSide(
-                      color: AppColors.mossGreen, width: 1.5)),
+                  borderSide:
+                      const BorderSide(color: AppColors.mossGreen, width: 1.5)),
             ),
             style: GoogleFonts.inter(fontSize: 13, color: AppColors.charcoal),
           ),
@@ -2077,7 +2089,10 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
         borderRadius: AppRadius.xxlBr,
         border: Border.all(color: AppColors.lightBone),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
         ],
       ),
       child: Column(
@@ -2085,13 +2100,19 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
         children: [
           Row(
             children: [
-              const Icon(Icons.history_rounded, color: AppColors.mossGreen, size: 22),
+              const Icon(Icons.history_rounded,
+                  color: AppColors.mossGreen, size: 22),
               const SizedBox(width: 8),
-              Text('Audit Logs', style: AppTextStyles.titleMd.copyWith(color: AppColors.charcoal)),
+              Text('Audit Logs',
+                  style: AppTextStyles.titleMd
+                      .copyWith(color: AppColors.charcoal)),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
-          Text('All system actions recorded for compliance and monitoring.', style: GoogleFonts.inter(fontSize: 11, color: AppColors.charcoal.withValues(alpha: 0.5))),
+          Text('All system actions recorded for compliance and monitoring.',
+              style: GoogleFonts.inter(
+                  fontSize: 11,
+                  color: AppColors.charcoal.withValues(alpha: 0.5))),
           const SizedBox(height: AppSpacing.lg),
           const Divider(color: AppColors.lightBone),
           const SizedBox(height: AppSpacing.lg),
@@ -2101,64 +2122,94 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                 padding: const EdgeInsets.all(40),
                 child: Column(
                   children: [
-                    Icon(Icons.history_rounded, size: 40, color: AppColors.charcoal.withValues(alpha: 0.15)),
+                    Icon(Icons.history_rounded,
+                        size: 40,
+                        color: AppColors.charcoal.withValues(alpha: 0.15)),
                     const SizedBox(height: AppSpacing.md),
-                    Text('No audit logs recorded yet.', style: GoogleFonts.inter(fontSize: 13, color: AppColors.charcoal.withValues(alpha: 0.5))),
+                    Text('No audit logs recorded yet.',
+                        style: GoogleFonts.inter(
+                            fontSize: 13,
+                            color: AppColors.charcoal.withValues(alpha: 0.5))),
                   ],
                 ),
               ),
             )
           else
             ...logs.map((log) => Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: AppColors.softCream,
-                borderRadius: AppRadius.mdBr,
-                border: Border.all(color: AppColors.lightBone),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.goldAccent.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(Icons.touch_app_rounded, size: 16, color: AppColors.goldAccent),
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: AppColors.softCream,
+                    borderRadius: AppRadius.mdBr,
+                    border: Border.all(color: AppColors.lightBone),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.goldAccent.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(Icons.touch_app_rounded,
+                            size: 16, color: AppColors.goldAccent),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(log['action'] as String? ?? '', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.charcoal)),
-                            const SizedBox(width: 8),
-                            if (log['targetType'] != null)
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: AppColors.mossGreen.withValues(alpha: 0.08),
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                child: Text(log['targetType'] as String? ?? '', style: GoogleFonts.spaceGrotesk(fontSize: 9, fontWeight: FontWeight.bold, color: AppColors.mossGreen)),
-                              ),
+                            Row(
+                              children: [
+                                Text(log['action'] as String? ?? '',
+                                    style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.charcoal)),
+                                const SizedBox(width: 8),
+                                if (log['targetType'] != null)
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.mossGreen
+                                          .withValues(alpha: 0.08),
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: Text(
+                                        log['targetType'] as String? ?? '',
+                                        style: GoogleFonts.spaceGrotesk(
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColors.mossGreen)),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(height: AppSpacing.xs),
+                            if (log['userName'] != null)
+                              Text(
+                                  'by ${log['userName']} (${log['userRole'] ?? ''})',
+                                  style: GoogleFonts.inter(
+                                      fontSize: 10,
+                                      color: AppColors.charcoal
+                                          .withValues(alpha: 0.5))),
+                            if (log['details'] != null)
+                              Text(log['details'] as String? ?? '',
+                                  style: GoogleFonts.inter(
+                                      fontSize: 10,
+                                      color: AppColors.charcoal
+                                          .withValues(alpha: 0.6))),
                           ],
                         ),
-                        const SizedBox(height: AppSpacing.xs),
-                        if (log['userName'] != null)
-                          Text('by ${log['userName']} (${log['userRole'] ?? ''})', style: GoogleFonts.inter(fontSize: 10, color: AppColors.charcoal.withValues(alpha: 0.5))),
-                        if (log['details'] != null)
-                          Text(log['details'] as String? ?? '', style: GoogleFonts.inter(fontSize: 10, color: AppColors.charcoal.withValues(alpha: 0.6))),
-                      ],
-                    ),
+                      ),
+                      Text(log['timestamp'] as String? ?? '',
+                          style: GoogleFonts.spaceGrotesk(
+                              fontSize: 9,
+                              color:
+                                  AppColors.charcoal.withValues(alpha: 0.4))),
+                    ],
                   ),
-                  Text(log['timestamp'] as String? ?? '', style: GoogleFonts.spaceGrotesk(fontSize: 9, color: AppColors.charcoal.withValues(alpha: 0.4))),
-                ],
-              ),
-            )),
+                )),
         ],
       ),
     );
@@ -2173,7 +2224,10 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
         borderRadius: AppRadius.xxlBr,
         border: Border.all(color: AppColors.lightBone),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
         ],
       ),
       child: Column(
@@ -2181,20 +2235,27 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
         children: [
           Row(
             children: [
-              const Icon(Icons.notifications_outlined, color: AppColors.mossGreen, size: 22),
+              const Icon(Icons.notifications_outlined,
+                  color: AppColors.mossGreen, size: 22),
               const SizedBox(width: 8),
               Expanded(
-                child: Text('System Notifications', style: AppTextStyles.titleMd.copyWith(color: AppColors.charcoal)),
+                child: Text('System Notifications',
+                    style: AppTextStyles.titleMd
+                        .copyWith(color: AppColors.charcoal)),
               ),
               if (notifications.any((n) => !n.read))
                 TextButton.icon(
                   onPressed: () async {
                     for (final n in notifications.where((n) => !n.read)) {
-                      await ref.read(superAdminNotificationsProvider.notifier).markAsRead(n.id);
+                      await ref
+                          .read(superAdminNotificationsProvider.notifier)
+                          .markAsRead(n.id);
                     }
                   },
                   icon: const Icon(Icons.done_all, size: 14),
-                  label: Text('Mark All Read', style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.bold)),
+                  label: Text('Mark All Read',
+                      style: GoogleFonts.inter(
+                          fontSize: 11, fontWeight: FontWeight.bold)),
                 ),
             ],
           ),
@@ -2207,67 +2268,101 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                 padding: const EdgeInsets.all(40),
                 child: Column(
                   children: [
-                    Icon(Icons.notifications_none_rounded, size: 40, color: AppColors.charcoal.withValues(alpha: 0.15)),
+                    Icon(Icons.notifications_none_rounded,
+                        size: 40,
+                        color: AppColors.charcoal.withValues(alpha: 0.15)),
                     const SizedBox(height: AppSpacing.md),
-                    Text('No notifications yet.', style: GoogleFonts.inter(fontSize: 13, color: AppColors.charcoal.withValues(alpha: 0.5))),
+                    Text('No notifications yet.',
+                        style: GoogleFonts.inter(
+                            fontSize: 13,
+                            color: AppColors.charcoal.withValues(alpha: 0.5))),
                   ],
                 ),
               ),
             )
           else
             ...notifications.map((n) => Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: n.read ? AppColors.softCream : Colors.white,
-                borderRadius: AppRadius.mdBr,
-                border: Border.all(color: n.read ? AppColors.lightBone : AppColors.goldAccent.withValues(alpha: 0.3)),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: n.read ? AppColors.charcoal.withValues(alpha: 0.05) : AppColors.goldAccent.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(
-                      n.type == 'booking' ? Icons.book_online_outlined :
-                      n.type == 'payment' ? Icons.payment_outlined :
-                      n.type == 'promo' ? Icons.local_offer_outlined :
-                      Icons.notifications_outlined,
-                      size: 16, color: n.read ? AppColors.charcoal.withValues(alpha: 0.3) : AppColors.goldAccent,
-                    ),
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: n.read ? AppColors.softCream : Colors.white,
+                    borderRadius: AppRadius.mdBr,
+                    border: Border.all(
+                        color: n.read
+                            ? AppColors.lightBone
+                            : AppColors.goldAccent.withValues(alpha: 0.3)),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(n.title, style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.charcoal)),
-                        const SizedBox(height: 2),
-                        Text(n.message, style: GoogleFonts.inter(fontSize: 10, color: AppColors.charcoal.withValues(alpha: 0.6)), maxLines: 2, overflow: TextOverflow.ellipsis),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(n.timestamp, style: GoogleFonts.spaceGrotesk(fontSize: 9, color: AppColors.charcoal.withValues(alpha: 0.4))),
-                  if (!n.read) ...[
-                    const SizedBox(width: 8),
-                    SizedBox(
-                      height: 24,
-                      child: IconButton(
-                        icon: const Icon(Icons.check_circle_outline, size: 14),
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
-                        color: AppColors.mossGreen,
-                        onPressed: () => ref.read(superAdminNotificationsProvider.notifier).markAsRead(n.id),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: n.read
+                              ? AppColors.charcoal.withValues(alpha: 0.05)
+                              : AppColors.goldAccent.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          n.type == 'booking'
+                              ? Icons.book_online_outlined
+                              : n.type == 'payment'
+                                  ? Icons.payment_outlined
+                                  : n.type == 'promo'
+                                      ? Icons.local_offer_outlined
+                                      : Icons.notifications_outlined,
+                          size: 16,
+                          color: n.read
+                              ? AppColors.charcoal.withValues(alpha: 0.3)
+                              : AppColors.goldAccent,
+                        ),
                       ),
-                    ),
-                  ],
-                ],
-              ),
-            )),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(n.title,
+                                style: GoogleFonts.inter(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.charcoal)),
+                            const SizedBox(height: 2),
+                            Text(n.message,
+                                style: GoogleFonts.inter(
+                                    fontSize: 10,
+                                    color: AppColors.charcoal
+                                        .withValues(alpha: 0.6)),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(n.timestamp,
+                          style: GoogleFonts.spaceGrotesk(
+                              fontSize: 9,
+                              color:
+                                  AppColors.charcoal.withValues(alpha: 0.4))),
+                      if (!n.read) ...[
+                        const SizedBox(width: 8),
+                        SizedBox(
+                          height: 24,
+                          child: IconButton(
+                            icon: const Icon(Icons.check_circle_outline,
+                                size: 14),
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(
+                                minWidth: 24, minHeight: 24),
+                            color: AppColors.mossGreen,
+                            onPressed: () => ref
+                                .read(superAdminNotificationsProvider.notifier)
+                                .markAsRead(n.id),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                )),
         ],
       ),
     );
@@ -2284,7 +2379,8 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
     final totalRevenue = (revenueData['totalRevenue'] as num?)?.toDouble() ?? 0;
     final adr = (revenueData['averageDailyRate'] as num?)?.toDouble() ?? 0;
     final totalNights = (revenueData['totalNights'] as num?)?.toInt() ?? 0;
-    final pendingBalance = (revenueData['pendingBalance'] as num?)?.toDouble() ?? 0;
+    final pendingBalance =
+        (revenueData['pendingBalance'] as num?)?.toDouble() ?? 0;
 
     return Container(
       width: double.infinity,
@@ -2389,8 +2485,7 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                        flex: 3, child: _buildSourceBreakdown(sourceData)),
+                    Expanded(flex: 3, child: _buildSourceBreakdown(sourceData)),
                     const SizedBox(width: 32),
                     Expanded(
                         flex: 2,
@@ -2487,11 +2582,13 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                     TableRow(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 24),
                           child: Text('No resort data available',
                               style: GoogleFonts.inter(
                                   fontSize: 11,
-                                  color: AppColors.charcoal.withValues(alpha: 0.5))),
+                                  color: AppColors.charcoal
+                                      .withValues(alpha: 0.5))),
                         ),
                         const SizedBox(),
                         const SizedBox(),
@@ -2504,8 +2601,11 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
                       final isLast = entry.key == resortData.length - 1;
                       final rev = (r['totalRevenue'] as num?)?.toDouble() ?? 0;
                       final count = (r['totalBookings'] as num?)?.toInt() ?? 0;
-                      final occRate = (r['occupancyRate'] as num?)?.toDouble() ?? 0;
-                      final name = r['propertyName'] as String? ?? r['propertyId'] as String? ?? 'Unknown';
+                      final occRate =
+                          (r['occupancyRate'] as num?)?.toDouble() ?? 0;
+                      final name = r['propertyName'] as String? ??
+                          r['propertyId'] as String? ??
+                          'Unknown';
                       return TableRow(
                         decoration: BoxDecoration(
                           border: isLast
@@ -2631,7 +2731,8 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
   }
 
   Widget _buildSourceBreakdown(List<Map<String, dynamic>> sourceData) {
-    final totalBookings = sourceData.fold<int>(0, (sum, s) => sum + ((s['count'] as num?)?.toInt() ?? 0));
+    final totalBookings = sourceData.fold<int>(
+        0, (sum, s) => sum + ((s['count'] as num?)?.toInt() ?? 0));
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -2657,14 +2758,19 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Text('No booking source data available',
-                  style: GoogleFonts.inter(fontSize: 11, color: AppColors.charcoal.withValues(alpha: 0.5))),
+                  style: GoogleFonts.inter(
+                      fontSize: 11,
+                      color: AppColors.charcoal.withValues(alpha: 0.5))),
             )
           else
             ...sourceData.map((src) {
-              final label = src['label'] as String? ?? src['source'] as String? ?? 'Unknown';
+              final label = src['label'] as String? ??
+                  src['source'] as String? ??
+                  'Unknown';
               final count = (src['count'] as num?)?.toInt() ?? 0;
               final revenue = (src['revenue'] as num?)?.toDouble() ?? 0;
-              final percent = (src['percentage'] as num?)?.toDouble() ?? (totalBookings > 0 ? (count / totalBookings) * 100 : 0.0);
+              final percent = (src['percentage'] as num?)?.toDouble() ??
+                  (totalBookings > 0 ? (count / totalBookings) * 100 : 0.0);
 
               return Padding(
                 padding: const EdgeInsets.only(bottom: 12.0),
@@ -2727,7 +2833,8 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
     );
   }
 
-  Widget _buildRefundsAndTaxStats(AsyncValue<SuperAdminAnalyticsState>? analyticsAsync) {
+  Widget _buildRefundsAndTaxStats(
+      AsyncValue<SuperAdminAnalyticsState>? analyticsAsync) {
     final analytics = analyticsAsync?.valueOrNull;
     final revenueData = analytics?.revenue ?? {};
     final currency = revenueData['currency'] as String? ?? 'INR';
@@ -2774,7 +2881,8 @@ class _SuperAdminViewState extends ConsumerState<SuperAdminView> {
           _buildDetailRow(
             icon: Icons.analytics_rounded,
             label: 'Average Daily Rate (ADR)',
-            value: '₹${_formatAmount((revenueData['averageDailyRate'] as num?)?.toDouble() ?? 0)}',
+            value:
+                '₹${_formatAmount((revenueData['averageDailyRate'] as num?)?.toDouble() ?? 0)}',
             subtext: 'Per occupied room/night',
             color: AppColors.charcoal,
           ),

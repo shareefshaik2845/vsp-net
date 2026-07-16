@@ -1,4 +1,3 @@
-
 enum UserRole {
   customer,
   admin,
@@ -25,8 +24,8 @@ enum BookingStatus {
   checkedOut;
 
   String toJson() => name;
-  static BookingStatus fromJson(String name) => 
-      BookingStatus.values.firstWhere((e) => e.name == name, orElse: () => BookingStatus.confirmed);
+  static BookingStatus fromJson(String name) => BookingStatus.values
+      .firstWhere((e) => e.name == name, orElse: () => BookingStatus.confirmed);
 }
 
 enum PaymentStatus {
@@ -36,8 +35,8 @@ enum PaymentStatus {
   refunded;
 
   String toJson() => name;
-  static PaymentStatus fromJson(String name) => 
-      PaymentStatus.values.firstWhere((e) => e.name == name, orElse: () => PaymentStatus.pending);
+  static PaymentStatus fromJson(String name) => PaymentStatus.values
+      .firstWhere((e) => e.name == name, orElse: () => PaymentStatus.pending);
 }
 
 enum BookingSource {
@@ -49,8 +48,8 @@ enum BookingSource {
   goibibo;
 
   String toJson() => name;
-  static BookingSource fromJson(String name) => 
-      BookingSource.values.firstWhere((e) => e.name == name, orElse: () => BookingSource.direct);
+  static BookingSource fromJson(String name) => BookingSource.values
+      .firstWhere((e) => e.name == name, orElse: () => BookingSource.direct);
 }
 
 class PropertyDetails {
@@ -91,7 +90,9 @@ class PropertyDetails {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PropertyDetails && runtimeType == other.runtimeType && id == other.id;
+      other is PropertyDetails &&
+          runtimeType == other.runtimeType &&
+          id == other.id;
 
   @override
   int get hashCode => id.hashCode;
@@ -371,8 +372,9 @@ enum HousekeepingStatus {
   dirty;
 
   String toJson() => name;
-  static HousekeepingStatus fromJson(String name) => 
-      HousekeepingStatus.values.firstWhere((e) => e.name == name, orElse: () => HousekeepingStatus.clean);
+  static HousekeepingStatus fromJson(String name) =>
+      HousekeepingStatus.values.firstWhere((e) => e.name == name,
+          orElse: () => HousekeepingStatus.clean);
 }
 
 class RoomStatus {
@@ -636,8 +638,8 @@ class InstallationRecord {
 class AuditLogEntry {
   final String id;
   final String userId;
-  final String action;        // create, update, delete, login, etc.
-  final String? targetType;   // 'user', 'booking', 'role', etc.
+  final String action; // create, update, delete, login, etc.
+  final String? targetType; // 'user', 'booking', 'role', etc.
   final String? targetId;
   final String? details;
   final String timestamp;

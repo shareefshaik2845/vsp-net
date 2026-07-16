@@ -40,7 +40,10 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
       if (error != null && error.isNotEmpty && context.mounted) {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(error), backgroundColor: Colors.red.shade700, behavior: SnackBarBehavior.floating));
+          ..showSnackBar(SnackBar(
+              content: Text(error),
+              backgroundColor: Colors.red.shade700,
+              behavior: SnackBarBehavior.floating));
         notifier.lastError = null;
       }
     } catch (_) {}
@@ -77,9 +80,18 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(accountantInvoicesProvider, (_, __) => _lastError(ref, context, ref.read(accountantInvoicesProvider.notifier)));
-    ref.listen(accountantKpisProvider, (_, __) => _lastError(ref, context, ref.read(accountantKpisProvider.notifier)));
-    ref.listen(accountantRefundsProvider, (_, __) => _lastError(ref, context, ref.read(accountantRefundsProvider.notifier)));
+    ref.listen(
+        accountantInvoicesProvider,
+        (_, __) => _lastError(
+            ref, context, ref.read(accountantInvoicesProvider.notifier)));
+    ref.listen(
+        accountantKpisProvider,
+        (_, __) => _lastError(
+            ref, context, ref.read(accountantKpisProvider.notifier)));
+    ref.listen(
+        accountantRefundsProvider,
+        (_, __) => _lastError(
+            ref, context, ref.read(accountantRefundsProvider.notifier)));
     final invoicesAsync = ref.watch(accountantInvoicesProvider);
     final kpisAsync = ref.watch(accountantKpisProvider);
     final refundsAsync = ref.watch(accountantRefundsProvider);
@@ -90,7 +102,9 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
     ref.listen(propertyProvider, (prev, next) {
       final resort = next.valueOrNull;
       if (resort != null) {
-        ref.read(accountantInvoicesProvider.notifier).loadInvoices(propertyId: resort.id);
+        ref
+            .read(accountantInvoicesProvider.notifier)
+            .loadInvoices(propertyId: resort.id);
         ref.read(accountantKpisProvider.notifier).loadKpis(resort.id);
         ref.read(accountantRefundsProvider.notifier).loadRefunds(resort.id);
       }
@@ -100,9 +114,10 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
 
     // Filtered list of invoices
     final filteredInvoices = bookings.where((b) {
-      final matchSearch = b.id.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          b.guestName.toLowerCase().contains(_searchQuery.toLowerCase());
-      
+      final matchSearch =
+          b.id.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+              b.guestName.toLowerCase().contains(_searchQuery.toLowerCase());
+
       bool matchPayment = true;
       if (_filterPayment != 'all') {
         if (_filterPayment == 'paid') {
@@ -115,27 +130,36 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
           matchPayment = b.paymentStatus == PaymentStatus.refunded;
         }
       }
-      
+
       return matchSearch && matchPayment;
     }).toList();
 
     // KPIs from API response or computed fallback
     final kpis = kpisAsync.valueOrNull ?? {};
-    final totalInvoicedSum = ((kpis['totalInvoiced'] as num?)?.toDouble() ?? 0) +
-        (bookings.isEmpty ? 0 : bookings.fold(0.0, (sum, b) => sum + b.totalAmount));
-    final totalCollectedSum = ((kpis['totalCollected'] as num?)?.toDouble() ?? 0) +
-        (bookings.isEmpty ? 0 : bookings.fold(0.0, (sum, b) => sum + b.advancePaidAmount));
+    final totalInvoicedSum =
+        ((kpis['totalInvoiced'] as num?)?.toDouble() ?? 0) +
+            (bookings.isEmpty
+                ? 0
+                : bookings.fold(0.0, (sum, b) => sum + b.totalAmount));
+    final totalCollectedSum =
+        ((kpis['totalCollected'] as num?)?.toDouble() ?? 0) +
+            (bookings.isEmpty
+                ? 0
+                : bookings.fold(0.0, (sum, b) => sum + b.advancePaidAmount));
     final totalBalanceSells = totalInvoicedSum - totalCollectedSum;
-    
+
     // Refunds from dedicated API or computed fallback
     final refundData = refundsAsync.valueOrNull ?? [];
     final refundQueue = refundData.isNotEmpty
         ? refundData
-            .map((r) => bookings.where((b) => b.id == r['bookingId'] || b.id == r['id']))
+            .map((r) => bookings
+                .where((b) => b.id == r['bookingId'] || b.id == r['id']))
             .expand((e) => e)
             .toList()
         : bookings
-            .where((b) => b.status == BookingStatus.cancelled && b.paymentStatus != PaymentStatus.refunded)
+            .where((b) =>
+                b.status == BookingStatus.cancelled &&
+                b.paymentStatus != PaymentStatus.refunded)
             .toList();
 
     return Scaffold(
@@ -169,9 +193,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
   }
 
   Widget _buildHeaderRibbon(bool isMobile, PropertyDetails? activeResort) {
-    final resortName = activeResort != null 
-        ? activeResort.name
-        : 'Resort';
+    final resortName = activeResort != null ? activeResort.name : 'Resort';
 
     return Container(
       padding: const EdgeInsets.all(20.0),
@@ -269,7 +291,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
     );
   }
 
-  Widget _buildPropertySelector(PropertyDetails currentProperty, bool isMobile) {
+  Widget _buildPropertySelector(
+      PropertyDetails currentProperty, bool isMobile) {
     return Container(
       width: isMobile ? double.infinity : null,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -294,10 +317,10 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
             if (newProperty != null) {
               ref.read(propertyProvider.notifier).updateProperty(newProperty);
               ref.read(notificationsProvider.notifier).addNotification(
-                'Context Switched',
-                'Now managing ${newProperty.name}.',
-                'system',
-              );
+                    'Context Switched',
+                    'Now managing ${newProperty.name}.',
+                    'system',
+                  );
             }
           },
           items: ref.watch(resortsListProvider).map((PropertyDetails resort) {
@@ -317,16 +340,23 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
         final resort = ref.read(propertyProvider).valueOrNull;
         final pid = resort?.id ?? '';
         try {
-          final path = format == 'pdf'
-              ? await ref.read(accountantRepositoryProvider).downloadLedgerPdf(pid, '2026-01-01', '2026-12-31')
-              : await ref.read(accountantRepositoryProvider).downloadLedgerExcel(pid, '2026-01-01', '2026-12-31');
+          final report = format == 'pdf'
+              ? await ref
+                  .read(accountantRepositoryProvider)
+                  .downloadLedgerPdf(pid, '2026-01-01', '2026-12-31')
+              : await ref
+                  .read(accountantRepositoryProvider)
+                  .downloadLedgerExcel(pid, '2026-01-01', '2026-12-31');
+          final count = report['recordCount'] ?? 0;
+          final revenue = report['totalRevenue'] ?? 'N/A';
+          final summary = 'Ledger: $count bookings, revenue $revenue';
           ref.read(notificationsProvider.notifier).addNotification(
-            'Export Complete',
-            'Ledger saved to $path',
-            'system',
-          );
+                'Export Complete',
+                summary,
+                'system',
+              );
           if (context.mounted) {
-            SnackbarHelper.success(context, 'Ledger saved to $path');
+            SnackbarHelper.success(context, summary);
           }
         } catch (e) {
           if (context.mounted) {
@@ -517,7 +547,9 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                   style: GoogleFonts.spaceGrotesk(
                     fontSize: 9,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.grey.shade400 : AppColors.charcoal.withValues(alpha: 0.4),
+                    color: isDark
+                        ? Colors.grey.shade400
+                        : AppColors.charcoal.withValues(alpha: 0.4),
                     letterSpacing: 1.0,
                   ),
                 ),
@@ -532,9 +564,11 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                 ),
                 const SizedBox(height: 6),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: isDark ? Colors.white.withValues(alpha: 0.1) : accentBg,
+                    color:
+                        isDark ? Colors.white.withValues(alpha: 0.1) : accentBg,
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
@@ -622,7 +656,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
         children: [
           Row(
             children: [
-              const Icon(Icons.credit_card, size: 16, color: AppColors.charcoal),
+              const Icon(Icons.credit_card,
+                  size: 16, color: AppColors.charcoal),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -644,7 +679,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                 child: Text(
                   'No pending refunds require bookkeeping clears.',
                   textAlign: TextAlign.center,
-                  style: AppTextStyles.bodyXs.copyWith(color: Colors.grey.shade400),
+                  style: AppTextStyles.bodyXs
+                      .copyWith(color: Colors.grey.shade400),
                 ),
               ),
             )
@@ -661,7 +697,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
                     color: Colors.red.shade50.withValues(alpha: 0.15),
-                    border: Border.all(color: Colors.red.shade100.withValues(alpha: 0.6)),
+                    border: Border.all(
+                        color: Colors.red.shade100.withValues(alpha: 0.6)),
                     borderRadius: AppRadius.lgBr,
                   ),
                   child: Column(
@@ -731,13 +768,18 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                         height: 30,
                         child: ElevatedButton(
                           onPressed: () {
-                            ref.read(bookingsProvider.notifier).processRefund(b.id);
-                            ref.read(notificationsProvider.notifier).addNotification(
-                              'Refund Settled',
-                              'Accountant processed full refund transaction for reference ${b.id}.',
-                              'payment',
-                            );
-                            SnackbarHelper.success(context, 'Processed refund obligation for ${b.id}.');
+                            ref
+                                .read(bookingsProvider.notifier)
+                                .processRefund(b.id);
+                            ref
+                                .read(notificationsProvider.notifier)
+                                .addNotification(
+                                  'Refund Settled',
+                                  'Accountant processed full refund transaction for reference ${b.id}.',
+                                  'payment',
+                                );
+                            SnackbarHelper.success(context,
+                                'Processed refund obligation for ${b.id}.');
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFB91C1C),
@@ -766,7 +808,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
     );
   }
 
-  Widget _buildInvoicesBlock(BuildContext context, List<Booking> list, {required bool isMobile}) {
+  Widget _buildInvoicesBlock(BuildContext context, List<Booking> list,
+      {required bool isMobile}) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -795,7 +838,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                     const SizedBox(height: 2),
                     Text(
                       'Review all generated customer transaction papers.',
-                      style: AppTextStyles.bodyXs.copyWith(color: AppColors.charcoal.withValues(alpha: 0.4)),
+                      style: AppTextStyles.bodyXs.copyWith(
+                          color: AppColors.charcoal.withValues(alpha: 0.4)),
                     ),
                   ],
                 ),
@@ -803,7 +847,7 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
             ],
           ),
           const SizedBox(height: AppSpacing.lg),
-          
+
           // Search & Filter controls
           isMobile
               ? Column(
@@ -833,7 +877,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: list.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.lg),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: AppSpacing.lg),
                   itemBuilder: (context, index) {
                     return _buildInvoiceCard(context, list[index]);
                   },
@@ -863,7 +908,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
           items: const [
             DropdownMenuItem(value: 'all', child: Text('All States')),
             DropdownMenuItem(value: 'paid', child: Text('Paid')),
-            DropdownMenuItem(value: 'partially_paid', child: Text('Partially Paid')),
+            DropdownMenuItem(
+                value: 'partially_paid', child: Text('Partially Paid')),
             DropdownMenuItem(value: 'pending', child: Text('Pending')),
             DropdownMenuItem(value: 'refunded', child: Text('Refunded')),
           ],
@@ -891,16 +937,19 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
         style: GoogleFonts.inter(fontSize: 11.5),
         decoration: InputDecoration(
           isDense: true,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           hintText: 'search by name or invoice...',
-          hintStyle: GoogleFonts.inter(color: Colors.grey.shade400, fontSize: 11.5),
+          hintStyle:
+              GoogleFonts.inter(color: Colors.grey.shade400, fontSize: 11.5),
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           fillColor: Colors.transparent,
           filled: false,
           prefixIcon: Icon(Icons.search, size: 14, color: Colors.grey.shade400),
-          prefixIconConstraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+          prefixIconConstraints:
+              const BoxConstraints(minWidth: 32, minHeight: 32),
         ),
       ),
     );
@@ -1086,12 +1135,25 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 children: [
-                  Expanded(flex: 2, child: Text('INVOICE CODE', style: _tableHeaderStyle)),
-                  Expanded(flex: 3, child: Text('CUSTOMER ACCOUNT', style: _tableHeaderStyle)),
-                  Expanded(flex: 2, child: Text('FULFILLMENT AMOUNT', style: _tableHeaderStyle)),
-                  Expanded(flex: 3, child: Text('CASH INFLOWS', style: _tableHeaderStyle)),
-                  Expanded(flex: 2, child: Text('STATE', style: _tableHeaderStyle)),
-                  Expanded(flex: 2, child: Text('INVOICE DETAILS', style: _tableHeaderStyle)),
+                  Expanded(
+                      flex: 2,
+                      child: Text('INVOICE CODE', style: _tableHeaderStyle)),
+                  Expanded(
+                      flex: 3,
+                      child:
+                          Text('CUSTOMER ACCOUNT', style: _tableHeaderStyle)),
+                  Expanded(
+                      flex: 2,
+                      child:
+                          Text('FULFILLMENT AMOUNT', style: _tableHeaderStyle)),
+                  Expanded(
+                      flex: 3,
+                      child: Text('CASH INFLOWS', style: _tableHeaderStyle)),
+                  Expanded(
+                      flex: 2, child: Text('STATE', style: _tableHeaderStyle)),
+                  Expanded(
+                      flex: 2,
+                      child: Text('INVOICE DETAILS', style: _tableHeaderStyle)),
                 ],
               ),
             ),
@@ -1102,7 +1164,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                 child: Center(
                   child: Text(
                     'No matching records found.',
-                    style: AppTextStyles.bodySm.copyWith(color: Colors.grey.shade500),
+                    style: AppTextStyles.bodySm
+                        .copyWith(color: Colors.grey.shade500),
                   ),
                 ),
               )
@@ -1111,7 +1174,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: invoices.length,
-                separatorBuilder: (context, index) => const Divider(color: AppColors.lightBone, height: 1),
+                separatorBuilder: (context, index) =>
+                    const Divider(color: AppColors.lightBone, height: 1),
                 itemBuilder: (context, index) {
                   final invoice = invoices[index];
                   Color stateBg = Colors.white;
@@ -1136,7 +1200,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                   }
 
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
                     color: Colors.white,
                     child: Row(
                       children: [
@@ -1168,7 +1233,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                                 invoice.guestEmail,
                                 style: GoogleFonts.inter(
                                   fontSize: 9.5,
-                                  color: AppColors.charcoal.withValues(alpha: 0.5),
+                                  color:
+                                      AppColors.charcoal.withValues(alpha: 0.5),
                                 ),
                               ),
                             ],
@@ -1202,7 +1268,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                                 'Balance: ₹${_formatIndianCurrency(invoice.balanceAmount)}',
                                 style: GoogleFonts.inter(
                                   fontSize: 9.5,
-                                  color: AppColors.charcoal.withValues(alpha: 0.5),
+                                  color:
+                                      AppColors.charcoal.withValues(alpha: 0.5),
                                 ),
                               ),
                             ],
@@ -1213,7 +1280,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                           child: UnconstrainedBox(
                             alignment: Alignment.centerLeft,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(
                                 color: stateBg,
                                 borderRadius: BorderRadius.circular(8),
@@ -1237,7 +1305,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                               onTap: () => _showInvoiceDialog(context, invoice),
                               borderRadius: BorderRadius.circular(6),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: AppColors.charcoal,
                                   borderRadius: BorderRadius.circular(6),
@@ -1245,7 +1314,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Icon(Icons.receipt, size: 10, color: Colors.white),
+                                    const Icon(Icons.receipt,
+                                        size: 10, color: Colors.white),
                                     const SizedBox(width: 4),
                                     Text(
                                       'View paper',
@@ -1464,12 +1534,14 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                         ),
                         const TextSpan(text: 'Transacted Advance Collected: '),
                         TextSpan(
-                          text: '₹${_formatIndianCurrency(invoice.advancePaidAmount)}',
+                          text:
+                              '₹${_formatIndianCurrency(invoice.advancePaidAmount)}',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const TextSpan(text: '. Ledger Accounts Receivable: '),
                         TextSpan(
-                          text: '₹${_formatIndianCurrency(invoice.balanceAmount)}',
+                          text:
+                              '₹${_formatIndianCurrency(invoice.balanceAmount)}',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const TextSpan(text: '. State: '),
@@ -1489,9 +1561,11 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
                       child: ElevatedButton.icon(
                         onPressed: () {
                           Navigator.pop(context);
-                          SnackbarHelper.info(context, 'Direct Print Out stream initiated.');
+                          SnackbarHelper.info(
+                              context, 'Direct Print Out stream initiated.');
                         },
-                        icon: const Icon(Icons.print, size: 14, color: Colors.white),
+                        icon: const Icon(Icons.print,
+                            size: 14, color: Colors.white),
                         label: Text(
                           'Direct Print Out',
                           style: GoogleFonts.inter(
@@ -1548,7 +1622,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
         children: [
           Text(
             label,
-            style: AppTextStyles.bodyXs.copyWith(color: AppColors.charcoal.withValues(alpha: 0.6)),
+            style: AppTextStyles.bodyXs
+                .copyWith(color: AppColors.charcoal.withValues(alpha: 0.6)),
           ),
           Text(
             value,
@@ -1572,7 +1647,8 @@ class _AccountantViewState extends ConsumerState<AccountantView> {
           Expanded(
             child: Text(
               label,
-              style: AppTextStyles.bodyXs.copyWith(color: AppColors.charcoal.withValues(alpha: 0.8)),
+              style: AppTextStyles.bodyXs
+                  .copyWith(color: AppColors.charcoal.withValues(alpha: 0.8)),
             ),
           ),
           Text(

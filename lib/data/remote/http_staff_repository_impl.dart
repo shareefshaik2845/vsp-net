@@ -13,7 +13,8 @@ class HttpStaffRepositoryImpl implements IStaffRepository {
   dynamic _unwrap(Response response) {
     final envelope = ApiEnvelope.fromResponse(response);
     if (!envelope.success) {
-      throw ApiException(envelope.error ?? envelope.message ?? 'Request failed');
+      throw ApiException(
+          envelope.error ?? envelope.message ?? 'Request failed');
     }
     return envelope.data;
   }
@@ -31,7 +32,8 @@ class HttpStaffRepositoryImpl implements IStaffRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> fetchRoster(String propertyId, String date) async {
+  Future<Map<String, dynamic>> fetchRoster(
+      String propertyId, String date) async {
     final response = await _dio.get('/staff/roster', queryParameters: {
       'date': date,
     });
@@ -40,7 +42,8 @@ class HttpStaffRepositoryImpl implements IStaffRepository {
 
   @override
   Future<List<RoomStatus>> fetchHousekeepingRooms(String propertyId) async {
-    final response = await _dio.get('/staff/rooms/housekeeping', queryParameters: {
+    final response =
+        await _dio.get('/staff/rooms/housekeeping', queryParameters: {
       'propertyId': propertyId,
     });
     final data = unwrapList(_unwrap(response));
@@ -67,7 +70,8 @@ class HttpStaffRepositoryImpl implements IStaffRepository {
   }
 
   @override
-  Future<void> updateHousekeepingStatus(String roomId, String status, {String? assignedStaff, String? notes}) async {
+  Future<void> updateHousekeepingStatus(String roomId, String status,
+      {String? assignedStaff, String? notes}) async {
     final body = <String, dynamic>{'status': status};
     if (assignedStaff != null) body['assignedStaff'] = assignedStaff;
     if (notes != null) body['notes'] = notes;
@@ -86,9 +90,9 @@ class HttpStaffRepositoryImpl implements IStaffRepository {
       id: json['id'] as String? ?? '',
       title: json['title'] as String? ?? '',
       message: json['message'] as String? ?? '',
-      timestamp: json['timestamp'] as String? ?? '',
+      timestamp: json['createdAt'] as String? ?? '',
       type: json['type'] as String? ?? 'system',
-      read: json['read'] as bool? ?? false,
+      read: json['isRead'] as bool? ?? false,
     );
   }
 
@@ -110,7 +114,8 @@ class HttpStaffRepositoryImpl implements IStaffRepository {
   }
 
   @override
-  Future<List<Map<String, dynamic>>> fetchTasks(String propertyId, {String? status, String? date}) async {
+  Future<List<Map<String, dynamic>>> fetchTasks(String propertyId,
+      {String? status, String? date}) async {
     final params = <String, dynamic>{'propertyId': propertyId};
     if (status != null) params['status'] = status;
     if (date != null) params['date'] = date;

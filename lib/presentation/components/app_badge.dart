@@ -8,7 +8,8 @@ class AppBadge extends StatelessWidget {
   final String label;
   final AppBadgeVariant variant;
 
-  const AppBadge({super.key, required this.label, this.variant = AppBadgeVariant.neutral});
+  const AppBadge(
+      {super.key, required this.label, this.variant = AppBadgeVariant.neutral});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,10 @@ class AppBadge extends StatelessWidget {
       AppBadgeVariant.success => (AppColors.successLight, AppColors.success),
       AppBadgeVariant.warning => (AppColors.warningLight, AppColors.warning),
       AppBadgeVariant.error => (AppColors.errorLight, AppColors.error),
-      AppBadgeVariant.info => (AppColors.goldAccent.withValues(alpha: 0.15), AppColors.goldDark),
+      AppBadgeVariant.info => (
+          AppColors.goldAccent.withValues(alpha: 0.15),
+          AppColors.goldDark
+        ),
       AppBadgeVariant.neutral => (AppColors.stoneBg, AppColors.charcoal),
     };
 

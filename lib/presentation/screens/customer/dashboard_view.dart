@@ -10,7 +10,8 @@ class CustomerDashboardView extends ConsumerStatefulWidget {
   const CustomerDashboardView({super.key});
 
   @override
-  ConsumerState<CustomerDashboardView> createState() => _CustomerDashboardViewState();
+  ConsumerState<CustomerDashboardView> createState() =>
+      _CustomerDashboardViewState();
 }
 
 class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
@@ -18,7 +19,6 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
   Booking? _selectedInvoice;
   Map<String, dynamic>? _invoiceData;
 
-  
   // Cancellation form states
   final _cancelReasonController = TextEditingController();
 
@@ -34,7 +34,10 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
       if (error != null && error.isNotEmpty && context.mounted) {
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(error), backgroundColor: Colors.red.shade700, behavior: SnackBarBehavior.floating));
+          ..showSnackBar(SnackBar(
+              content: Text(error),
+              backgroundColor: Colors.red.shade700,
+              behavior: SnackBarBehavior.floating));
         notifier.lastError = null;
       }
     } catch (_) {}
@@ -121,10 +124,10 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                     const SizedBox(height: AppSpacing.lg),
                     const Divider(color: AppColors.lightBone),
                     const SizedBox(height: AppSpacing.lg),
-                    
+
                     // Refund Policy info
                     Container(
-                        padding: AppSpacing.allLg,
+                      padding: AppSpacing.allLg,
                       decoration: BoxDecoration(
                         color: const Color(0xFFFFF5F5),
                         borderRadius: BorderRadius.circular(16),
@@ -135,7 +138,8 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.info_outline, color: Colors.red.shade700, size: 18),
+                              Icon(Icons.info_outline,
+                                  color: Colors.red.shade700, size: 18),
                               const SizedBox(width: 8),
                               Text(
                                 'Cancellation & Refund Policy',
@@ -160,12 +164,17 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    
+
                     // Refund estimates
-                    _refundDetailRow('Deposit Paid:', '₹${_formatIndianCurrency(paid)} INR'),
-                    _refundDetailRow('Refund rate eligibility:', '100% Full Refund', isHighlight: true),
-                    _refundDetailRow('Estimated refund credit:', '₹${_formatIndianCurrency(refundEst)} INR', isBold: true),
-                    
+                    _refundDetailRow(
+                        'Deposit Paid:', '₹${_formatIndianCurrency(paid)} INR'),
+                    _refundDetailRow(
+                        'Refund rate eligibility:', '100% Full Refund',
+                        isHighlight: true),
+                    _refundDetailRow('Estimated refund credit:',
+                        '₹${_formatIndianCurrency(refundEst)} INR',
+                        isBold: true),
+
                     const SizedBox(height: 20),
                     Text(
                       'REASON FOR CANCELLATION',
@@ -182,26 +191,32 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                       maxLines: 3,
                       style: GoogleFonts.inter(fontSize: 12),
                       decoration: InputDecoration(
-                        hintText: 'Please share your reason for cancellation...',
+                        hintText:
+                            'Please share your reason for cancellation...',
                         filled: true,
                         fillColor: AppColors.stoneBg.withValues(alpha: 0.3),
                         border: OutlineInputBorder(
                           borderRadius: AppRadius.lgBr,
-                          borderSide: BorderSide(color: AppColors.lightBone.withValues(alpha: 0.8)),
+                          borderSide: BorderSide(
+                              color:
+                                  AppColors.lightBone.withValues(alpha: 0.8)),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: AppRadius.lgBr,
-                          borderSide: BorderSide(color: AppColors.lightBone.withValues(alpha: 0.8)),
+                          borderSide: BorderSide(
+                              color:
+                                  AppColors.lightBone.withValues(alpha: 0.8)),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: AppRadius.lgBr,
-                          borderSide: const BorderSide(color: AppColors.mossGreen),
+                          borderSide:
+                              const BorderSide(color: AppColors.mossGreen),
                         ),
                         contentPadding: AppSpacing.allLg,
                       ),
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Buttons
                     Row(
                       children: [
@@ -209,8 +224,10 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                           child: OutlinedButton(
                             onPressed: () => Navigator.pop(context),
                             style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: AppColors.lightBone),
-                              shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
+                              side:
+                                  const BorderSide(color: AppColors.lightBone),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: AppRadius.lgBr),
                               padding: const EdgeInsets.symmetric(vertical: 14),
                             ),
                             child: Text(
@@ -228,28 +245,33 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                           child: ElevatedButton(
                             onPressed: () {
                               if (_cancelReasonController.text.trim().isEmpty) {
-                                SnackbarHelper.warning(context, 'Please share a reason for cancellation.');
+                                SnackbarHelper.warning(context,
+                                    'Please share a reason for cancellation.');
                                 return;
                               }
-                              
-                              ref.read(bookingsProvider.notifier).cancelBooking(
-                                booking.id,
-                                _cancelReasonController.text.trim(),
-                                100.0, // 100% refund
-                              );
 
-                              ref.read(notificationsProvider.notifier).addNotification(
-                                'Cancellation Requested',
-                                '${booking.guestName} initiated cancellation for stay ID: ${booking.id}.',
-                                'booking',
-                              );
+                              ref.read(bookingsProvider.notifier).cancelBooking(
+                                    booking.id,
+                                    _cancelReasonController.text.trim(),
+                                    100.0, // 100% refund
+                                  );
+
+                              ref
+                                  .read(notificationsProvider.notifier)
+                                  .addNotification(
+                                    'Cancellation Requested',
+                                    '${booking.guestName} initiated cancellation for stay ID: ${booking.id}.',
+                                    'booking',
+                                  );
 
                               Navigator.pop(context);
-                              SnackbarHelper.success(context, 'Cancellation request filed for ${booking.id}.');
+                              SnackbarHelper.success(context,
+                                  'Cancellation request filed for ${booking.id}.');
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFC62828),
-                              shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: AppRadius.lgBr),
                               padding: const EdgeInsets.symmetric(vertical: 14),
                             ),
                             child: Text(
@@ -274,7 +296,8 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
     );
   }
 
-  Widget _refundDetailRow(String label, String value, {bool isHighlight = false, bool isBold = false}) {
+  Widget _refundDetailRow(String label, String value,
+      {bool isHighlight = false, bool isBold = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
       child: Row(
@@ -291,7 +314,8 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
             value,
             style: GoogleFonts.inter(
               fontSize: 12,
-              fontWeight: isBold || isHighlight ? FontWeight.bold : FontWeight.w500,
+              fontWeight:
+                  isBold || isHighlight ? FontWeight.bold : FontWeight.w500,
               color: isHighlight
                   ? AppColors.mossGreen
                   : (isBold ? const Color(0xFFC62828) : AppColors.charcoal),
@@ -304,7 +328,10 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(bookingsProvider, (_, __) => _lastError(ref, context, ref.read(bookingsProvider.notifier)));
+    ref.listen(
+        bookingsProvider,
+        (_, __) =>
+            _lastError(ref, context, ref.read(bookingsProvider.notifier)));
     final bookings = ref.watch(bookingsProvider);
     final profileAsync = ref.watch(customerProfileProvider);
     final profile = profileAsync.valueOrNull ?? {};
@@ -316,11 +343,15 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
     }).toList();
 
     final upcomingBookings = myBookings
-        .where((b) => b.status != BookingStatus.cancelled && b.status != BookingStatus.checkedOut)
+        .where((b) =>
+            b.status != BookingStatus.cancelled &&
+            b.status != BookingStatus.checkedOut)
         .toList();
 
     final pastBookings = myBookings
-        .where((b) => b.status == BookingStatus.cancelled || b.status == BookingStatus.checkedOut)
+        .where((b) =>
+            b.status == BookingStatus.cancelled ||
+            b.status == BookingStatus.checkedOut)
         .toList();
 
     return Scaffold(
@@ -368,21 +399,23 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Tab switchers
                       Wrap(
                         spacing: 12,
                         runSpacing: 8,
                         children: [
-                          _tabButton('upcoming', Icons.hotel_outlined, 'Upcoming Stays (${upcomingBookings.length})'),
-                          _tabButton('past', Icons.history, 'Past History (${pastBookings.length})'),
+                          _tabButton('upcoming', Icons.hotel_outlined,
+                              'Upcoming Stays (${upcomingBookings.length})'),
+                          _tabButton('past', Icons.history,
+                              'Past History (${pastBookings.length})'),
                         ],
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 24),
-        
+
                 // Content List
                 _activeTab == 'upcoming'
                     ? _buildBookingsList(upcomingBookings, isUpcoming: true)
@@ -406,7 +439,9 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isActive ? AppColors.mossGreen : AppColors.stoneBg.withValues(alpha: 0.5),
+          color: isActive
+              ? AppColors.mossGreen
+              : AppColors.stoneBg.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isActive ? Colors.transparent : AppColors.lightBone,
@@ -418,7 +453,9 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
             Icon(
               icon,
               size: 16,
-              color: isActive ? Colors.white : AppColors.charcoal.withValues(alpha: 0.6),
+              color: isActive
+                  ? Colors.white
+                  : AppColors.charcoal.withValues(alpha: 0.6),
             ),
             const SizedBox(width: 8),
             Text(
@@ -426,7 +463,9 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
               style: GoogleFonts.inter(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                color: isActive ? Colors.white : AppColors.charcoal.withValues(alpha: 0.8),
+                color: isActive
+                    ? Colors.white
+                    : AppColors.charcoal.withValues(alpha: 0.8),
               ),
             ),
           ],
@@ -450,7 +489,9 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                isUpcoming ? Icons.calendar_today_outlined : Icons.folder_open_outlined,
+                isUpcoming
+                    ? Icons.calendar_today_outlined
+                    : Icons.folder_open_outlined,
                 size: 40,
                 color: AppColors.charcoal.withValues(alpha: 0.3),
               ),
@@ -480,11 +521,12 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
       itemBuilder: (context, index) {
         final b = list[index];
         final statusLabel = b.status.name.toUpperCase();
-        
+
         // Match status colors
         Color statusBg = const Color(0xFFFFF8E1);
         Color statusTxt = const Color(0xFFF57F17);
-        if (b.status == BookingStatus.confirmed || b.status == BookingStatus.checkedIn) {
+        if (b.status == BookingStatus.confirmed ||
+            b.status == BookingStatus.checkedIn) {
           statusBg = const Color(0xFFE8F5E9);
           statusTxt = const Color(0xFF2E7D32);
         } else if (b.status == BookingStatus.cancelled) {
@@ -517,10 +559,11 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       color: statusBg,
-                              borderRadius: AppRadius.smBr,
+                      borderRadius: AppRadius.smBr,
                     ),
                     child: Text(
                       statusLabel,
@@ -542,16 +585,18 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                 ],
               ),
               const SizedBox(height: AppSpacing.lg),
-              
+
               // Resort Title and Details
               Text(
                 'Whispering Valleys Sanctuary', // Standard default resort label
-                  style: AppTextStyles.titleLg.copyWith(color: AppColors.mossGreen),
+                style:
+                    AppTextStyles.titleLg.copyWith(color: AppColors.mossGreen),
               ),
               const SizedBox(height: 6),
               Row(
                 children: [
-                  const Icon(Icons.date_range_outlined, size: 14, color: AppColors.mossGreen),
+                  const Icon(Icons.date_range_outlined,
+                      size: 14, color: AppColors.mossGreen),
                   const SizedBox(width: 6),
                   Text(
                     '${b.startDate} to ${b.endDate} (${b.nightsCount} Nights)',
@@ -566,7 +611,8 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
               const SizedBox(height: 4),
               Row(
                 children: [
-                  const Icon(Icons.people_outline, size: 14, color: AppColors.mossGreen),
+                  const Icon(Icons.people_outline,
+                      size: 14, color: AppColors.mossGreen),
                   const SizedBox(width: 6),
                   Text(
                     '${b.guestsCount} Guest(s) checked in',
@@ -578,11 +624,11 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: AppSpacing.lg),
               const Divider(color: AppColors.lightBone),
               const SizedBox(height: AppSpacing.lg),
-              
+
               // Pricing summary
               SizedBox(
                 width: double.infinity,
@@ -625,10 +671,15 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                             try {
                               final repo = ref.read(customerRepositoryProvider);
                               final invoices = await repo.fetchInvoices();
-                              final match = invoices.cast<Map<String, dynamic>?>().firstWhere(
-                                (inv) => inv?['bookingId'] == b.id || inv?['bookingId'] == b.id.replaceAll('BKG-', ''),
-                                orElse: () => null,
-                              );
+                              final match = invoices
+                                  .cast<Map<String, dynamic>?>()
+                                  .firstWhere(
+                                    (inv) =>
+                                        inv?['bookingId'] == b.id ||
+                                        inv?['bookingId'] ==
+                                            b.id.replaceAll('BKG-', ''),
+                                    orElse: () => null,
+                                  );
                               setState(() => _invoiceData = match);
                             } catch (_) {
                               setState(() => _invoiceData = null);
@@ -636,8 +687,10 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                           },
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: AppColors.lightBone),
-                            shape: RoundedRectangleBorder(borderRadius: AppRadius.mdBr),
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: AppRadius.mdBr),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 10),
                           ),
                           child: Text(
                             'View Invoice',
@@ -653,8 +706,10 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                             onPressed: () => _openCancellationSheet(b),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFC62828),
-                              shape: RoundedRectangleBorder(borderRadius: AppRadius.mdBr),
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: AppRadius.mdBr),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 10),
                             ),
                             child: Text(
                               'Cancel Stay',
@@ -679,10 +734,14 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
 
   Widget _buildInvoiceModal(Booking booking) {
     final inv = _invoiceData;
-    final double subtotal = (inv?['subtotal'] as num?)?.toDouble() ?? booking.baseAmount;
-    final double tax = (inv?['taxAmount'] as num?)?.toDouble() ?? booking.taxAmount;
-    final double discount = (inv?['discountAmount'] as num?)?.toDouble() ?? booking.discountAmount;
-    final double total = (inv?['totalAmount'] as num?)?.toDouble() ?? booking.totalAmount;
+    final double subtotal =
+        (inv?['subtotal'] as num?)?.toDouble() ?? booking.baseAmount;
+    final double tax =
+        (inv?['taxAmount'] as num?)?.toDouble() ?? booking.taxAmount;
+    final double discount =
+        (inv?['discountAmount'] as num?)?.toDouble() ?? booking.discountAmount;
+    final double total =
+        (inv?['totalAmount'] as num?)?.toDouble() ?? booking.totalAmount;
     final String invoiceNumber = inv?['invoiceNumber'] as String? ?? booking.id;
     final String invStatus = inv?['status'] as String? ?? '';
     final String dueDate = inv?['dueDate'] as String? ?? '';
@@ -702,230 +761,265 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(32),
-              boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 20)],
+              boxShadow: const [
+                BoxShadow(color: Colors.black26, blurRadius: 20)
+              ],
             ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'VSP Nest Billing Statement',
-                        style: AppTextStyles.titleMd.copyWith(color: AppColors.mossGreen),
-                        ),
-                        Text(
-                          'Invoice #$invoiceNumber • ${booking.id}',
-                          style: GoogleFonts.inter(
-                            fontSize: 10,
-                            color: AppColors.charcoal.withValues(alpha: 0.5),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'VSP Nest Billing Statement',
+                            style: AppTextStyles.titleMd
+                                .copyWith(color: AppColors.mossGreen),
                           ),
-                        ),
-                        if (invStatus.isNotEmpty)
-                          Container(
-                            margin: const EdgeInsets.only(top: 4),
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: invStatus == 'PAID' ? Colors.green.shade50 : Colors.orange.shade50,
-                      borderRadius: AppRadius.smBr,
-                            ),
-                            child: Text(
-                              invStatus,
-                              style: GoogleFonts.inter(fontSize: 9, fontWeight: FontWeight.bold, color: invStatus == 'PAID' ? Colors.green.shade800 : Colors.orange.shade800),
+                          Text(
+                            'Invoice #$invoiceNumber • ${booking.id}',
+                            style: GoogleFonts.inter(
+                              fontSize: 10,
+                              color: AppColors.charcoal.withValues(alpha: 0.5),
                             ),
                           ),
-                      ],
+                          if (invStatus.isNotEmpty)
+                            Container(
+                              margin: const EdgeInsets.only(top: 4),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: invStatus == 'PAID'
+                                    ? Colors.green.shade50
+                                    : Colors.orange.shade50,
+                                borderRadius: AppRadius.smBr,
+                              ),
+                              child: Text(
+                                invStatus,
+                                style: GoogleFonts.inter(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                    color: invStatus == 'PAID'
+                                        ? Colors.green.shade800
+                                        : Colors.orange.shade800),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () => setState(() {
-                      _selectedInvoice = null;
-                      _invoiceData = null;
-                    }),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.md),
-              const Divider(color: AppColors.lightBone),
-              const SizedBox(height: AppSpacing.md),
-              
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _invoiceDetailsRow('Direct client:', booking.guestName),
-                      _invoiceDetailsRow('Telephone:', booking.guestPhone),
-                      _invoiceDetailsRow('Check-in Period:', '${booking.startDate} to ${booking.endDate} (${booking.nightsCount} Nights)'),
-                      if (dueDate.isNotEmpty) _invoiceDetailsRow('Due Date:', dueDate.split('T').first),
-                      if (paidAt.isNotEmpty) _invoiceDetailsRow('Paid At:', paidAt.split('T').first),
-                      const SizedBox(height: AppSpacing.lg),
-                      
-                      // Breakdown
-                      Container(
-                      padding: AppSpacing.allLg,
-                        decoration: BoxDecoration(
-                          color: AppColors.stoneBg.withValues(alpha: 0.4),
-                          borderRadius: AppRadius.lgBr,
-                          border: Border.all(color: AppColors.lightBone),
-                        ),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'CHARGES DESCRIPTION',
-                                  style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.charcoal.withValues(alpha: 0.4),
-                                    letterSpacing: 1.0,
-                                  ),
-                                ),
-                                Text(
-                                  'AMOUNT',
-                                  style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.charcoal.withValues(alpha: 0.4),
-                                    letterSpacing: 1.0,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: AppSpacing.sm),
-                            const Divider(color: AppColors.lightBone),
-                            const SizedBox(height: 10),
-                            _invoiceBreakdownItem('Luxury Accommodation Stays (${booking.nightsCount} Nights)', subtotal),
-                            if (booking.extraGuestAmount > 0) _invoiceBreakdownItem('Extra Guest Capacity Surcharges', booking.extraGuestAmount),
-                            _invoiceBreakdownItem('Sanitization & Cleaning Fees', booking.cleaningAmount),
-                            if (discount > 0) _invoiceBreakdownItem('Coupon Applied (${booking.couponApplied ?? 'Promo'})', -discount, isDiscount: true),
-                            _invoiceBreakdownItem('Luxury GST (18.00%)', tax),
-                            const SizedBox(height: 10),
-                            const Divider(color: AppColors.lightBone),
-                            const SizedBox(height: AppSpacing.sm),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Grand Total:',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.mossGreen,
-                                  ),
-                                ),
-                                Text(
-                                  '₹${_formatIndianCurrency(total)} INR',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.mossGreen,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      
-                      // Payment Summary
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFFFDF5),
-                          borderRadius: AppRadius.mdBr,
-                          border: Border.all(color: AppColors.goldAccent.withValues(alpha: 0.3)),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Advance Paid Amount:',
-                              style: GoogleFonts.inter(
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.mossGreen,
-                              ),
-                            ),
-                            Text(
-                              '₹${_formatIndianCurrency(booking.advancePaidAmount)} INR',
-                              style: GoogleFonts.inter(
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.mossGreen,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
+                    IconButton(
                       onPressed: () => setState(() {
                         _selectedInvoice = null;
                         _invoiceData = null;
                       }),
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: AppColors.lightBone),
-                        shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                      child: Text(
-                        'Close',
-                        style: GoogleFonts.inter(
-                          color: AppColors.charcoal,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
+                      icon: const Icon(Icons.close),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.md),
+                const Divider(color: AppColors.lightBone),
+                const SizedBox(height: AppSpacing.md),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _invoiceDetailsRow('Direct client:', booking.guestName),
+                        _invoiceDetailsRow('Telephone:', booking.guestPhone),
+                        _invoiceDetailsRow('Check-in Period:',
+                            '${booking.startDate} to ${booking.endDate} (${booking.nightsCount} Nights)'),
+                        if (dueDate.isNotEmpty)
+                          _invoiceDetailsRow(
+                              'Due Date:', dueDate.split('T').first),
+                        if (paidAt.isNotEmpty)
+                          _invoiceDetailsRow(
+                              'Paid At:', paidAt.split('T').first),
+                        const SizedBox(height: AppSpacing.lg),
+
+                        // Breakdown
+                        Container(
+                          padding: AppSpacing.allLg,
+                          decoration: BoxDecoration(
+                            color: AppColors.stoneBg.withValues(alpha: 0.4),
+                            borderRadius: AppRadius.lgBr,
+                            border: Border.all(color: AppColors.lightBone),
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'CHARGES DESCRIPTION',
+                                    style: GoogleFonts.spaceGrotesk(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.charcoal
+                                          .withValues(alpha: 0.4),
+                                      letterSpacing: 1.0,
+                                    ),
+                                  ),
+                                  Text(
+                                    'AMOUNT',
+                                    style: GoogleFonts.spaceGrotesk(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.charcoal
+                                          .withValues(alpha: 0.4),
+                                      letterSpacing: 1.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: AppSpacing.sm),
+                              const Divider(color: AppColors.lightBone),
+                              const SizedBox(height: 10),
+                              _invoiceBreakdownItem(
+                                  'Luxury Accommodation Stays (${booking.nightsCount} Nights)',
+                                  subtotal),
+                              if (booking.extraGuestAmount > 0)
+                                _invoiceBreakdownItem(
+                                    'Extra Guest Capacity Surcharges',
+                                    booking.extraGuestAmount),
+                              _invoiceBreakdownItem(
+                                  'Sanitization & Cleaning Fees',
+                                  booking.cleaningAmount),
+                              if (discount > 0)
+                                _invoiceBreakdownItem(
+                                    'Coupon Applied (${booking.couponApplied ?? 'Promo'})',
+                                    -discount,
+                                    isDiscount: true),
+                              _invoiceBreakdownItem('Luxury GST (18.00%)', tax),
+                              const SizedBox(height: 10),
+                              const Divider(color: AppColors.lightBone),
+                              const SizedBox(height: AppSpacing.sm),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Grand Total:',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.mossGreen,
+                                    ),
+                                  ),
+                                  Text(
+                                    '₹${_formatIndianCurrency(total)} INR',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.mossGreen,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.lg),
+
+                        // Payment Summary
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFFDF5),
+                            borderRadius: AppRadius.mdBr,
+                            border: Border.all(
+                                color: AppColors.goldAccent
+                                    .withValues(alpha: 0.3)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Advance Paid Amount:',
+                                style: GoogleFonts.inter(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.mossGreen,
+                                ),
+                              ),
+                              Text(
+                                '₹${_formatIndianCurrency(booking.advancePaidAmount)} INR',
+                                style: GoogleFonts.inter(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.mossGreen,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => setState(() {
+                          _selectedInvoice = null;
+                          _invoiceData = null;
+                        }),
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: AppColors.lightBone),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: AppRadius.lgBr),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        child: Text(
+                          'Close',
+                          style: GoogleFonts.inter(
+                            color: AppColors.charcoal,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        SnackbarHelper.info(context, 'Direct printing initialized.');
-                      },
-                      icon: const Icon(Icons.print, size: 14, color: Colors.white),
-                      label: Text(
-                        'Print Statement',
-                        style: GoogleFonts.inter(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          SnackbarHelper.info(
+                              context, 'Direct printing initialized.');
+                        },
+                        icon: const Icon(Icons.print,
+                            size: 14, color: Colors.white),
+                        label: Text(
+                          'Print Statement',
+                          style: GoogleFonts.inter(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.mossGreen,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: AppRadius.lgBr),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.mossGreen,
-                        shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _invoiceDetailsRow(String label, String value) {
     return Padding(
@@ -959,7 +1053,8 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
     );
   }
 
-  Widget _invoiceBreakdownItem(String label, double value, {bool isDiscount = false}) {
+  Widget _invoiceBreakdownItem(String label, double value,
+      {bool isDiscount = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6.0),
       child: Row(
@@ -970,7 +1065,9 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
               label,
               style: GoogleFonts.inter(
                 fontSize: 11,
-                color: isDiscount ? AppColors.mossGreen : AppColors.charcoal.withValues(alpha: 0.8),
+                color: isDiscount
+                    ? AppColors.mossGreen
+                    : AppColors.charcoal.withValues(alpha: 0.8),
                 fontWeight: isDiscount ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -981,7 +1078,9 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                 : '₹${_formatIndianCurrency(value)}',
             style: GoogleFonts.inter(
               fontSize: 11,
-              color: isDiscount ? AppColors.mossGreen : AppColors.charcoal.withValues(alpha: 0.8),
+              color: isDiscount
+                  ? AppColors.mossGreen
+                  : AppColors.charcoal.withValues(alpha: 0.8),
               fontWeight: isDiscount ? FontWeight.bold : FontWeight.normal,
             ),
           ),

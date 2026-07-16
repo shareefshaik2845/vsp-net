@@ -28,10 +28,12 @@ import 'package:vsp_resorts_portal/domain/repositories.dart';
 import '../test/mocks.dart';
 
 List<Override> allMockOverrides() => [
-      accountantRepositoryProvider.overrideWithValue(MockAccountantRepository()),
+      accountantRepositoryProvider
+          .overrideWithValue(MockAccountantRepository()),
       staffRepositoryProvider.overrideWithValue(MockStaffRepository()),
       customerRepositoryProvider.overrideWithValue(MockCustomerRepository()),
-      superAdminRepositoryProvider.overrideWithValue(MockSuperAdminRepository()),
+      superAdminRepositoryProvider
+          .overrideWithValue(MockSuperAdminRepository()),
       resortRepositoryProvider.overrideWithValue(MockResortRepository()),
     ];
 
@@ -45,7 +47,8 @@ Widget wrapAppAsRole(
       isLoggedInProvider.overrideWith((ref) => true),
       authenticatedRoleProvider.overrideWith((ref) => role),
       activeRoleProvider.overrideWith((ref) => role),
-      if (role == UserRole.customer) activeTabProvider.overrideWith((ref) => 'villa'),
+      if (role == UserRole.customer)
+        activeTabProvider.overrideWith((ref) => 'villa'),
       ...allMockOverrides(),
       ...additionalOverrides,
     ],
@@ -70,16 +73,20 @@ void main() {
   // ── 1. Login screen ──
 
   group('Login screen', () {
-    testWidgets('renders branding and form elements', (WidgetTester tester) async {
-      await pumpApp(tester, const ProviderScope(child: MaterialApp(home: LoginScreen())));
+    testWidgets('renders branding and form elements',
+        (WidgetTester tester) async {
+      await pumpApp(
+          tester, const ProviderScope(child: MaterialApp(home: LoginScreen())));
       expect(find.text('Sanctuary Portal'), findsOneWidget);
       expect(find.text('Access Sanctuary Portal'), findsOneWidget);
       expect(find.text('Forgot Password?'), findsOneWidget);
       expect(find.text('Request a Live Demo'), findsOneWidget);
     });
 
-    testWidgets('shows validation snackbar on empty submit', (WidgetTester tester) async {
-      await pumpApp(tester, const ProviderScope(child: MaterialApp(home: LoginScreen())));
+    testWidgets('shows validation snackbar on empty submit',
+        (WidgetTester tester) async {
+      await pumpApp(
+          tester, const ProviderScope(child: MaterialApp(home: LoginScreen())));
       await tester.tap(find.text('Access Sanctuary Portal'));
       await tester.pump();
       expect(find.textContaining('enter an email'), findsOneWidget);
@@ -97,7 +104,8 @@ void main() {
       expect(find.text('Profile Management'), findsOneWidget);
     });
 
-    testWidgets('tapping My Dashboard shows My Trips', (WidgetTester tester) async {
+    testWidgets('tapping My Dashboard shows My Trips',
+        (WidgetTester tester) async {
       await pumpApp(tester, wrapAppAsRole(UserRole.customer));
       await tester.pumpAndSettle();
       await tester.tap(find.text('My Dashboard'));
@@ -106,7 +114,8 @@ void main() {
       expect(find.text('My Trips'), findsOneWidget);
     });
 
-    testWidgets('tapping Profile Management shows password section', (WidgetTester tester) async {
+    testWidgets('tapping Profile Management shows password section',
+        (WidgetTester tester) async {
       await pumpApp(tester, wrapAppAsRole(UserRole.customer));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Profile Management'));
@@ -119,14 +128,16 @@ void main() {
   // ── 3. Customer resort interaction ──
 
   group('Customer resort interaction', () {
-    testWidgets('search input field renders and accepts text', (WidgetTester tester) async {
+    testWidgets('search input field renders and accepts text',
+        (WidgetTester tester) async {
       await pumpApp(tester, wrapAppAsRole(UserRole.customer));
       await tester.pumpAndSettle();
       final searchFields = find.byType(TextField);
       expect(searchFields, findsAtLeast(1));
     });
 
-    testWidgets('resort card renders with mock data', (WidgetTester tester) async {
+    testWidgets('resort card renders with mock data',
+        (WidgetTester tester) async {
       await pumpApp(tester, wrapAppAsRole(UserRole.customer));
       await tester.pumpAndSettle();
       expect(find.text('Test Resort'), findsAtLeastNWidgets(1));
@@ -136,7 +147,8 @@ void main() {
   // ── 4. Customer full sidebar navigation ──
 
   group('Customer full sidebar navigation', () {
-    testWidgets('sidebar Interactive Calendar shows calendar view', (WidgetTester tester) async {
+    testWidgets('sidebar Interactive Calendar shows calendar view',
+        (WidgetTester tester) async {
       await pumpApp(tester, wrapAppAsRole(UserRole.customer));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Interactive Calendar'));
@@ -146,7 +158,9 @@ void main() {
       expect(find.text('Valley Reservation Matrix'), findsOneWidget);
     });
 
-    testWidgets('sidebar Villa Specs shows resort cards after visiting calendar', (WidgetTester tester) async {
+    testWidgets(
+        'sidebar Villa Specs shows resort cards after visiting calendar',
+        (WidgetTester tester) async {
       await pumpApp(tester, wrapAppAsRole(UserRole.customer));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Interactive Calendar'));
@@ -228,7 +242,8 @@ void main() {
       expect(find.text('Resort Operations'), findsOneWidget);
     });
 
-    testWidgets('tapping Calendar Blocking shows block form fields', (WidgetTester tester) async {
+    testWidgets('tapping Calendar Blocking shows block form fields',
+        (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(const Size(1200, 800));
       await tester.pumpWidget(wrapAppAsRole(UserRole.admin));
       await tester.pumpAndSettle();
@@ -242,7 +257,8 @@ void main() {
       expect(find.text('Commit Date Isolation'), findsOneWidget);
     });
 
-    testWidgets('tapping Booking Matrix shows booking table headers', (WidgetTester tester) async {
+    testWidgets('tapping Booking Matrix shows booking table headers',
+        (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(const Size(1200, 800));
       await tester.pumpWidget(wrapAppAsRole(UserRole.admin));
       await tester.pumpAndSettle();
@@ -256,7 +272,8 @@ void main() {
       expect(find.text('DATES / NIGHTS'), findsOneWidget);
     });
 
-    testWidgets('tapping Coupons Editor shows coupon form', (WidgetTester tester) async {
+    testWidgets('tapping Coupons Editor shows coupon form',
+        (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(const Size(1200, 800));
       await tester.pumpWidget(wrapAppAsRole(UserRole.admin));
       await tester.pumpAndSettle();
@@ -269,14 +286,13 @@ void main() {
       expect(find.text('VALUE AMOUNT'), findsOneWidget);
       expect(find.text('Add Coupon to Registry'), findsOneWidget);
     });
-
-
   });
 
   // ── 7. Staff functional flows ──
 
   group('Staff functional flows', () {
-    testWidgets('renders staff view with roster tab showing empty sections', (WidgetTester tester) async {
+    testWidgets('renders staff view with roster tab showing empty sections',
+        (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(const Size(1200, 800));
       await tester.pumpWidget(wrapAppAsRole(UserRole.staff));
       await tester.pumpAndSettle();
@@ -288,7 +304,8 @@ void main() {
       expect(find.textContaining('Active In-house Guests'), findsOneWidget);
     });
 
-    testWidgets('tapping Housekeeping tab shows housekeeping board', (WidgetTester tester) async {
+    testWidgets('tapping Housekeeping tab shows housekeeping board',
+        (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(const Size(1200, 800));
       await tester.pumpWidget(wrapAppAsRole(UserRole.staff));
       await tester.pumpAndSettle();
@@ -304,7 +321,8 @@ void main() {
   // ── 8. Accountant functional flows ──
 
   group('Accountant functional flows', () {
-    testWidgets('renders KPI grid and invoice ledger', (WidgetTester tester) async {
+    testWidgets('renders KPI grid and invoice ledger',
+        (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(const Size(1200, 800));
       await tester.pumpWidget(wrapAppAsRole(UserRole.accountant));
       await tester.pumpAndSettle();
@@ -316,7 +334,8 @@ void main() {
       expect(find.text('Corporate Invoices Ledger'), findsOneWidget);
     });
 
-    testWidgets('shows refund queue and export buttons', (WidgetTester tester) async {
+    testWidgets('shows refund queue and export buttons',
+        (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(const Size(1200, 800));
       await tester.pumpWidget(wrapAppAsRole(UserRole.accountant));
       await tester.pumpAndSettle();
@@ -330,7 +349,8 @@ void main() {
   // ── 9. Super Admin functional flows ──
 
   group('Super Admin functional flows', () {
-    testWidgets('tab navigation switches between sections', (WidgetTester tester) async {
+    testWidgets('tab navigation switches between sections',
+        (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(const Size(1200, 800));
       await tester.pumpWidget(wrapAppAsRole(UserRole.superAdmin));
       await tester.pumpAndSettle();
@@ -359,7 +379,8 @@ void main() {
       expect(find.text('System Notifications'), findsOneWidget);
     });
 
-    testWidgets('tapping Create User opens dialog', (WidgetTester tester) async {
+    testWidgets('tapping Create User opens dialog',
+        (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(const Size(1200, 800));
       await tester.pumpWidget(wrapAppAsRole(UserRole.superAdmin));
       await tester.pumpAndSettle();
@@ -379,7 +400,8 @@ void main() {
       expect(find.text('Role'), findsOneWidget);
     });
 
-    testWidgets('dashboard renders all stat cards', (WidgetTester tester) async {
+    testWidgets('dashboard renders all stat cards',
+        (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(const Size(1200, 800));
       await tester.pumpWidget(wrapAppAsRole(UserRole.superAdmin));
       await tester.pumpAndSettle();
@@ -396,14 +418,16 @@ void main() {
   // ── 10. Logout flow ──
 
   group('Logout flow', () {
-    testWidgets('tapping Logout Perspective navigates to login', (WidgetTester tester) async {
+    testWidgets('tapping Logout Perspective navigates to login',
+        (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(const Size(1200, 800));
       await tester.pumpWidget(wrapAppAsRole(UserRole.customer));
       await tester.pumpAndSettle();
 
       final logoutFinder = find.text('Logout Perspective');
       if (logoutFinder.evaluate().isEmpty) {
-        await tester.scrollUntilVisible(logoutFinder, 100, scrollable: find.byType(Scrollable).first);
+        await tester.scrollUntilVisible(logoutFinder, 100,
+            scrollable: find.byType(Scrollable).first);
         await tester.pump();
       }
       await tester.tap(logoutFinder);
@@ -418,27 +442,37 @@ void main() {
 
   group('Screen rendering', () {
     testWidgets('CustomerView renders', (WidgetTester tester) async {
-      await pumpApp(tester, wrapAppAsRole(UserRole.customer, home: const CustomerView()));
+      await pumpApp(
+          tester, wrapAppAsRole(UserRole.customer, home: const CustomerView()));
       expect(find.byType(CustomerView), findsOneWidget);
     });
 
-    testWidgets('SavedView shows empty state message', (WidgetTester tester) async {
-      await pumpApp(tester, wrapAppAsRole(UserRole.customer, home: const SavedView()));
+    testWidgets('SavedView shows empty state message',
+        (WidgetTester tester) async {
+      await pumpApp(
+          tester, wrapAppAsRole(UserRole.customer, home: const SavedView()));
       expect(find.text('No Saved Resorts Yet'), findsOneWidget);
     });
 
-    testWidgets('CustomerDashboardView shows My Trips', (WidgetTester tester) async {
-      await pumpApp(tester, wrapAppAsRole(UserRole.customer, home: const CustomerDashboardView()));
+    testWidgets('CustomerDashboardView shows My Trips',
+        (WidgetTester tester) async {
+      await pumpApp(
+          tester,
+          wrapAppAsRole(UserRole.customer,
+              home: const CustomerDashboardView()));
       expect(find.text('My Trips'), findsOneWidget);
     });
 
-    testWidgets('CustomerProfileView renders password section', (WidgetTester tester) async {
-      await pumpApp(tester, wrapAppAsRole(UserRole.customer, home: const CustomerProfileView()));
+    testWidgets('CustomerProfileView renders password section',
+        (WidgetTester tester) async {
+      await pumpApp(tester,
+          wrapAppAsRole(UserRole.customer, home: const CustomerProfileView()));
       expect(find.textContaining('Password'), findsAtLeastNWidgets(1));
     });
 
     testWidgets('StaffView renders', (WidgetTester tester) async {
-      await pumpApp(tester, wrapAppAsRole(UserRole.staff, home: const StaffView()));
+      await pumpApp(
+          tester, wrapAppAsRole(UserRole.staff, home: const StaffView()));
       expect(find.byType(StaffView), findsOneWidget);
     });
   });
@@ -447,10 +481,12 @@ void main() {
 
   group('Repository integration', () {
     test('MockAccountantRepository downloadLedgerPdf', () async {
-      expect(await MockAccountantRepository().downloadLedgerPdf('1', '', ''), endsWith('.pdf'));
+      expect(await MockAccountantRepository().downloadLedgerPdf('1', '', ''),
+          endsWith('.pdf'));
     });
     test('MockAccountantRepository downloadLedgerExcel', () async {
-      expect(await MockAccountantRepository().downloadLedgerExcel('1', '', ''), endsWith('.xlsx'));
+      expect(await MockAccountantRepository().downloadLedgerExcel('1', '', ''),
+          endsWith('.xlsx'));
     });
     test('MockStaffRepository fetchProperties returns data', () async {
       expect(await MockStaffRepository().fetchProperties(), isNotEmpty);
@@ -458,7 +494,8 @@ void main() {
     test('MockCustomerRepository fetchProperties returns mock data', () async {
       expect(await MockCustomerRepository().fetchProperties(), isNotEmpty);
     });
-    test('MockResortRepository fetchPropertyDetails returns PropertyDetails', () async {
+    test('MockResortRepository fetchPropertyDetails returns PropertyDetails',
+        () async {
       final d = await MockResortRepository().fetchPropertyDetails();
       expect(d.id, '1');
       expect(d.name, 'Test');
@@ -467,35 +504,85 @@ void main() {
 }
 
 class MockSuperAdminRepository implements ISuperAdminRepository {
-  @override Future<Map<String, dynamic>> fetchAnalyticsRevenue() async => {};
-  @override Future<List<Map<String, dynamic>>> fetchBookingSources() async => [];
-  @override Future<List<Map<String, dynamic>>> fetchResortRevenueTable() async => [];
-  @override Future<Map<String, dynamic>> fetchGlobalSettings() async => {};
-  @override Future<void> updateGlobalSettings(Map<String, dynamic> s) async {}
-  @override Future<void> factoryReset({String? confirmationToken}) async {}
-  @override Future<Map<String, dynamic>> fetchSchema() async => {};
-  @override Future<List<Map<String, dynamic>>> fetchProperties() async => [];
-  @override Future<Map<String, dynamic>> fetchPropertyDetail(String id) async => {};
-  @override Future<void> createProperty(Map<String, dynamic> p) async {}
-  @override Future<void> updateProperty(String id, Map<String, dynamic> p) async {}
-  @override Future<void> deleteProperty(String id) async {}
-  @override Future<Map<String, dynamic>> uploadImage(String filePath, {String? caption}) async => {};
-  @override Future<List<Map<String, dynamic>>> uploadGallery(List<String> filePaths) async => [];
-  @override Future<List<Map<String, dynamic>>> fetchUsers({String? role, String? status, String? search, int page = 1, int pageSize = 20}) async => [];
-  @override Future<Map<String, dynamic>> fetchUserDetail(String id) async => {};
-  @override Future<void> createUser(Map<String, dynamic> user) async {}
-  @override Future<void> updateUser(String id, Map<String, dynamic> user) async {}
-  @override Future<void> deleteUser(String id) async {}
-  @override Future<List<Map<String, dynamic>>> fetchApprovals() async => [];
-  @override Future<List<Map<String, dynamic>>> fetchPendingApprovals() async => [];
-  @override Future<void> resolveApproval(String id, String status, {String? rejectionReason}) async {}
-  @override Future<List<RoleDefinition>> fetchRoles() async => [];
-  @override Future<RoleDefinition> fetchRoleDetail(String id) async => RoleDefinition(id: '1', displayName: 'Admin', description: '', permissions: []);
-  @override Future<void> updateRole(RoleDefinition role) async {}
-  @override Future<List<Map<String, dynamic>>> fetchAuditLogs({String? userId, String? action, String? from, String? to, int? page, int? pageSize}) async => [];
-  @override Future<List<AppNotification>> fetchNotifications() async => [];
-  @override Future<void> addNotification(AppNotification notification) async {}
-  @override Future<void> markNotificationAsRead(String id) async {}
-  @override Future<void> clearNotifications() async {}
-  @override Future<List<Booking>> fetchAllBookings() async => [];
+  @override
+  Future<Map<String, dynamic>> fetchAnalyticsRevenue() async => {};
+  @override
+  Future<List<Map<String, dynamic>>> fetchBookingSources() async => [];
+  @override
+  Future<List<Map<String, dynamic>>> fetchResortRevenueTable() async => [];
+  @override
+  Future<Map<String, dynamic>> fetchGlobalSettings() async => {};
+  @override
+  Future<void> updateGlobalSettings(Map<String, dynamic> s) async {}
+  @override
+  Future<void> factoryReset({String? confirmationToken}) async {}
+  @override
+  Future<Map<String, dynamic>> fetchSchema() async => {};
+  @override
+  Future<List<Map<String, dynamic>>> fetchProperties() async => [];
+  @override
+  Future<Map<String, dynamic>> fetchPropertyDetail(String id) async => {};
+  @override
+  Future<void> createProperty(Map<String, dynamic> p) async {}
+  @override
+  Future<void> updateProperty(String id, Map<String, dynamic> p) async {}
+  @override
+  Future<void> deleteProperty(String id) async {}
+  @override
+  Future<Map<String, dynamic>> uploadImage(String filePath,
+          {String? caption}) async =>
+      {};
+  @override
+  Future<List<Map<String, dynamic>>> uploadGallery(
+          List<String> filePaths) async =>
+      [];
+  @override
+  Future<List<Map<String, dynamic>>> fetchUsers(
+          {String? role,
+          String? status,
+          String? search,
+          int page = 1,
+          int pageSize = 20}) async =>
+      [];
+  @override
+  Future<Map<String, dynamic>> fetchUserDetail(String id) async => {};
+  @override
+  Future<void> createUser(Map<String, dynamic> user) async {}
+  @override
+  Future<void> updateUser(String id, Map<String, dynamic> user) async {}
+  @override
+  Future<void> deleteUser(String id) async {}
+  @override
+  Future<List<Map<String, dynamic>>> fetchApprovals() async => [];
+  @override
+  Future<List<Map<String, dynamic>>> fetchPendingApprovals() async => [];
+  @override
+  Future<void> resolveApproval(String id, String status,
+      {String? rejectionReason}) async {}
+  @override
+  Future<List<RoleDefinition>> fetchRoles() async => [];
+  @override
+  Future<RoleDefinition> fetchRoleDetail(String id) async => RoleDefinition(
+      id: '1', displayName: 'Admin', description: '', permissions: []);
+  @override
+  Future<void> updateRole(RoleDefinition role) async {}
+  @override
+  Future<List<Map<String, dynamic>>> fetchAuditLogs(
+          {String? userId,
+          String? action,
+          String? from,
+          String? to,
+          int? page,
+          int? pageSize}) async =>
+      [];
+  @override
+  Future<List<AppNotification>> fetchNotifications() async => [];
+  @override
+  Future<void> addNotification(AppNotification notification) async {}
+  @override
+  Future<void> markNotificationAsRead(String id) async {}
+  @override
+  Future<void> clearNotifications() async {}
+  @override
+  Future<List<Booking>> fetchAllBookings() async => [];
 }

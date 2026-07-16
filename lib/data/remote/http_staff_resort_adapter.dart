@@ -47,10 +47,10 @@ class HttpStaffResortAdapter implements IResortRepository {
   @override
   Future<List<Booking>> fetchBookings() async {
     final dashboard = await _staffRepo.fetchDashboard();
-    final rosterData = (dashboard['roster'] as List<dynamic>?)
-        ?? (dashboard['bookings'] as List<dynamic>?)
-        ?? (dashboard['data'] as List<dynamic>?)
-        ?? [];
+    final rosterData = (dashboard['roster'] as List<dynamic>?) ??
+        (dashboard['bookings'] as List<dynamic>?) ??
+        (dashboard['data'] as List<dynamic>?) ??
+        [];
     return rosterData.map((e) {
       final json = e as Map<String, dynamic>;
       final total = (json['totalAmount'] as num?)?.toDouble() ?? 0;
@@ -61,10 +61,19 @@ class HttpStaffResortAdapter implements IResortRepository {
         guestName: json['guestName'] as String? ?? '',
         guestEmail: json['guestEmail'] as String? ?? '',
         guestPhone: json['guestPhone'] as String? ?? '',
-        startDate: json['startDate'] as String? ?? json['checkInDate'] as String? ?? '',
-        endDate: json['endDate'] as String? ?? json['checkOutDate'] as String? ?? '',
+        startDate: json['startDate'] as String? ??
+            json['checkInDate'] as String? ??
+            '',
+        endDate:
+            json['endDate'] as String? ?? json['checkOutDate'] as String? ?? '',
         guestsCount: json['guestsCount'] as int? ?? 1,
-        nightsCount: _nightsBetween(json['startDate'] as String? ?? json['checkInDate'] as String? ?? '', json['endDate'] as String? ?? json['checkOutDate'] as String? ?? ''),
+        nightsCount: _nightsBetween(
+            json['startDate'] as String? ??
+                json['checkInDate'] as String? ??
+                '',
+            json['endDate'] as String? ??
+                json['checkOutDate'] as String? ??
+                ''),
         source: _parseSource(json['source'] as String?),
         status: status,
         paymentStatus: _approximatePaymentStatus(status),
@@ -76,8 +85,10 @@ class HttpStaffResortAdapter implements IResortRepository {
         totalAmount: total,
         advancePaidAmount: status == BookingStatus.pendingPayment ? 0 : total,
         balanceAmount: status == BookingStatus.pendingPayment ? total : 0,
-        createdAt: json['createdAt'] as String? ?? DateTime.now().toIso8601String(),
-        housekeepingNotes: json['notes'] as String? ?? json['specialRequests'] as String?,
+        createdAt:
+            json['createdAt'] as String? ?? DateTime.now().toIso8601String(),
+        housekeepingNotes:
+            json['notes'] as String? ?? json['specialRequests'] as String?,
       );
     }).toList();
   }
@@ -94,12 +105,18 @@ class HttpStaffResortAdapter implements IResortRepository {
 
   BookingStatus _parseBookingStatus(String? status) {
     switch (status?.toUpperCase()) {
-      case 'CONFIRMED': return BookingStatus.confirmed;
-      case 'PENDING': return BookingStatus.pendingPayment;
-      case 'CANCELLED': return BookingStatus.cancelled;
-      case 'CHECKED_IN': return BookingStatus.checkedIn;
-      case 'CHECKED_OUT': return BookingStatus.checkedOut;
-      default: return BookingStatus.pendingPayment;
+      case 'CONFIRMED':
+        return BookingStatus.confirmed;
+      case 'PENDING':
+        return BookingStatus.pendingPayment;
+      case 'CANCELLED':
+        return BookingStatus.cancelled;
+      case 'CHECKED_IN':
+        return BookingStatus.checkedIn;
+      case 'CHECKED_OUT':
+        return BookingStatus.checkedOut;
+      default:
+        return BookingStatus.pendingPayment;
     }
   }
 
@@ -118,14 +135,20 @@ class HttpStaffResortAdapter implements IResortRepository {
 
   BookingSource _parseSource(String? source) {
     switch (source?.toLowerCase()) {
-      case 'airbnb': return BookingSource.airbnb;
+      case 'airbnb':
+        return BookingSource.airbnb;
       case 'booking_com':
-      case 'booking.com': return BookingSource.bookingCom;
-      case 'agoda': return BookingSource.agoda;
+      case 'booking.com':
+        return BookingSource.bookingCom;
+      case 'agoda':
+        return BookingSource.agoda;
       case 'makemytrip':
-      case 'mmt': return BookingSource.makemytrip;
-      case 'goibibo': return BookingSource.goibibo;
-      default: return BookingSource.direct;
+      case 'mmt':
+        return BookingSource.makemytrip;
+      case 'goibibo':
+        return BookingSource.goibibo;
+      default:
+        return BookingSource.direct;
     }
   }
 
@@ -182,7 +205,8 @@ class HttpStaffResortAdapter implements IResortRepository {
   @override
   Future<List<RoomStatus>> fetchRoomStatuses() async {
     final props = await _staffRepo.fetchProperties();
-    final propertyId = props.isNotEmpty ? (props.first['id'] as String? ?? '1') : '1';
+    final propertyId =
+        props.isNotEmpty ? (props.first['id'] as String? ?? '1') : '1';
     return _staffRepo.fetchHousekeepingRooms(propertyId);
   }
 
@@ -227,7 +251,8 @@ class HttpStaffResortAdapter implements IResortRepository {
   }
 
   @override
-  Future<List<AppNotification>> fetchNotifications() => _staffRepo.fetchNotifications();
+  Future<List<AppNotification>> fetchNotifications() =>
+      _staffRepo.fetchNotifications();
 
   @override
   Future<void> addNotification(AppNotification notification) async {
@@ -235,35 +260,50 @@ class HttpStaffResortAdapter implements IResortRepository {
   }
 
   @override
-  Future<void> markNotificationAsRead(String id) => _staffRepo.markNotificationAsRead(id);
+  Future<void> markNotificationAsRead(String id) =>
+      _staffRepo.markNotificationAsRead(id);
 
   @override
   Future<void> clearNotifications() => _staffRepo.markAllNotificationsAsRead();
 
   @override
-  Future<Map<String, dynamic>> fetchAnalyticsKpis() => throw UnsupportedError('Staff: fetchAnalyticsKpis not available');
+  Future<Map<String, dynamic>> fetchAnalyticsKpis() =>
+      throw UnsupportedError('Staff: fetchAnalyticsKpis not available');
   @override
-  Future<List<Map<String, dynamic>>> fetchAnalyticsSalesChart() => throw UnsupportedError('Staff: fetchAnalyticsSalesChart not available');
+  Future<List<Map<String, dynamic>>> fetchAnalyticsSalesChart() =>
+      throw UnsupportedError('Staff: fetchAnalyticsSalesChart not available');
   @override
-  Future<List<Map<String, dynamic>>> fetchAnalyticsMetricsInsights() => throw UnsupportedError('Staff: fetchAnalyticsMetricsInsights not available');
+  Future<List<Map<String, dynamic>>> fetchAnalyticsMetricsInsights() =>
+      throw UnsupportedError(
+          'Staff: fetchAnalyticsMetricsInsights not available');
   @override
-  Future<void> activateProperty(String id, bool active) => _staffRepo.activateProperty(id);
+  Future<void> activateProperty(String id, bool active) =>
+      _staffRepo.activateProperty(id);
   @override
-  Future<Map<String, dynamic>> fetchBookingDetail(String id) => throw UnsupportedError('Staff: fetchBookingDetail not available');
+  Future<Map<String, dynamic>> fetchBookingDetail(String id) =>
+      throw UnsupportedError('Staff: fetchBookingDetail not available');
   @override
-  Future<List<Map<String, dynamic>>> fetchBookingNotes(String bookingId) => throw UnsupportedError('Staff: fetchBookingNotes not available');
+  Future<List<Map<String, dynamic>>> fetchBookingNotes(String bookingId) =>
+      throw UnsupportedError('Staff: fetchBookingNotes not available');
   @override
-  Future<void> authorizePayment(String bookingId) => throw UnsupportedError('Staff: authorizePayment not available');
+  Future<void> authorizePayment(String bookingId) =>
+      throw UnsupportedError('Staff: authorizePayment not available');
   @override
-  Future<void> revokeBooking(String bookingId, {String? reason}) => throw UnsupportedError('Staff: revokeBooking not available');
+  Future<void> revokeBooking(String bookingId, {String? reason}) =>
+      throw UnsupportedError('Staff: revokeBooking not available');
   @override
-  Future<Map<String, dynamic>> fetchBasePricing() => throw UnsupportedError('Staff: fetchBasePricing not available');
+  Future<Map<String, dynamic>> fetchBasePricing() =>
+      throw UnsupportedError('Staff: fetchBasePricing not available');
   @override
-  Future<void> updateBasePricing(Map<String, dynamic> pricing) => throw UnsupportedError('Staff: updateBasePricing not available');
+  Future<void> updateBasePricing(Map<String, dynamic> pricing) =>
+      throw UnsupportedError('Staff: updateBasePricing not available');
   @override
-  Future<void> toggleSeasonalRule(String id) => throw UnsupportedError('Staff: toggleSeasonalRule not available');
+  Future<void> toggleSeasonalRule(String id) =>
+      throw UnsupportedError('Staff: toggleSeasonalRule not available');
   @override
-  Future<void> toggleCoupon(String id) => throw UnsupportedError('Staff: toggleCoupon not available');
+  Future<void> toggleCoupon(String id) =>
+      throw UnsupportedError('Staff: toggleCoupon not available');
   @override
-  Future<List<Map<String, dynamic>>> fetchPropertiesRaw() => throw UnsupportedError('Staff: fetchPropertiesRaw not available');
+  Future<List<Map<String, dynamic>>> fetchPropertiesRaw() =>
+      throw UnsupportedError('Staff: fetchPropertiesRaw not available');
 }

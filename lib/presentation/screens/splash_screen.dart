@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/api_client.dart';
 import '../../core/theme.dart';
-import '../../data/remote/auth_api_service.dart' show AuthApiService, AuthFailure, AuthSuccess, AuthResult, RemoteUserInfo;
+import '../../data/remote/auth_api_service.dart'
+    show AuthApiService, AuthFailure, AuthSuccess, AuthResult, RemoteUserInfo;
 import '../../domain/entities.dart';
 import '../providers/state_provider.dart';
 import '../routing/app_router.dart';
@@ -15,10 +16,12 @@ class VspNestSplashScreen extends ConsumerStatefulWidget {
   const VspNestSplashScreen({super.key});
 
   @override
-  ConsumerState<VspNestSplashScreen> createState() => _VspNestSplashScreenState();
+  ConsumerState<VspNestSplashScreen> createState() =>
+      _VspNestSplashScreenState();
 }
 
-class _VspNestSplashScreenState extends ConsumerState<VspNestSplashScreen> with SingleTickerProviderStateMixin {
+class _VspNestSplashScreenState extends ConsumerState<VspNestSplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeInAnimation;
 
@@ -67,7 +70,8 @@ class _VspNestSplashScreenState extends ConsumerState<VspNestSplashScreen> with 
         return;
       }
 
-      if (authResult is AuthSuccess<RemoteUserInfo> && !authResult.data.active) {
+      if (authResult is AuthSuccess<RemoteUserInfo> &&
+          !authResult.data.active) {
         await ApiClient.instance.clearTokens();
         if (!mounted) return;
         Navigator.pushReplacementNamed(context, RouteNames.login);
@@ -97,7 +101,8 @@ class _VspNestSplashScreenState extends ConsumerState<VspNestSplashScreen> with 
         });
       }
 
-      Navigator.pushReplacementNamed(context, AppRouter.routeForRole(targetRole));
+      Navigator.pushReplacementNamed(
+          context, AppRouter.routeForRole(targetRole));
     } catch (_) {
       await ApiClient.instance.clearTokens();
       if (!mounted) return;
@@ -109,7 +114,8 @@ class _VspNestSplashScreenState extends ConsumerState<VspNestSplashScreen> with 
     try {
       final parts = token.split('.');
       if (parts.length != 3) return true;
-      final payload = utf8.decode(base64Url.decode(base64Url.normalize(parts[1])));
+      final payload =
+          utf8.decode(base64Url.decode(base64Url.normalize(parts[1])));
       final claims = json.decode(payload) as Map<String, dynamic>;
       final exp = claims['exp'] as int?;
       if (exp == null) return false;
@@ -188,7 +194,7 @@ class _VspNestSplashScreenState extends ConsumerState<VspNestSplashScreen> with 
                 ),
               ),
             ),
-            
+
             // Center Logo and Brand Title
             Center(
               child: FadeTransition(

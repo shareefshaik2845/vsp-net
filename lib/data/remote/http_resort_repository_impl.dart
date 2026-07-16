@@ -14,7 +14,8 @@ class HttpResortRepositoryImpl implements IResortRepository {
   dynamic _unwrap(Response response) {
     final envelope = ApiEnvelope.fromResponse(response);
     if (!envelope.success) {
-      throw ApiException(envelope.error ?? envelope.message ?? 'Request failed');
+      throw ApiException(
+          envelope.error ?? envelope.message ?? 'Request failed');
     }
     return envelope.data;
   }
@@ -30,19 +31,32 @@ class HttpResortRepositoryImpl implements IResortRepository {
       id: map['id'] as String? ?? '',
       name: map['name'] as String? ?? '',
       tagline: map['tagline'] as String? ?? '',
-      description: '',
+      description: map['description'] as String? ?? '',
       location: map['location'] as String? ?? '',
-      basePriceWeekday: 0,
-      basePriceWeekend: 0,
-      extraGuestCharge: 0,
-      cleaningFee: 0,
-      state: '',
-      city: '',
+      basePriceWeekday: (map['basePriceWeekday'] as num?)?.toDouble() ?? 0,
+      basePriceWeekend: (map['basePriceWeekend'] as num?)?.toDouble() ?? 0,
+      extraGuestCharge: (map['extraGuestCharge'] as num?)?.toDouble() ?? 0,
+      cleaningFee: (map['cleaningFee'] as num?)?.toDouble() ?? 0,
+      state: map['state'] as String? ?? '',
+      city: map['city'] as String? ?? '',
       image: map['image'] as String? ?? '',
-      gallery: [if (map['image'] != null) map['image'] as String],
-      amenities: const [],
-      rules: const [],
+      gallery: (map['gallery'] as List<dynamic>?)?.cast<String>() ?? [],
+      amenities: _parseAmenities(map['amenities']),
+      rules: (map['rules'] as List<dynamic>?)?.cast<String>() ?? [],
     );
+  }
+
+  List<Amenity> _parseAmenities(dynamic raw) {
+    if (raw == null) return [];
+    final list = raw as List<dynamic>;
+    return list.map((a) {
+      final m = a as Map<String, dynamic>;
+      return Amenity(
+        icon: m['icon'] as String? ?? '',
+        label: m['label'] as String? ?? '',
+        category: m['category'] as String? ?? '',
+      );
+    }).toList();
   }
 
   // ==================== Bookings ====================
@@ -147,7 +161,8 @@ class HttpResortRepositoryImpl implements IResortRepository {
       totalAmount: total,
       advancePaidAmount: status == BookingStatus.pendingPayment ? 0 : total,
       balanceAmount: status == BookingStatus.pendingPayment ? total : 0,
-      createdAt: json['createdAt'] as String? ?? DateTime.now().toIso8601String(),
+      createdAt:
+          json['createdAt'] as String? ?? DateTime.now().toIso8601String(),
       housekeepingNotes: json['specialRequests'] as String?,
     );
   }
@@ -181,7 +196,8 @@ class HttpResortRepositoryImpl implements IResortRepository {
   Future<void> updateBooking(Booking booking) async {
     // The real Admin API only exposes a status-transition endpoint (no
     // generic full-booking PATCH), so only the status field is synced.
-    final backendStatus = _bookingStatusToBackend[booking.status] ?? 'CONFIRMED';
+    final backendStatus =
+        _bookingStatusToBackend[booking.status] ?? 'CONFIRMED';
     await _dio.put('/admin/bookings/${booking.id}/status', data: {
       'status': backendStatus,
       'reason': booking.cancellationReason,
@@ -341,7 +357,8 @@ class HttpResortRepositoryImpl implements IResortRepository {
       status: _roomStatusFromBackend(json['status'] as String?),
       assignedStaff: json['assignedStaff'] as String?,
       notes: json['notes'] as String?,
-      lastUpdated: json['lastUpdated'] as String? ?? DateTime.now().toIso8601String(),
+      lastUpdated:
+          json['lastUpdated'] as String? ?? DateTime.now().toIso8601String(),
     );
   }
 
@@ -480,7 +497,8 @@ class HttpResortRepositoryImpl implements IResortRepository {
       id: (json['id'] as String?) ?? '',
       title: json['title'] as String? ?? '',
       message: json['message'] as String? ?? '',
-      timestamp: json['createdAt'] as String? ?? DateTime.now().toIso8601String(),
+      timestamp:
+          json['createdAt'] as String? ?? DateTime.now().toIso8601String(),
       type: (json['type'] as String? ?? 'system').toLowerCase(),
       read: json['isRead'] as bool? ?? false,
     );
@@ -529,7 +547,9 @@ class HttpResortRepositoryImpl implements IResortRepository {
     // Backend has no dedicated sales-chart endpoint; reuses dashboard data
     final response = await _dio.get('/admin/dashboard');
     final data = unwrapMap(_unwrap(response));
-    return (data['salesChart'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? [];
+    return (data['salesChart'] as List<dynamic>?)
+            ?.cast<Map<String, dynamic>>() ??
+        [];
   }
 
   @override
@@ -537,7 +557,9 @@ class HttpResortRepositoryImpl implements IResortRepository {
     // Backend has no dedicated metrics-insights endpoint; reuses dashboard data
     final response = await _dio.get('/admin/dashboard');
     final data = unwrapMap(_unwrap(response));
-    return (data['metricsInsights'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? [];
+    return (data['metricsInsights'] as List<dynamic>?)
+            ?.cast<Map<String, dynamic>>() ??
+        [];
   }
 
   // ==================== Raw Properties ====================

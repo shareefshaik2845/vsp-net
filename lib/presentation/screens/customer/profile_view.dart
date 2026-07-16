@@ -9,7 +9,8 @@ class CustomerProfileView extends ConsumerStatefulWidget {
   const CustomerProfileView({super.key});
 
   @override
-  ConsumerState<CustomerProfileView> createState() => _CustomerProfileViewState();
+  ConsumerState<CustomerProfileView> createState() =>
+      _CustomerProfileViewState();
 }
 
 class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
@@ -33,7 +34,8 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
   }
 
   String _formatIndianCurrency(dynamic value) {
-    final num n = value is num ? value : (double.tryParse(value.toString()) ?? 0);
+    final num n =
+        value is num ? value : (double.tryParse(value.toString()) ?? 0);
     final String s = n.toInt().toString();
     if (s.length <= 3) return s;
     final String lastThree = s.substring(s.length - 3);
@@ -66,8 +68,12 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
     }
 
     final stats = statsAsync.valueOrNull ?? {};
-    final totalBookings = stats['totalBookings'] as int? ?? profileData['totalBookings'] as int? ?? 0;
-    final totalSpent = (stats['totalSpent'] as num?)?.toDouble() ?? (profileData['totalSpent'] as num?)?.toDouble() ?? 0;
+    final totalBookings = stats['totalBookings'] as int? ??
+        profileData['totalBookings'] as int? ??
+        0;
+    final totalSpent = (stats['totalSpent'] as num?)?.toDouble() ??
+        (profileData['totalSpent'] as num?)?.toDouble() ??
+        0;
     final activeStays = stats['activeStays'] as int? ?? 0;
     final memberSince = profileData['memberSince'] as String? ?? '';
 
@@ -117,7 +123,9 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                               ),
                               alignment: Alignment.center,
                               child: Text(
-                                name.isNotEmpty ? name.substring(0, 1).toUpperCase() : 'U',
+                                name.isNotEmpty
+                                    ? name.substring(0, 1).toUpperCase()
+                                    : 'U',
                                 style: GoogleFonts.playfairDisplay(
                                   color: AppColors.mossGreen,
                                   fontSize: 24,
@@ -145,7 +153,8 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                                     style: GoogleFonts.inter(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600,
-                                      color: AppColors.charcoal.withValues(alpha: 0.5),
+                                      color: AppColors.charcoal
+                                          .withValues(alpha: 0.5),
                                     ),
                                   ),
                                 ],
@@ -179,8 +188,10 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                           ),
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: AppColors.lightBone),
-                            shape: RoundedRectangleBorder(borderRadius: AppRadius.mdBr),
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: AppRadius.mdBr),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 8),
                           ),
                         ),
                       ],
@@ -191,11 +202,16 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                   const SizedBox(height: 24),
 
                   // Profile fields
-                  _profileField('FULL NAME', _nameController, _isEditing, Icons.person_outline),
+                  _profileField('FULL NAME', _nameController, _isEditing,
+                      Icons.person_outline),
                   const SizedBox(height: AppSpacing.lg),
-                  _profileField('EMAIL ADDRESS', _emailController, _isEditing, Icons.email_outlined, keyboardType: TextInputType.emailAddress),
+                  _profileField('EMAIL ADDRESS', _emailController, _isEditing,
+                      Icons.email_outlined,
+                      keyboardType: TextInputType.emailAddress),
                   const SizedBox(height: AppSpacing.lg),
-                  _profileField('TELEPHONE NUMBER', _phoneController, _isEditing, Icons.phone_android_outlined, keyboardType: TextInputType.phone),
+                  _profileField('TELEPHONE NUMBER', _phoneController,
+                      _isEditing, Icons.phone_android_outlined,
+                      keyboardType: TextInputType.phone),
 
                   if (_isEditing) ...[
                     const SizedBox(height: 24),
@@ -204,14 +220,17 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                       height: 48,
                       child: ElevatedButton(
                         onPressed: () async {
-                            if (_nameController.text.trim().isEmpty ||
-                                _emailController.text.trim().isEmpty ||
-                                _phoneController.text.trim().isEmpty) {
-                              SnackbarHelper.warning(context, 'Please complete all contact profile fields.');
-                              return;
+                          if (_nameController.text.trim().isEmpty ||
+                              _emailController.text.trim().isEmpty ||
+                              _phoneController.text.trim().isEmpty) {
+                            SnackbarHelper.warning(context,
+                                'Please complete all contact profile fields.');
+                            return;
                           }
 
-                          await ref.read(customerProfileProvider.notifier).updateProfile({
+                          await ref
+                              .read(customerProfileProvider.notifier)
+                              .updateProfile({
                             'name': _nameController.text.trim(),
                             'email': _emailController.text.trim(),
                             'phone': _phoneController.text.trim(),
@@ -220,11 +239,13 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                           setState(() {
                             _isEditing = false;
                           });
-                          SnackbarHelper.success(context, 'Profile details updated successfully!');
+                          SnackbarHelper.success(
+                              context, 'Profile details updated successfully!');
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.mossGreen,
-                          shape: RoundedRectangleBorder(borderRadius: AppRadius.lgBr),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: AppRadius.lgBr),
                         ),
                         child: Text(
                           'Save Settings Changes',
@@ -258,26 +279,45 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                 final isMobile = constraints.maxWidth < 600;
 
                 final statItems = [
-                  _statCard('Total Bookings', '$totalBookings', const Color(0xFFE8EAF6), const Color(0xFF3F51B5), Icons.book_online_outlined),
-                  _statCard('Active Stays', '$activeStays Stays', const Color(0xFFE8F5E9), const Color(0xFF2E7D32), Icons.hotel_outlined),
-                  _statCard('Total Spent', '₹${_formatIndianCurrency(totalSpent)}', const Color(0xFFFFF8E1), const Color(0xFFF57F17), Icons.wallet_outlined),
+                  _statCard(
+                      'Total Bookings',
+                      '$totalBookings',
+                      const Color(0xFFE8EAF6),
+                      const Color(0xFF3F51B5),
+                      Icons.book_online_outlined),
+                  _statCard(
+                      'Active Stays',
+                      '$activeStays Stays',
+                      const Color(0xFFE8F5E9),
+                      const Color(0xFF2E7D32),
+                      Icons.hotel_outlined),
+                  _statCard(
+                      'Total Spent',
+                      '₹${_formatIndianCurrency(totalSpent)}',
+                      const Color(0xFFFFF8E1),
+                      const Color(0xFFF57F17),
+                      Icons.wallet_outlined),
                 ];
 
                 if (isMobile) {
                   return Column(
-                    children: statItems.map((card) => Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: card,
-                    )).toList(),
+                    children: statItems
+                        .map((card) => Padding(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              child: card,
+                            ))
+                        .toList(),
                   );
                 } else {
                   return Row(
-                    children: statItems.map((card) => Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 12.0),
-                        child: card,
-                      ),
-                    )).toList(),
+                    children: statItems
+                        .map((card) => Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 12.0),
+                                child: card,
+                              ),
+                            ))
+                        .toList(),
                   );
                 }
               },
@@ -294,7 +334,8 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
 
             // Password Change Section
             GestureDetector(
-              onTap: () => setState(() => _showPasswordSection = !_showPasswordSection),
+              onTap: () =>
+                  setState(() => _showPasswordSection = !_showPasswordSection),
               child: Container(
                 padding: AppSpacing.allLg,
                 decoration: BoxDecoration(
@@ -304,16 +345,22 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.lock_outline, size: 18, color: AppColors.mossGreen),
+                    const Icon(Icons.lock_outline,
+                        size: 18, color: AppColors.mossGreen),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         'Security & Password',
-                        style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.charcoal),
+                        style: GoogleFonts.inter(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                            color: AppColors.charcoal),
                       ),
                     ),
                     Icon(
-                      _showPasswordSection ? Icons.expand_less : Icons.expand_more,
+                      _showPasswordSection
+                          ? Icons.expand_less
+                          : Icons.expand_more,
                       color: AppColors.charcoal.withValues(alpha: 0.5),
                     ),
                   ],
@@ -338,7 +385,8 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                       decoration: InputDecoration(
                         labelText: 'Current Password',
                         prefixIcon: const Icon(Icons.lock, size: 18),
-                        border: OutlineInputBorder(borderRadius: AppRadius.mdBr),
+                        border:
+                            OutlineInputBorder(borderRadius: AppRadius.mdBr),
                       ),
                       style: GoogleFonts.inter(fontSize: 12),
                     ),
@@ -349,7 +397,8 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                       decoration: InputDecoration(
                         labelText: 'New Password',
                         prefixIcon: const Icon(Icons.lock_outline, size: 18),
-                        border: OutlineInputBorder(borderRadius: AppRadius.mdBr),
+                        border:
+                            OutlineInputBorder(borderRadius: AppRadius.mdBr),
                       ),
                       style: GoogleFonts.inter(fontSize: 12),
                     ),
@@ -359,29 +408,37 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                       height: 44,
                       child: ElevatedButton(
                         onPressed: () async {
-                          if (_currentPasswordController.text.isEmpty || _newPasswordController.text.isEmpty) {
-                            SnackbarHelper.warning(context, 'Please fill in both password fields.');
+                          if (_currentPasswordController.text.isEmpty ||
+                              _newPasswordController.text.isEmpty) {
+                            SnackbarHelper.warning(context,
+                                'Please fill in both password fields.');
                             return;
                           }
                           try {
-                            await ref.read(customerRepositoryProvider).changePassword(
-                              _currentPasswordController.text,
-                              _newPasswordController.text,
-                            );
+                            await ref
+                                .read(customerRepositoryProvider)
+                                .changePassword(
+                                  _currentPasswordController.text,
+                                  _newPasswordController.text,
+                                );
                             _currentPasswordController.clear();
                             _newPasswordController.clear();
-                            SnackbarHelper.success(context, 'Password changed successfully!');
+                            SnackbarHelper.success(
+                                context, 'Password changed successfully!');
                           } catch (e) {
-                            SnackbarHelper.error(context, 'Failed to change password.');
+                            SnackbarHelper.error(
+                                context, 'Failed to change password.');
                           }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.mossGreen,
-                          shape: RoundedRectangleBorder(borderRadius: AppRadius.mdBr),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: AppRadius.mdBr),
                         ),
                         child: Text(
                           'Change Password',
-                          style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold),
+                          style: GoogleFonts.inter(
+                              color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -395,7 +452,9 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
     );
   }
 
-  Widget _profileField(String label, TextEditingController controller, bool enabled, IconData prefixIcon, {TextInputType keyboardType = TextInputType.text}) {
+  Widget _profileField(String label, TextEditingController controller,
+      bool enabled, IconData prefixIcon,
+      {TextInputType keyboardType = TextInputType.text}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -416,19 +475,25 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
           style: GoogleFonts.inter(
             fontSize: 13,
             fontWeight: FontWeight.bold,
-            color: enabled ? AppColors.charcoal : AppColors.charcoal.withValues(alpha: 0.6),
+            color: enabled
+                ? AppColors.charcoal
+                : AppColors.charcoal.withValues(alpha: 0.6),
           ),
           decoration: InputDecoration(
-            prefixIcon: Icon(prefixIcon, size: 18, color: AppColors.mossGreen.withValues(alpha: 0.6)),
+            prefixIcon: Icon(prefixIcon,
+                size: 18, color: AppColors.mossGreen.withValues(alpha: 0.6)),
             filled: true,
-            fillColor: enabled ? Colors.white : AppColors.stoneBg.withValues(alpha: 0.4),
+            fillColor: enabled
+                ? Colors.white
+                : AppColors.stoneBg.withValues(alpha: 0.4),
             disabledBorder: OutlineInputBorder(
               borderRadius: AppRadius.lgBr,
               borderSide: const BorderSide(color: AppColors.lightBone),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: AppRadius.lgBr,
-              borderSide: BorderSide(color: AppColors.lightBone.withValues(alpha: 0.8)),
+              borderSide:
+                  BorderSide(color: AppColors.lightBone.withValues(alpha: 0.8)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: AppRadius.lgBr,
@@ -441,7 +506,8 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
     );
   }
 
-  Widget _statCard(String label, String value, Color bg, Color text, IconData icon) {
+  Widget _statCard(
+      String label, String value, Color bg, Color text, IconData icon) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(

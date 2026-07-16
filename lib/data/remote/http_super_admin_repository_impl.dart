@@ -15,7 +15,8 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
   dynamic _unwrap(Response response) {
     final envelope = ApiEnvelope.fromResponse(response);
     if (!envelope.success) {
-      throw ApiException(envelope.error ?? envelope.message ?? 'Request failed');
+      throw ApiException(
+          envelope.error ?? envelope.message ?? 'Request failed');
     }
     return envelope.data;
   }
@@ -37,7 +38,8 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
 
   @override
   Future<List<Map<String, dynamic>>> fetchResortRevenueTable() async {
-    final response = await _dio.get('/super-admin/analytics/resort-revenue-table');
+    final response =
+        await _dio.get('/super-admin/analytics/resort-revenue-table');
     final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
@@ -72,22 +74,27 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
   // ==================== Image Uploads ====================
 
   @override
-  Future<Map<String, dynamic>> uploadImage(String filePath, {String? caption}) async {
+  Future<Map<String, dynamic>> uploadImage(String filePath,
+      {String? caption}) async {
     final formData = FormData.fromMap({
       'file': await MultipartFile.fromFile(filePath),
       if (caption != null) 'caption': caption,
     });
-    final response = await _dio.post('/super-admin/properties/upload-image', data: formData);
+    final response =
+        await _dio.post('/super-admin/properties/upload-image', data: formData);
     return unwrapMap(_unwrap(response));
   }
 
   @override
-  Future<List<Map<String, dynamic>>> uploadGallery(List<String> filePaths) async {
-    final files = await Future.wait(filePaths.map((p) => MultipartFile.fromFile(p)));
+  Future<List<Map<String, dynamic>>> uploadGallery(
+      List<String> filePaths) async {
+    final files =
+        await Future.wait(filePaths.map((p) => MultipartFile.fromFile(p)));
     final formData = FormData.fromMap({
       'files': files,
     });
-    final response = await _dio.post('/super-admin/properties/upload-gallery', data: formData);
+    final response = await _dio.post('/super-admin/properties/upload-gallery',
+        data: formData);
     final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
@@ -138,7 +145,8 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
     if (role != null) params['role'] = role;
     if (status != null) params['status'] = status;
     if (search != null) params['search'] = search;
-    final response = await _dio.get('/super-admin/users', queryParameters: params.isNotEmpty ? params : null);
+    final response = await _dio.get('/super-admin/users',
+        queryParameters: params.isNotEmpty ? params : null);
     final data = unwrapList(_unwrap(response));
     return data.cast<Map<String, dynamic>>();
   }
@@ -183,7 +191,8 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
   }
 
   @override
-  Future<void> resolveApproval(String id, String status, {String? rejectionReason}) async {
+  Future<void> resolveApproval(String id, String status,
+      {String? rejectionReason}) async {
     await _dio.put('/super-admin/approvals/$id/resolve', data: {
       'status': status,
       if (rejectionReason != null) 'rejectionReason': rejectionReason,
@@ -271,7 +280,8 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
     final data = <String, dynamic>{
       'permissions': role.permissions
           .map((p) => {
-                'resource': _resourceToBackend[p.resource.name] ?? p.resource.name,
+                'resource':
+                    _resourceToBackend[p.resource.name] ?? p.resource.name,
                 'actions': p.actions.map((a) => a.name).toList(),
               })
           .toList(),
@@ -312,7 +322,8 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
       id: (json['id'] as String?) ?? '',
       title: json['title'] as String? ?? '',
       message: json['message'] as String? ?? '',
-      timestamp: json['createdAt'] as String? ?? DateTime.now().toIso8601String(),
+      timestamp:
+          json['createdAt'] as String? ?? DateTime.now().toIso8601String(),
       type: (json['type'] as String? ?? 'system').toLowerCase(),
       read: json['isRead'] as bool? ?? false,
     );
@@ -445,7 +456,8 @@ class HttpSuperAdminRepositoryImpl implements ISuperAdminRepository {
       totalAmount: total,
       advancePaidAmount: status == BookingStatus.pendingPayment ? 0 : total,
       balanceAmount: status == BookingStatus.pendingPayment ? total : 0,
-      createdAt: json['createdAt'] as String? ?? DateTime.now().toIso8601String(),
+      createdAt:
+          json['createdAt'] as String? ?? DateTime.now().toIso8601String(),
       housekeepingNotes: json['specialRequests'] as String?,
     );
   }

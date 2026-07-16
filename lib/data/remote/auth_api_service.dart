@@ -12,9 +12,8 @@ class RemoteRolePermission {
 
   factory RemoteRolePermission.fromJson(Map<String, dynamic> json) {
     final rawActions = json['actions'];
-    final actions = (rawActions is List)
-        ? rawActions.cast<String>()
-        : <String>[];
+    final actions =
+        (rawActions is List) ? rawActions.cast<String>() : <String>[];
     return RemoteRolePermission(
       resource: json['resource'] as String? ?? '',
       actions: actions,
@@ -49,7 +48,8 @@ class RemoteUserInfo {
     final rawPermissions = json['permissions'];
     final permissions = (rawPermissions is List)
         ? rawPermissions
-            .map((e) => RemoteRolePermission.fromJson(e as Map<String, dynamic>))
+            .map(
+                (e) => RemoteRolePermission.fromJson(e as Map<String, dynamic>))
             .toList()
         : <RemoteRolePermission>[];
     return RemoteUserInfo(
@@ -107,7 +107,8 @@ class AuthApiService {
 
   final ApiClient _client;
 
-  Future<AuthResult<RemoteAuthResult>> login(String email, String password) async {
+  Future<AuthResult<RemoteAuthResult>> login(
+      String email, String password) async {
     try {
       final response = await _client.dio.post('/auth/login', data: {
         'email': email,
@@ -120,7 +121,8 @@ class AuthApiService {
           statusCode: response.statusCode,
         );
       }
-      final result = RemoteAuthResult.fromJson(envelope.data as Map<String, dynamic>);
+      final result =
+          RemoteAuthResult.fromJson(envelope.data as Map<String, dynamic>);
       await _client.saveTokens(
         accessToken: result.accessToken,
         refreshToken: result.refreshToken,
@@ -146,7 +148,8 @@ class AuthApiService {
           statusCode: response.statusCode,
         );
       }
-      return AuthSuccess(RemoteUserInfo.fromJson(envelope.data as Map<String, dynamic>));
+      return AuthSuccess(
+          RemoteUserInfo.fromJson(envelope.data as Map<String, dynamic>));
     } on DioException catch (e) {
       return AuthFailure(
         _errorMessage(e),
@@ -179,7 +182,8 @@ class AuthApiService {
           statusCode: response.statusCode,
         );
       }
-      final result = RemoteAuthResult.fromJson(envelope.data as Map<String, dynamic>);
+      final result =
+          RemoteAuthResult.fromJson(envelope.data as Map<String, dynamic>);
       await _client.saveTokens(
         accessToken: result.accessToken,
         refreshToken: result.refreshToken,
@@ -215,7 +219,8 @@ class AuthApiService {
           statusCode: response.statusCode,
         );
       }
-      final result = RemoteAuthResult.fromJson(envelope.data as Map<String, dynamic>);
+      final result =
+          RemoteAuthResult.fromJson(envelope.data as Map<String, dynamic>);
       await _client.saveTokens(
         accessToken: result.accessToken,
         refreshToken: result.refreshToken,
@@ -247,7 +252,8 @@ class AuthApiService {
           statusCode: response.statusCode,
         );
       }
-      final result = RemoteAuthResult.fromJson(envelope.data as Map<String, dynamic>);
+      final result =
+          RemoteAuthResult.fromJson(envelope.data as Map<String, dynamic>);
       await _client.saveTokens(
         accessToken: result.accessToken,
         refreshToken: result.refreshToken,
@@ -289,8 +295,7 @@ class AuthApiService {
       await _client.dio.post('/auth/forgot-password', data: {
         'email': email,
       });
-    } catch (_) {
-    }
+    } catch (_) {}
     return true;
   }
 
