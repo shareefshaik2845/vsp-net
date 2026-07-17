@@ -153,6 +153,7 @@ class CalendarBlock {
   final String reason; // maintenance, owner_stay, private_event, holiday
   final String? notes;
   final String blockedBy;
+  final String? propertyId;
 
   const CalendarBlock({
     required this.id,
@@ -161,6 +162,7 @@ class CalendarBlock {
     required this.reason,
     this.notes,
     required this.blockedBy,
+    this.propertyId,
   });
 }
 
@@ -242,6 +244,7 @@ class Booking {
   final String? housekeepingNotes;
   final String? cancellationReason;
   final double? refundAmount;
+  final String? propertyId;
 
   const Booking({
     required this.id,
@@ -269,6 +272,7 @@ class Booking {
     this.housekeepingNotes,
     this.cancellationReason,
     this.refundAmount,
+    this.propertyId,
   });
 
   Booking copyWith({
@@ -297,6 +301,7 @@ class Booking {
     String? housekeepingNotes,
     String? cancellationReason,
     double? refundAmount,
+    String? propertyId,
   }) {
     return Booking(
       id: id ?? this.id,
@@ -324,6 +329,7 @@ class Booking {
       housekeepingNotes: housekeepingNotes ?? this.housekeepingNotes,
       cancellationReason: cancellationReason ?? this.cancellationReason,
       refundAmount: refundAmount ?? this.refundAmount,
+      propertyId: propertyId ?? this.propertyId,
     );
   }
 }
@@ -422,6 +428,7 @@ class PricingSeasonRule {
   final double weekendPrice;
   final double multiplier;
   final bool isActive;
+  final String? propertyId;
 
   const PricingSeasonRule({
     required this.id,
@@ -432,6 +439,7 @@ class PricingSeasonRule {
     required this.weekendPrice,
     required this.multiplier,
     required this.isActive,
+    this.propertyId,
   });
 
   PricingSeasonRule copyWith({
@@ -443,6 +451,7 @@ class PricingSeasonRule {
     double? weekendPrice,
     double? multiplier,
     bool? isActive,
+    String? propertyId,
   }) {
     return PricingSeasonRule(
       id: id ?? this.id,
@@ -453,6 +462,7 @@ class PricingSeasonRule {
       weekendPrice: weekendPrice ?? this.weekendPrice,
       multiplier: multiplier ?? this.multiplier,
       isActive: isActive ?? this.isActive,
+      propertyId: propertyId ?? this.propertyId,
     );
   }
 }

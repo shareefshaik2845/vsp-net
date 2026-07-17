@@ -349,6 +349,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
           _couponSuccess.isNotEmpty ? _couponCode.toUpperCase() : null,
       createdAt: DateTime.now().toIso8601String(),
       housekeepingNotes: _hkNotesController.text,
+      propertyId: _selectedResort.id,
     );
 
     try {

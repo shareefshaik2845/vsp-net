@@ -50,7 +50,7 @@ class HttpCustomerResortAdapter implements IResortRepository {
   @override
   Future<Map<String, dynamic>> addBooking(Booking booking) async {
     return await _customerRepo.createBooking({
-      'propertyId': booking.resortName,
+      'propertyId': booking.propertyId ?? booking.resortName,
       'checkInDate': booking.startDate,
       'checkOutDate': booking.endDate,
       'guestsCount': booking.guestsCount,

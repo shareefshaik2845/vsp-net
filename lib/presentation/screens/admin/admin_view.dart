@@ -37,6 +37,7 @@ class _AdminViewState extends ConsumerState<AdminView> {
   String _blockReason = 'maintenance';
   String? _blockError;
   String? _blockSuccess;
+  String? _selectedPropertyId;
 
   // Coupon Form states
   final _couponCodeController = TextEditingController();
@@ -65,6 +66,10 @@ class _AdminViewState extends ConsumerState<AdminView> {
     _couponCodeController.dispose();
     _couponDescController.dispose();
     _searchController.dispose();
+    _seasonNameController.dispose();
+    _seasonWeekdayController.dispose();
+    _seasonWeekendController.dispose();
+    _seasonMultiplierController.dispose();
     super.dispose();
   }
 
@@ -1317,6 +1322,45 @@ class _AdminViewState extends ConsumerState<AdminView> {
           ),
           const SizedBox(height: AppSpacing.lg),
           Text(
+            'Select Property',
+            style: GoogleFonts.spaceGrotesk(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
+              color: AppColors.charcoal.withValues(alpha: 0.5),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Consumer(
+            builder: (context, ref, _) {
+              final properties = ref.watch(resortsListProvider);
+              if (properties.isEmpty) return const Text('No properties available');
+              return DropdownButtonFormField<String>(
+                value: _selectedPropertyId,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: AppColors.lightBone,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                ),
+                hint: Text('Select a property', style: TextStyle(color: AppColors.charcoal.withValues(alpha: 0.5))),
+                items: properties.map((p) {
+                  return DropdownMenuItem<String>(
+                    value: p.id,
+                    child: Text(p.name, style: const TextStyle(fontSize: 14)),
+                  );
+                }).toList(),
+                onChanged: (val) {
+                  setState(() => _selectedPropertyId = val);
+                },
+              );
+            },
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          Text(
             'Reason category',
             style: GoogleFonts.spaceGrotesk(
               fontSize: 10,
@@ -1536,11 +1580,18 @@ class _AdminViewState extends ConsumerState<AdminView> {
     );
   }
 
-  void _handleCreateBlock() {
+  Future<void> _handleCreateBlock() async {
     setState(() {
       _blockError = null;
       _blockSuccess = null;
     });
+
+    if (_selectedPropertyId == null) {
+      setState(() {
+        _blockError = 'Please select a property.';
+      });
+      return;
+    }
 
     if (_blockNotesController.text.trim().isEmpty) {
       setState(() {
@@ -1594,20 +1645,26 @@ class _AdminViewState extends ConsumerState<AdminView> {
       reason: _blockReason,
       notes: _blockNotesController.text,
       blockedBy: 'Admin Console',
+      propertyId: _selectedPropertyId,
     );
 
-    ref.read(calendarBlocksProvider.notifier).addBlock(newBlock);
-    ref.read(notificationsProvider.notifier).addNotification(
-          'Calendar Dates Isolated',
-          'Blocked dates $_blockStart to $_blockEnd due to $_blockReason.',
-          'system',
-        );
-
-    setState(() {
-      _blockNotesController.clear();
-      _blockSuccess =
-          'Calendar date block placed successfully! Dynamic availability locked.';
-    });
+    try {
+      await ref.read(calendarBlocksProvider.notifier).addBlock(newBlock);
+      ref.read(notificationsProvider.notifier).addNotification(
+            'Calendar Dates Isolated',
+            'Blocked dates $_blockStart to $_blockEnd due to $_blockReason.',
+            'system',
+          );
+      setState(() {
+        _blockNotesController.clear();
+        _blockSuccess =
+            'Calendar date block placed successfully! Dynamic availability locked.';
+      });
+    } catch (e) {
+      setState(() {
+        _blockError = 'Failed to create block: $e';
+      });
+    }
   }
 
   Widget _buildActiveBlocksCard(List<CalendarBlock> blocks) {
@@ -2490,6 +2547,319 @@ class _AdminViewState extends ConsumerState<AdminView> {
     );
   }
 
+  final _seasonNameController = TextEditingController();
+  final _seasonWeekdayController = TextEditingController();
+  final _seasonWeekendController = TextEditingController();
+  final _seasonMultiplierController = TextEditingController();
+  String _seasonStartDate = '';
+  String _seasonEndDate = '';
+  String? _seasonFormError;
+
+  Future<void> _pickSeasonDate(bool isStart, [void Function()? onUpdate]) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime(2026, 6, 1),
+      firstDate: DateTime(2026, 1, 1),
+      lastDate: DateTime(2026, 12, 31),
+      helpText: isStart ? 'Select Start Month & Day' : 'Select End Month & Day',
+      builder: (ctx, child) {
+        return Theme(
+          data: Theme.of(ctx).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.mossGreen,
+              onPrimary: Colors.white,
+              onSurface: AppColors.charcoal,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null && context.mounted) {
+      final formatted =
+          '${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
+      setState(() {
+        if (isStart) {
+          _seasonStartDate = formatted;
+        } else {
+          _seasonEndDate = formatted;
+        }
+      });
+      onUpdate?.call();
+    }
+  }
+
+  void _showAddSeasonRuleDialog() {
+    _seasonNameController.clear();
+    _seasonStartDate = '';
+    _seasonEndDate = '';
+    _seasonWeekdayController.clear();
+    _seasonWeekendController.clear();
+    _seasonMultiplierController.clear();
+    _seasonFormError = null;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          title: Row(
+            children: [
+              const Icon(Icons.tune, size: 20, color: AppColors.mossGreen),
+              const SizedBox(width: 8),
+              Text('Add Seasonal Rule', style: AppTextStyles.titleLg),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('SEASON NAME',
+                    style: GoogleFonts.spaceGrotesk(
+                        fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey)),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: _seasonNameController,
+                  style: GoogleFonts.inter(fontSize: 12),
+                  decoration: const InputDecoration(
+                      hintText: 'e.g. Monsoon Discount, Peak Season'),
+                ),
+                const SizedBox(height: 16),
+                Text('PROPERTY',
+                    style: GoogleFonts.spaceGrotesk(
+                        fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey)),
+                const SizedBox(height: 6),
+                Consumer(
+                  builder: (context, ref, _) {
+                    final properties = ref.watch(resortsListProvider);
+                    if (properties.isEmpty) return const Text('No properties available');
+                    return DropdownButtonFormField<String>(
+                      value: _selectedPropertyId,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.stoneBg.withValues(alpha: 0.3),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: AppColors.lightBone),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      ),
+                      hint: Text('Select a property', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                      items: properties.map((p) {
+                        return DropdownMenuItem<String>(
+                          value: p.id,
+                          child: Text(p.name, style: const TextStyle(fontSize: 12)),
+                        );
+                      }).toList(),
+                      onChanged: (val) {
+                        setState(() => _selectedPropertyId = val);
+                        setDialogState(() {});
+                      },
+                    );
+                  },
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildSeasonDateField(
+                        'START DATE',
+                        _seasonStartDate,
+                        () => _pickSeasonDate(true, () => setDialogState(() {})),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildSeasonDateField(
+                        'END DATE',
+                        _seasonEndDate,
+                        () => _pickSeasonDate(false, () => setDialogState(() {})),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildSeasonNumberField(
+                        'WEEKDAY PRICE (₹)',
+                        _seasonWeekdayController,
+                        'e.g. 9600',
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildSeasonNumberField(
+                        'WEEKEND PRICE (₹)',
+                        _seasonWeekendController,
+                        'e.g. 12000',
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                _buildSeasonNumberField(
+                  'MULTIPLIER',
+                  _seasonMultiplierController,
+                  'e.g. 0.8 for discount, 1.5 for peak',
+                ),
+                if (_seasonFormError != null) ...[
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(6)),
+                    child: Text(_seasonFormError!,
+                        style: TextStyle(
+                            color: Colors.red.shade800, fontSize: 11)),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final name = _seasonNameController.text.trim();
+                final start = _seasonStartDate;
+                final end = _seasonEndDate;
+                final weekday =
+                    double.tryParse(_seasonWeekdayController.text.trim());
+                final weekend =
+                    double.tryParse(_seasonWeekendController.text.trim());
+                final multiplier =
+                    double.tryParse(_seasonMultiplierController.text.trim());
+
+                if (_selectedPropertyId == null) {
+                  setDialogState(() {
+                    _seasonFormError = 'Please select a property.';
+                  });
+                  return;
+                }
+
+                if (name.isEmpty || start.isEmpty || end.isEmpty) {
+                  setDialogState(() {
+                    _seasonFormError = 'Name, start date, and end date are required.';
+                  });
+                  return;
+                }
+
+                if (weekday == null || weekend == null) {
+                  setDialogState(() {
+                    _seasonFormError = 'Weekday and weekend prices are required.';
+                  });
+                  return;
+                }
+
+                final rule = PricingSeasonRule(
+                  id: 'SR-${DateTime.now().millisecondsSinceEpoch}',
+                  name: name,
+                  startDate: start,
+                  endDate: end,
+                  weekdayPrice: weekday,
+                  weekendPrice: weekend,
+                  multiplier: multiplier ?? 1.0,
+                  isActive: true,
+                  propertyId: _selectedPropertyId,
+                );
+
+                try {
+                  await ref.read(pricingRulesProvider.notifier).addRule(rule);
+                  if (ctx.mounted) {
+                    Navigator.pop(ctx);
+                    if (context.mounted) {
+                      SnackbarHelper.success(context, 'Seasonal rule "$name" added.');
+                    }
+                  }
+                } catch (e) {
+                  setDialogState(() {
+                    _seasonFormError = 'Failed to add rule: $e';
+                  });
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.mossGreen,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Add Rule'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSeasonDateField(String label, String value, VoidCallback onTap) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style: GoogleFonts.spaceGrotesk(
+                fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey)),
+        const SizedBox(height: 6),
+        InkWell(
+          onTap: onTap,
+          child: Container(
+            height: 40,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+              color: AppColors.stoneBg.withValues(alpha: 0.3),
+              borderRadius: AppRadius.mdBr,
+              border: Border.all(color: AppColors.lightBone),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    value.isEmpty ? 'Pick date' : value,
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      color: value.isEmpty
+                          ? Colors.grey
+                          : AppColors.charcoal,
+                      fontWeight:
+                          value.isEmpty ? FontWeight.normal : FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Icon(Icons.calendar_today,
+                    size: 14, color: AppColors.mossGreen),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSeasonNumberField(
+      String label, TextEditingController controller, String hint) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style: GoogleFonts.spaceGrotesk(
+                fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey)),
+        const SizedBox(height: 6),
+        SizedBox(
+          height: 40,
+          child: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            style: GoogleFonts.inter(fontSize: 12),
+            decoration: InputDecoration(hintText: hint),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildSeasonalRulesCard(List<PricingSeasonRule> pricingRules) {
     return Container(
       padding: const EdgeInsets.all(24.0),
@@ -2503,6 +2873,21 @@ class _AdminViewState extends ConsumerState<AdminView> {
         children: [
           Text('Seasonal Rule Modifiers', style: AppTextStyles.titleLg),
           const SizedBox(height: AppSpacing.sm),
+          ElevatedButton.icon(
+            onPressed: _showAddSeasonRuleDialog,
+            icon: const Icon(Icons.add, size: 16),
+            label: const Text('Add Rule',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.mossGreen,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 16, vertical: 10),
+              shape: RoundedRectangleBorder(
+                  borderRadius: AppRadius.mdBr),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             'Toggle or customize seasonal multipliers on target date limits.',
             style: AppTextStyles.bodyMd.copyWith(
@@ -2510,7 +2895,16 @@ class _AdminViewState extends ConsumerState<AdminView> {
             ),
           ),
           const SizedBox(height: 20),
-          ListView.separated(
+          if (pricingRules.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 40),
+              child: Center(
+                child: Text('No seasonal rules defined yet. Tap "Add Rule" to create one.',
+                    style: TextStyle(color: Colors.grey, fontSize: 12)),
+              ),
+            )
+          else
+            ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: pricingRules.length,
@@ -2920,7 +3314,7 @@ class _AdminViewState extends ConsumerState<AdminView> {
     );
   }
 
-  void _handleCreateCoupon() {
+  Future<void> _handleCreateCoupon() async {
     setState(() {
       _couponFormError = null;
     });
@@ -2950,21 +3344,26 @@ class _AdminViewState extends ConsumerState<AdminView> {
       isActive: true,
     );
 
-    ref.read(couponsProvider.notifier).addCoupon(newCoupon);
-    ref.read(notificationsProvider.notifier).addNotification(
-          'New Promotion Added',
-          'Created code $code offering dynamic savings on checkout.',
-          'system',
-        );
-
-    setState(() {
-      _couponCodeController.clear();
-      _couponDescController.clear();
-      _couponValue = 10;
-      _couponMinSub = 25000;
-    });
-
-    SnackbarHelper.success(context, 'Coupon added to registry successfully!');
+    try {
+      await ref.read(couponsProvider.notifier).addCoupon(newCoupon);
+      ref.read(notificationsProvider.notifier).addNotification(
+            'New Promotion Added',
+            'Created code $code offering dynamic savings on checkout.',
+            'system',
+          );
+      setState(() {
+        _couponCodeController.clear();
+        _couponDescController.clear();
+        _couponValue = 10;
+        _couponMinSub = 25000;
+      });
+      if (!context.mounted) return;
+      SnackbarHelper.success(context, 'Coupon added to registry successfully!');
+    } catch (e) {
+      setState(() {
+        _couponFormError = 'Failed to create coupon: $e';
+      });
+    }
   }
 
   Widget _buildCouponListCard(List<Coupon> coupons) {
