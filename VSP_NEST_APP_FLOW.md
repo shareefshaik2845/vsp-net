@@ -63,6 +63,11 @@ Open App → Splash Logo → Login Screen → Enter Email & Password
 **Also available:**
 - **Saved** tab — bookmark resorts you like
 - **Calendar** tab — see availability at a glance
+- **Concierge** tab — request airport transfer, dining reservation, spa booking, or other services
+  - Choose request type, describe what you need, pick preferred date/time
+  - Optionally link to an active booking
+  - Staff will be assigned and update you as your request progresses
+  - Track status: Pending → In Progress → Completed
 - **Profile** tab — edit your name/email/phone, change password
 
 ---
@@ -108,6 +113,15 @@ Open App → Splash Logo → Login Screen → Enter Email & Password
       └──────────────────────┬─────────────────────────────────────┘
                              ↓
       ┌────────────────────────────────────────────────────────────┐
+      │                   CONCIERGE DESK                         │
+      │  See all guest concierge requests across the resort.     │
+      │  Accept / Complete / Cancel requests.                    │
+      │  Assign requests to specific staff members.              │
+      │  Add staff notes for coordination.                       │
+      │  Filter by status: All / Pending / In Progress / Completed│
+      └──────────────────────┬─────────────────────────────────────┘
+                             ↓
+      ┌────────────────────────────────────────────────────────────┐
       │                   RESORT OPERATIONS                      │
       │  View the same screen as Staff — guest roster +          │
       │  housekeeping board.                                      │
@@ -124,6 +138,8 @@ Open App → Splash Logo → Login Screen → Enter Email & Password
       │  See who's arriving today (check-in).                    │
       │  See who's leaving today (check-out).                    │
       │  See currently lodged guests.                            │
+      │  Tap "Check In" when a guest arrives.                    │
+      │  Tap "Check Out" when a guest departs.                   │
       └──────────────────────┬─────────────────────────────────────┘
                              ↓
       ┌────────────────────────────────────────────────────────────┐
@@ -132,6 +148,15 @@ Open App → Splash Logo → Login Screen → Enter Email & Password
       │  Mark rooms as cleaned when done.                        │
       │  Add notes (e.g. "Deep clean requested - pet stayed").   │
       │  Admin sees these updates in real-time.                  │
+      └──────────────────────┬─────────────────────────────────────┘
+                             ↓
+      ┌────────────────────────────────────────────────────────────┐
+      │              CONCIERGE DESK                              │
+      │  View concierge requests assigned to you.                │
+      │  Accept a pending request to start working on it.        │
+      │  Mark requests as Completed when done.                   │
+      │  Add notes to communicate with admin.                    │
+      │  Filter by status: All / Pending / In Progress / Completed│
       └────────────────────────────────────────────────────────────┘
 ```
 
@@ -227,30 +252,83 @@ to instantly see the app through that person's eyes.
 ### A Complete Booking Lifecycle
 
 ```
-[GUEST]                                [SYSTEM]                        [STAFF / ADMIN / ACCOUNTANT]
-────────                                ──────                        ────────────────────────────
+CUSTOMER (Guest)        ADMIN (Manager)         STAFF (Ops)          ACCOUNTANT (Finance)
+───────────────         ────────────────        ────────────          ────────────────────
 
-Browse resorts on Explore  ──────→  Pulls property data from
-                                    Super Admin's master list
+BROWSE
+Opens app, browses      Sets up properties,
+resorts, views photos,  pricing rules,
+amenities, availability seasonal tariffs,
+                        coupon codes
 
-Select dates & book        ──────→  Calculates price using
-                                    Admin's tariff/season rules
-                                    Applies coupon if entered   ←── Admin created this coupon
+BOOK
+Selects dates, guests,  ── sees booking ──→   ── sees new ──────→   ── sees payment ──→
+applies coupon, adds    in Booking Matrix      arrival on Guest      in Booking Ledger
+special requests,                              Transit Manifest
+taps "Pay"
 
-Pay & confirm              ──────→  Booking created                    Admin sees it in Booking Matrix
-                                    Payment recorded                   Accountant sees in Ledger
+PAY
+Pays total amount       ── confirms ──→
+Booking confirmed       payment (Authorize Pay)
 
-Arrive at resort                    Status: CHECKED_IN          ──→   Staff sees in Guest Transit
-                                                                      Housekeeping prepares room
+────  GUEST ARRIVES  ────
 
-Check out                          Status: CHECKED_OUT         ──→   Invoice finalized
-                                                                      Accountant tracks payment
+CHECK-IN
+Arrives at resort,                             ── Staff clicks
+shows ID, gets keys                              "Check In" on
+                                                 arrival manifest
+                                                 Room marked occupied
 
-─────────────────────────────────────────────────────────────────────────────────────────────────
+STAY
+Requests concierge      Sees new request,      Sees assigned
+services (transport,    assigns to staff       request, accepts,
+dining, spa, etc.)                             updates status,
+                        ←── reviews ──────→    adds notes
+                        staff notes
 
-[GUEST] Cancels                     Booking → CANCELLED        ──→   Accountant sees Refund Queue
-                                    Refund entry created              Processes refund
-                                                                      Guest sees updated status
+────  GUEST DEPARTS  ────
+
+CHECK-OUT
+Vacates room                                   ── Staff clicks
+                                                 "Check Out"
+── invoice finalized ──→                        Room marked vacant
+                                                 Housekeeping triggered
+
+────  POST-STAY  ────
+
+REFUND (if cancelled)
+Requests cancel                                                  Accountant sees
+Reason: "Change of plans"                                        Refund entry
+                        ←── refund ────────── ←── refund ──────  Clicks "Process
+                          completed            completed           Refund"
+── sees refund ──→
+confirmed
+```
+
+### Concierge Service Flow
+
+```
+[GUEST]                               [ADMIN]                         [STAFF]
+───────                                ─────                         ──────
+
+Opens Concierge tab                                                    
+Selects request type, description,                                    
+preferred date/time                                                    
+Optionally links to a booking                                         
+Taps "Submit"                                                         
+                                    Sees new request in               
+                                    Concierge Desk tab                
+                                    Assigns to available staff  ──→  Sees request in
+                                                                      "My Concierge Requests"
+                                                                      Taps "Accept"
+                                                                      Updates status to "In Progress"
+                                    Sees status change               
+                                    Can add notes for staff   ←──   Staff adds update notes
+
+                                    Completes request         ←──   Staff marks "Completed"
+
+Guest sees status badges on dashboard:
+  🟡 Pending → 🔵 In Progress → 🟢 Completed
 ```
 
 ### How Pricing Rules Flow
@@ -310,8 +388,8 @@ Shows revenue breakdown:             appear in system automatically
 | Role | What They Can Do |
 |------|-----------------|
 | **Customer** (Guest) | Browse resorts, search/filter, view pricing, book, pay, cancel, view invoices, save favorites, manage profile |
-| **Admin** (Resort Manager) | View analytics, block calendar dates, manage bookings, set seasonal pricing, create coupons, sync OTA channels, oversee staff ops |
-| **Staff** (Housekeeping) | View guest arrivals/departures, manage room cleaning status, add notes |
+| **Admin** (Resort Manager) | View analytics, block calendar dates, manage bookings (check-in/check-out), set seasonal pricing, create coupons, sync OTA channels, manage concierge requests (assign staff, update status, add notes), oversee staff ops |
+| **Staff** (Housekeeping) | View guest arrivals/departures, check guests in/out, manage room cleaning status, add notes, view & manage assigned concierge requests (accept, complete, add notes) |
 | **Accountant** (Finance) | View revenue KPIs, booking ledger with filters, process refunds, edit invoices, export reports |
 | **Super Admin** (Owner/HQ) | Global dashboard across all properties, manage properties & users, set roles & permissions, view audit logs, broadcast notifications, system settings — can switch to any role to preview |
 
@@ -329,3 +407,8 @@ Shows revenue breakdown:             appear in system automatically
 | Did my coupon code work? | Customer → Checkout price quote |
 | Are we blocked for Christmas? | Admin → Calendar Blocking |
 | What's our OTA channel revenue? | Admin → OTA Synergy |
+| How to check in a guest? | Staff → Guest Transit Manifest → Check In |
+| How to check out a guest? | Staff → Guest Transit Manifest → Check Out |
+| How to request concierge service? | Customer → Concierge Tab → New Request |
+| How to assign staff to a request? | Admin → Concierge Desk → Assign Staff |
+| What concierge requests are assigned to me? | Staff → Concierge Desk |

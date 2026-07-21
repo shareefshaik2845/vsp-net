@@ -87,17 +87,29 @@ class ApiEnvelope {
   final dynamic data;
   final String? error;
   final String? message;
+  final Map<String, dynamic>? pagination;
 
-  ApiEnvelope({required this.success, this.data, this.error, this.message});
+  ApiEnvelope({
+    required this.success,
+    this.data,
+    this.error,
+    this.message,
+    this.pagination,
+  });
 
   factory ApiEnvelope.fromResponse(Response response) {
     final body = response.data;
     if (body is Map<String, dynamic>) {
+      final paginationRaw = body['pagination'];
+      final pagination = paginationRaw is Map<String, dynamic>
+          ? paginationRaw
+          : null;
       return ApiEnvelope(
         success: body['success'] == true,
         data: body['data'],
         error: body['error'] as String?,
         message: body['message'] as String?,
+        pagination: pagination,
       );
     }
     return ApiEnvelope(success: true, data: body);

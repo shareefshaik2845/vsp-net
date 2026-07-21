@@ -292,11 +292,20 @@ class AuthApiService {
 
   Future<bool> forgotPassword(String email) async {
     try {
-      await _client.dio.post('/auth/forgot-password', data: {
+      final response = await _client.dio.post('/auth/forgot-password', data: {
         'email': email,
       });
-    } catch (_) {}
-    return true;
+      return response.statusCode == 200;
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout ||
+          e.type == DioExceptionType.connectionError) {
+        return false;
+      }
+      return true;
+    } catch (_) {
+      return true;
+    }
   }
 
   Future<void> logout() async {

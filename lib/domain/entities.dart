@@ -765,3 +765,115 @@ class RoleDefinition {
     required this.permissions,
   });
 }
+
+enum ConciergeRequestType {
+  transport,
+  dining,
+  spa,
+  activity,
+  other;
+
+  String toJson() => name.toUpperCase();
+  static ConciergeRequestType fromJson(String name) =>
+      ConciergeRequestType.values.firstWhere(
+        (e) => e.name == name.toLowerCase(),
+        orElse: () => ConciergeRequestType.other,
+      );
+
+  String get displayName {
+    switch (this) {
+      case ConciergeRequestType.transport:
+        return 'Airport Transfer';
+      case ConciergeRequestType.dining:
+        return 'Dining Reservation';
+      case ConciergeRequestType.spa:
+        return 'Spa Booking';
+      case ConciergeRequestType.activity:
+        return 'Activity / Experience';
+      case ConciergeRequestType.other:
+        return 'Other Request';
+    }
+  }
+}
+
+enum ConciergeStatus {
+  pending,
+  inProgress,
+  completed,
+  cancelled;
+
+  String toJson() {
+    switch (this) {
+      case ConciergeStatus.inProgress:
+        return 'IN_PROGRESS';
+      default:
+        return name.toUpperCase();
+    }
+  }
+
+  static ConciergeStatus fromJson(String name) {
+    final normalized = name.toUpperCase().replaceAll(' ', '_');
+    return ConciergeStatus.values.firstWhere(
+      (e) => e.toJson() == normalized,
+      orElse: () => ConciergeStatus.pending,
+    );
+  }
+
+  String get displayName {
+    switch (this) {
+      case ConciergeStatus.pending:
+        return 'Pending';
+      case ConciergeStatus.inProgress:
+        return 'In Progress';
+      case ConciergeStatus.completed:
+        return 'Completed';
+      case ConciergeStatus.cancelled:
+        return 'Cancelled';
+    }
+  }
+}
+
+class ConciergeRequest {
+  final String id;
+  final String? userName;
+  final ConciergeRequestType requestType;
+  final String description;
+  final ConciergeStatus status;
+  final String? preferredDateTime;
+  final String? assignedStaffId;
+  final String? assignedStaffName;
+  final String? staffNotes;
+  final String createdAt;
+  final String? updatedAt;
+
+  const ConciergeRequest({
+    required this.id,
+    this.userName,
+    required this.requestType,
+    required this.description,
+    required this.status,
+    this.preferredDateTime,
+    this.assignedStaffId,
+    this.assignedStaffName,
+    this.staffNotes,
+    required this.createdAt,
+    this.updatedAt,
+  });
+
+  factory ConciergeRequest.fromJson(Map<String, dynamic> json) {
+    return ConciergeRequest(
+      id: json['id'] as String? ?? '',
+      userName: json['userName'] as String?,
+      requestType: ConciergeRequestType.fromJson(
+          json['requestType'] as String? ?? 'OTHER'),
+      description: json['description'] as String? ?? '',
+      status: ConciergeStatus.fromJson(json['status'] as String? ?? 'PENDING'),
+      preferredDateTime: json['preferredDateTime'] as String?,
+      assignedStaffId: json['assignedStaffId'] as String?,
+      assignedStaffName: json['assignedStaffName'] as String?,
+      staffNotes: json['staffNotes'] as String?,
+      createdAt: json['createdAt'] as String? ?? '',
+      updatedAt: json['updatedAt'] as String?,
+    );
+  }
+}

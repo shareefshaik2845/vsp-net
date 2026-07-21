@@ -36,5 +36,11 @@ abstract class ICustomerRepository {
   Future<Map<String, dynamic>> fetchInvoiceDetail(String id);
   Future<List<AppNotification>> fetchNotifications();
   Future<void> markNotificationAsRead(String id);
-  Future<void> sendConciergeMessage(String message, String source);
+  Future<void> markAllNotificationsRead();
+  Future<void> sendConciergeMessage(
+    String message,
+    String source, {
+    String? bookingId,
+    String? preferredDateTime,
+  });
 }

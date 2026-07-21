@@ -430,6 +430,59 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
     );
   }
 
+  Widget _invoiceButton(Booking b) {
+    return OutlinedButton(
+      onPressed: () async {
+        setState(() => _selectedInvoice = b);
+        try {
+          final repo = ref.read(customerRepositoryProvider);
+          final invoices = await repo.fetchInvoices();
+          final match = invoices.cast<Map<String, dynamic>?>().firstWhere(
+                (inv) =>
+                    inv?['bookingId'] == b.id ||
+                    inv?['bookingId'] == b.id.replaceAll('BKG-', ''),
+                orElse: () => null,
+              );
+          setState(() => _invoiceData = match);
+        } catch (_) {
+          setState(() => _invoiceData = null);
+        }
+      },
+      style: OutlinedButton.styleFrom(
+        side: const BorderSide(color: AppColors.lightBone),
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.mdBr),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      ),
+      child: Text(
+        'View Invoice',
+        style: GoogleFonts.inter(
+          color: AppColors.charcoal,
+          fontWeight: FontWeight.bold,
+          fontSize: 11,
+        ),
+      ),
+    );
+  }
+
+  Widget _cancelButton(Booking b) {
+    return ElevatedButton(
+      onPressed: () => _openCancellationSheet(b),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFFC62828),
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.mdBr),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      ),
+      child: Text(
+        'Cancel Stay',
+        style: GoogleFonts.inter(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 11,
+        ),
+      ),
+    );
+  }
+
   Widget _tabButton(String tab, IconData icon, String label) {
     final isActive = _activeTab == tab;
     return InkWell(
@@ -661,66 +714,34 @@ class _CustomerDashboardViewState extends ConsumerState<CustomerDashboardView> {
                         ),
                       ],
                     ),
-                    Wrap(
-                      spacing: 10,
-                      runSpacing: 8,
-                      children: [
-                        OutlinedButton(
-                          onPressed: () async {
-                            setState(() => _selectedInvoice = b);
-                            try {
-                              final repo = ref.read(customerRepositoryProvider);
-                              final invoices = await repo.fetchInvoices();
-                              final match = invoices
-                                  .cast<Map<String, dynamic>?>()
-                                  .firstWhere(
-                                    (inv) =>
-                                        inv?['bookingId'] == b.id ||
-                                        inv?['bookingId'] ==
-                                            b.id.replaceAll('BKG-', ''),
-                                    orElse: () => null,
-                                  );
-                              setState(() => _invoiceData = match);
-                            } catch (_) {
-                              setState(() => _invoiceData = null);
-                            }
-                          },
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: AppColors.lightBone),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: AppRadius.mdBr),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 10),
-                          ),
-                          child: Text(
-                            'View Invoice',
-                            style: GoogleFonts.inter(
-                              color: AppColors.charcoal,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 11,
-                            ),
-                          ),
-                        ),
-                        if (isUpcoming && b.status != BookingStatus.cancelled)
-                          ElevatedButton(
-                            onPressed: () => _openCancellationSheet(b),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFC62828),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: AppRadius.mdBr),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 10),
-                            ),
-                            child: Text(
-                              'Cancel Stay',
-                              style: GoogleFonts.inter(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11,
-                              ),
-                            ),
-                          ),
-                      ],
+                    LayoutBuilder(
+                      builder: (context, btnConstraints) {
+                        final isBtnNarrow = btnConstraints.maxWidth < 240;
+                        if (isBtnNarrow) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _invoiceButton(b),
+                              if (isUpcoming &&
+                                  b.status != BookingStatus.cancelled) ...[
+                                const SizedBox(height: 8),
+                                _cancelButton(b),
+                              ],
+                            ],
+                          );
+                        }
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _invoiceButton(b),
+                            if (isUpcoming &&
+                                b.status != BookingStatus.cancelled) ...[
+                              const SizedBox(width: 10),
+                              _cancelButton(b),
+                            ],
+                          ],
+                        );
+                      },
                     ),
                   ],
                 ),

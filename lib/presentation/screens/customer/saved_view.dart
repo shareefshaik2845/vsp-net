@@ -98,68 +98,155 @@ class SavedView extends ConsumerWidget {
                               ref.read(activeTabProvider.notifier).state =
                                   'explore';
                             },
-                            child: Row(
-                              children: [
-                                Image.network(
-                                  resort.image,
-                                  height: 120,
-                                  width: 120,
-                                  fit: BoxFit.cover,
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12.0, horizontal: 4.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          resort.city.toUpperCase(),
-                                          style: GoogleFonts.spaceGrotesk(
-                                            fontSize: 9,
-                                            fontWeight: FontWeight.bold,
-                                            letterSpacing: 1.0,
-                                            color: AppColors.goldAccent,
-                                          ),
+                            child: LayoutBuilder(
+                              builder: (context, cardConstraints) {
+                                final isCardNarrow =
+                                    cardConstraints.maxWidth < 360;
+                                if (isCardNarrow) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Image.network(
+                                        resort.image,
+                                        height: 140,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(12),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    resort.city.toUpperCase(),
+                                                    style: GoogleFonts
+                                                        .spaceGrotesk(
+                                                      fontSize: 9,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      letterSpacing: 1.0,
+                                                      color:
+                                                          AppColors.goldAccent,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    resort.name,
+                                                    style: AppTextStyles.titleSm
+                                                        .copyWith(
+                                                            color: AppColors
+                                                                .mossGreen),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                  const SizedBox(height: 6),
+                                                  Text(
+                                                    '₹${resort.basePriceWeekday.toStringAsFixed(0)} / night',
+                                                    style: GoogleFonts.inter(
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: AppColors.charcoal
+                                                          .withValues(
+                                                              alpha: 0.8),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.favorite,
+                                                color: Colors.red,
+                                                size: 22,
+                                              ),
+                                              onPressed: () {
+                                                ref
+                                                    .read(
+                                                        savedPropertiesProvider
+                                                            .notifier)
+                                                    .toggleSave(resort);
+                                              },
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          resort.name,
-                                          style: AppTextStyles.titleSm.copyWith(
-                                              color: AppColors.mossGreen),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(height: 6),
-                                        Text(
-                                          '₹${resort.basePriceWeekday.toStringAsFixed(0)} / night',
-                                          style: GoogleFonts.inter(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColors.charcoal
-                                                .withValues(alpha: 0.8),
-                                          ),
-                                        ),
-                                      ],
+                                      ),
+                                    ],
+                                  );
+                                }
+                                return Row(
+                                  children: [
+                                    Image.network(
+                                      resort.image,
+                                      height: 120,
+                                      width: 120,
+                                      fit: BoxFit.cover,
                                     ),
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.favorite,
-                                    color: Colors.red,
-                                    size: 22,
-                                  ),
-                                  onPressed: () {
-                                    ref
-                                        .read(savedPropertiesProvider.notifier)
-                                        .toggleSave(resort);
-                                  },
-                                ),
-                                const SizedBox(width: 12),
-                              ],
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12.0, horizontal: 4.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              resort.city.toUpperCase(),
+                                              style: GoogleFonts.spaceGrotesk(
+                                                fontSize: 9,
+                                                fontWeight: FontWeight.bold,
+                                                letterSpacing: 1.0,
+                                                color: AppColors.goldAccent,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              resort.name,
+                                              style: AppTextStyles.titleSm
+                                                  .copyWith(
+                                                      color:
+                                                          AppColors.mossGreen),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 6),
+                                            Text(
+                                              '₹${resort.basePriceWeekday.toStringAsFixed(0)} / night',
+                                              style: GoogleFonts.inter(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColors.charcoal
+                                                    .withValues(alpha: 0.8),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.favorite,
+                                        color: Colors.red,
+                                        size: 22,
+                                      ),
+                                      onPressed: () {
+                                        ref
+                                            .read(savedPropertiesProvider
+                                                .notifier)
+                                            .toggleSave(resort);
+                                      },
+                                    ),
+                                    const SizedBox(width: 12),
+                                  ],
+                                );
+                              },
                             ),
                           ),
                         ),

@@ -103,99 +103,200 @@ class _CustomerProfileViewState extends ConsumerState<CustomerProfileView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Header row
-                  SizedBox(
-                    width: double.infinity,
-                    child: Wrap(
-                      alignment: WrapAlignment.spaceBetween,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      spacing: 16,
-                      runSpacing: 12,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
+                  LayoutBuilder(
+                    builder: (context, headerConstraints) {
+                      final isHeaderNarrow = headerConstraints.maxWidth < 420;
+                      if (isHeaderNarrow) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              width: 60,
-                              height: 60,
-                              decoration: const BoxDecoration(
-                                color: AppColors.goldAccent,
-                                shape: BoxShape.circle,
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.goldAccent,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    name.isNotEmpty
+                                        ? name.substring(0, 1).toUpperCase()
+                                        : 'U',
+                                    style: GoogleFonts.playfairDisplay(
+                                      color: AppColors.mossGreen,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        name.isNotEmpty ? name : 'User Profile',
+                                        style: GoogleFonts.playfairDisplay(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.mossGreen,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        'Direct Sanctuary Guest Member',
+                                        style: GoogleFonts.inter(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.charcoal
+                                              .withValues(alpha: 0.5),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            OutlinedButton.icon(
+                              onPressed: () {
+                                setState(() {
+                                  if (_isEditing) {
+                                    _nameController.text = name;
+                                    _emailController.text = email;
+                                    _phoneController.text = phone;
+                                  }
+                                  _isEditing = !_isEditing;
+                                });
+                              },
+                              icon: Icon(
+                                _isEditing ? Icons.close : Icons.edit_outlined,
+                                size: 14,
+                                color: AppColors.mossGreen,
                               ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                name.isNotEmpty
-                                    ? name.substring(0, 1).toUpperCase()
-                                    : 'U',
-                                style: GoogleFonts.playfairDisplay(
-                                  color: AppColors.mossGreen,
-                                  fontSize: 24,
+                              label: Text(
+                                _isEditing ? 'Cancel' : 'Edit Profile',
+                                style: GoogleFonts.inter(
+                                  fontSize: 11,
                                   fontWeight: FontWeight.bold,
+                                  color: AppColors.mossGreen,
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 16),
-                            Flexible(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    name.isNotEmpty ? name : 'User Profile',
-                                    style: GoogleFonts.playfairDisplay(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.mossGreen,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    'Direct Sanctuary Guest Member',
-                                    style: GoogleFonts.inter(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.charcoal
-                                          .withValues(alpha: 0.5),
-                                    ),
-                                  ),
-                                ],
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(
+                                    color: AppColors.lightBone),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: AppRadius.mdBr),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 14, vertical: 8),
                               ),
                             ),
                           ],
-                        ),
-                        OutlinedButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              if (_isEditing) {
-                                _nameController.text = name;
-                                _emailController.text = email;
-                                _phoneController.text = phone;
-                              }
-                              _isEditing = !_isEditing;
-                            });
-                          },
-                          icon: Icon(
-                            _isEditing ? Icons.close : Icons.edit_outlined,
-                            size: 14,
-                            color: AppColors.mossGreen,
-                          ),
-                          label: Text(
-                            _isEditing ? 'Cancel' : 'Edit Profile',
-                            style: GoogleFonts.inter(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.mossGreen,
+                        );
+                      }
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.goldAccent,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    name.isNotEmpty
+                                        ? name.substring(0, 1).toUpperCase()
+                                        : 'U',
+                                    style: GoogleFonts.playfairDisplay(
+                                      color: AppColors.mossGreen,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        name.isNotEmpty ? name : 'User Profile',
+                                        style: GoogleFonts.playfairDisplay(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.mossGreen,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        'Direct Sanctuary Guest Member',
+                                        style: GoogleFonts.inter(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.charcoal
+                                              .withValues(alpha: 0.5),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: AppColors.lightBone),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: AppRadius.mdBr),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 14, vertical: 8),
+                          const SizedBox(width: 16),
+                          OutlinedButton.icon(
+                            onPressed: () {
+                              setState(() {
+                                if (_isEditing) {
+                                  _nameController.text = name;
+                                  _emailController.text = email;
+                                  _phoneController.text = phone;
+                                }
+                                _isEditing = !_isEditing;
+                              });
+                            },
+                            icon: Icon(
+                              _isEditing ? Icons.close : Icons.edit_outlined,
+                              size: 14,
+                              color: AppColors.mossGreen,
+                            ),
+                            label: Text(
+                              _isEditing ? 'Cancel' : 'Edit Profile',
+                              style: GoogleFonts.inter(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.mossGreen,
+                              ),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              side:
+                                  const BorderSide(color: AppColors.lightBone),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: AppRadius.mdBr),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 8),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      );
+                    },
                   ),
                   const SizedBox(height: 24),
                   const Divider(color: AppColors.lightBone),

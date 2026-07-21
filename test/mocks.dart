@@ -218,7 +218,10 @@ class MockCustomerRepository implements ICustomerRepository {
   @override
   Future<void> markNotificationAsRead(String id) async {}
   @override
-  Future<void> sendConciergeMessage(String message, String source) async {}
+  Future<void> markAllNotificationsRead() async {}
+  @override
+  Future<void> sendConciergeMessage(String message, String source,
+      {String? bookingId, String? preferredDateTime}) async {}
 }
 
 class MockResortRepository implements IResortRepository {

@@ -4,9 +4,11 @@ import '../../domain/repositories.dart';
 import '../../domain/super_admin_repository.dart';
 import '../../domain/customer_repository.dart';
 import '../../domain/staff_repository.dart';
+import '../../domain/admin_repository.dart';
 import '../../domain/accountant_repository.dart';
 import '../../data/remote/http_resort_repository_impl.dart';
 import '../../data/remote/http_super_admin_repository_impl.dart';
+import '../../data/remote/http_admin_repository_impl.dart';
 import '../../data/remote/http_customer_repository_impl.dart';
 import '../../data/remote/http_customer_resort_adapter.dart';
 import '../../data/remote/http_staff_repository_impl.dart';
@@ -1345,8 +1347,18 @@ class CustomerConciergeNotifier
     }
   }
 
-  Future<void> createRequest(String type, String description) async {
-    await _repository.sendConciergeMessage(description, type);
+  Future<void> createRequest(
+    String type,
+    String description, {
+    String? bookingId,
+    String? preferredDateTime,
+  }) async {
+    await _repository.sendConciergeMessage(
+      description,
+      type,
+      bookingId: bookingId,
+      preferredDateTime: preferredDateTime,
+    );
     await load();
   }
 }
@@ -1603,4 +1615,96 @@ final adminDashboardProvider = StateNotifierProvider.autoDispose<
     AdminDashboardNotifier, AsyncValue<AdminDashboardState>>((ref) {
   final repo = ref.watch(resortRepositoryProvider);
   return AdminDashboardNotifier(repo);
+});
+
+// ── Admin Repository Provider ──
+
+final adminRepositoryProvider = Provider<IAdminRepository>((ref) {
+  return HttpAdminRepositoryImpl();
+});
+
+// ── Admin Concierge ──
+
+class AdminConciergeNotifier
+    extends StateNotifier<AsyncValue<List<Map<String, dynamic>>>> {
+  String? lastError;
+  final IAdminRepository _repository;
+  AdminConciergeNotifier(this._repository) : super(const AsyncValue.loading()) {
+    load();
+  }
+
+  Future<void> load({String? status, String? type}) async {
+    lastError = null;
+    try {
+      state = AsyncValue.data(
+          await _repository.fetchConciergeRequests(status: status, type: type));
+    } catch (e, stack) {
+      lastError = 'Failed to load concierge requests';
+      state = AsyncValue.error(e, stack);
+    }
+  }
+
+  Future<void> updateStatus(String id, String status) async {
+    await _repository.updateConciergeStatus(id, status);
+    await load();
+  }
+
+  Future<void> assignStaff(String id, int staffId) async {
+    await _repository.assignConciergeStaff(id, staffId);
+    await load();
+  }
+
+  Future<void> updateNotes(String id, String notes) async {
+    await _repository.updateConciergeNotes(id, notes);
+    await load();
+  }
+}
+
+final adminConciergeProvider = StateNotifierProvider.autoDispose<
+    AdminConciergeNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
+  final repo = ref.watch(adminRepositoryProvider);
+  return AdminConciergeNotifier(repo);
+});
+
+final adminStaffUsersProvider = FutureProvider<List<Map<String, dynamic>>>((ref) {
+  final repo = ref.watch(adminRepositoryProvider);
+  return repo.fetchStaffUsers();
+});
+
+// ── Staff Concierge ──
+
+class StaffConciergeNotifier
+    extends StateNotifier<AsyncValue<List<Map<String, dynamic>>>> {
+  String? lastError;
+  final IStaffRepository _repository;
+  StaffConciergeNotifier(this._repository) : super(const AsyncValue.loading()) {
+    load();
+  }
+
+  Future<void> load({String? status}) async {
+    lastError = null;
+    try {
+      state = AsyncValue.data(
+          await _repository.fetchAssignedConciergeRequests(status: status));
+    } catch (e, stack) {
+      lastError = 'Failed to load assigned concierge requests';
+      state = AsyncValue.error(e, stack);
+    }
+  }
+
+  Future<void> updateStatus(String id, String status) async {
+    await _repository.updateConciergeStatus(id, status);
+    await load();
+  }
+
+  Future<void> updateNotes(String id, String notes) async {
+    await _repository.updateConciergeNotes(id, notes);
+    await load();
+  }
+}
+
+final staffConciergeProvider = StateNotifierProvider.autoDispose<
+    StaffConciergeNotifier, AsyncValue<List<Map<String, dynamic>>>>((ref) {
+  final repo = ref.watch(staffRepositoryProvider);
+  return StaffConciergeNotifier(repo);
 });
