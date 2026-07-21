@@ -37,6 +37,7 @@ class _AdminViewState extends ConsumerState<AdminView> {
   String _blockReason = 'maintenance';
   String? _blockError;
   String? _blockSuccess;
+  String? _selectedPropertyId;
 
   // Coupon Form states
   final _couponCodeController = TextEditingController();
@@ -65,6 +66,10 @@ class _AdminViewState extends ConsumerState<AdminView> {
     _couponCodeController.dispose();
     _couponDescController.dispose();
     _searchController.dispose();
+    _seasonNameController.dispose();
+    _seasonWeekdayController.dispose();
+    _seasonWeekendController.dispose();
+    _seasonMultiplierController.dispose();
     super.dispose();
   }
 
@@ -159,12 +164,17 @@ class _AdminViewState extends ConsumerState<AdminView> {
       },
       {'id': 'orders', 'label': 'Booking Matrix', 'icon': Icons.shopping_bag},
       {'id': 'tariffs', 'label': 'Tariffs / Seasonality', 'icon': Icons.tune},
-      {'id': 'coupons', 'label': 'Coupons Editor', 'icon': Icons.local_offer},
+      {'id': 'coupons', 'label': 'Coupons Editor', 'icon': Icons.local_offer      },
       {'id': 'ota', 'label': 'OTA Synergy', 'icon': Icons.sync},
       {
         'id': 'staff_ops',
         'label': 'Resort Operations',
         'icon': Icons.cleaning_services_outlined
+      },
+      {
+        'id': 'concierge',
+        'label': 'Concierge Desk',
+        'icon': Icons.room_service
       },
     ];
 
@@ -430,6 +440,8 @@ class _AdminViewState extends ConsumerState<AdminView> {
         return _buildOtaSynergy(otaSyncs);
       case 'staff_ops':
         return const StaffView(isEmbedded: true);
+      case 'concierge':
+        return _buildAdminConciergeTab();
       default:
         return const SizedBox.shrink();
     }
@@ -1317,6 +1329,45 @@ class _AdminViewState extends ConsumerState<AdminView> {
           ),
           const SizedBox(height: AppSpacing.lg),
           Text(
+            'Select Property',
+            style: GoogleFonts.spaceGrotesk(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
+              color: AppColors.charcoal.withValues(alpha: 0.5),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Consumer(
+            builder: (context, ref, _) {
+              final properties = ref.watch(resortsListProvider);
+              if (properties.isEmpty) return const Text('No properties available');
+              return DropdownButtonFormField<String>(
+                value: _selectedPropertyId,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: AppColors.lightBone,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                ),
+                hint: Text('Select a property', style: TextStyle(color: AppColors.charcoal.withValues(alpha: 0.5))),
+                items: properties.map((p) {
+                  return DropdownMenuItem<String>(
+                    value: p.id,
+                    child: Text(p.name, style: const TextStyle(fontSize: 14)),
+                  );
+                }).toList(),
+                onChanged: (val) {
+                  setState(() => _selectedPropertyId = val);
+                },
+              );
+            },
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          Text(
             'Reason category',
             style: GoogleFonts.spaceGrotesk(
               fontSize: 10,
@@ -1536,11 +1587,18 @@ class _AdminViewState extends ConsumerState<AdminView> {
     );
   }
 
-  void _handleCreateBlock() {
+  Future<void> _handleCreateBlock() async {
     setState(() {
       _blockError = null;
       _blockSuccess = null;
     });
+
+    if (_selectedPropertyId == null) {
+      setState(() {
+        _blockError = 'Please select a property.';
+      });
+      return;
+    }
 
     if (_blockNotesController.text.trim().isEmpty) {
       setState(() {
@@ -1594,20 +1652,26 @@ class _AdminViewState extends ConsumerState<AdminView> {
       reason: _blockReason,
       notes: _blockNotesController.text,
       blockedBy: 'Admin Console',
+      propertyId: _selectedPropertyId,
     );
 
-    ref.read(calendarBlocksProvider.notifier).addBlock(newBlock);
-    ref.read(notificationsProvider.notifier).addNotification(
-          'Calendar Dates Isolated',
-          'Blocked dates $_blockStart to $_blockEnd due to $_blockReason.',
-          'system',
-        );
-
-    setState(() {
-      _blockNotesController.clear();
-      _blockSuccess =
-          'Calendar date block placed successfully! Dynamic availability locked.';
-    });
+    try {
+      await ref.read(calendarBlocksProvider.notifier).addBlock(newBlock);
+      ref.read(notificationsProvider.notifier).addNotification(
+            'Calendar Dates Isolated',
+            'Blocked dates $_blockStart to $_blockEnd due to $_blockReason.',
+            'system',
+          );
+      setState(() {
+        _blockNotesController.clear();
+        _blockSuccess =
+            'Calendar date block placed successfully! Dynamic availability locked.';
+      });
+    } catch (e) {
+      setState(() {
+        _blockError = 'Failed to create block: $e';
+      });
+    }
   }
 
   Widget _buildActiveBlocksCard(List<CalendarBlock> blocks) {
@@ -2190,7 +2254,56 @@ class _AdminViewState extends ConsumerState<AdminView> {
                       fontWeight: FontWeight.bold)),
             ),
           ),
-        if (b.status != BookingStatus.cancelled)
+        if (b.status == BookingStatus.confirmed)
+          InkWell(
+            onTap: () {
+              ref.read(bookingsProvider.notifier).checkInBooking(b.id);
+              ref.read(notificationsProvider.notifier).addNotification(
+                    'Guest Checked In',
+                    '${b.guestName} checked in for ${b.id}.',
+                    'booking',
+                  );
+              SnackbarHelper.success(context, 'Guest checked in.');
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: Colors.blue.shade200)),
+              child: Text('Check In',
+                  style: GoogleFonts.inter(
+                      fontSize: 9,
+                      color: Colors.blue.shade900,
+                      fontWeight: FontWeight.bold)),
+            ),
+          ),
+        if (b.status == BookingStatus.checkedIn)
+          InkWell(
+            onTap: () {
+              ref.read(bookingsProvider.notifier).checkOutBooking(b.id, 0);
+              ref.read(notificationsProvider.notifier).addNotification(
+                    'Guest Checked Out',
+                    '${b.guestName} checked out from ${b.id}.',
+                    'booking',
+                  );
+              SnackbarHelper.success(context, 'Guest checked out.');
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              decoration: BoxDecoration(
+                  color: Colors.teal.shade50,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: Colors.teal.shade200)),
+              child: Text('Check Out',
+                  style: GoogleFonts.inter(
+                      fontSize: 9,
+                      color: Colors.teal.shade900,
+                      fontWeight: FontWeight.bold)),
+            ),
+          ),
+        if (b.status != BookingStatus.cancelled &&
+            b.status != BookingStatus.checkedOut)
           InkWell(
             onTap: () {
               ref
@@ -2490,6 +2603,319 @@ class _AdminViewState extends ConsumerState<AdminView> {
     );
   }
 
+  final _seasonNameController = TextEditingController();
+  final _seasonWeekdayController = TextEditingController();
+  final _seasonWeekendController = TextEditingController();
+  final _seasonMultiplierController = TextEditingController();
+  String _seasonStartDate = '';
+  String _seasonEndDate = '';
+  String? _seasonFormError;
+
+  Future<void> _pickSeasonDate(bool isStart, [void Function()? onUpdate]) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime(2026, 6, 1),
+      firstDate: DateTime(2026, 1, 1),
+      lastDate: DateTime(2026, 12, 31),
+      helpText: isStart ? 'Select Start Month & Day' : 'Select End Month & Day',
+      builder: (ctx, child) {
+        return Theme(
+          data: Theme.of(ctx).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.mossGreen,
+              onPrimary: Colors.white,
+              onSurface: AppColors.charcoal,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null && context.mounted) {
+      final formatted =
+          '${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
+      setState(() {
+        if (isStart) {
+          _seasonStartDate = formatted;
+        } else {
+          _seasonEndDate = formatted;
+        }
+      });
+      onUpdate?.call();
+    }
+  }
+
+  void _showAddSeasonRuleDialog() {
+    _seasonNameController.clear();
+    _seasonStartDate = '';
+    _seasonEndDate = '';
+    _seasonWeekdayController.clear();
+    _seasonWeekendController.clear();
+    _seasonMultiplierController.clear();
+    _seasonFormError = null;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          title: Row(
+            children: [
+              const Icon(Icons.tune, size: 20, color: AppColors.mossGreen),
+              const SizedBox(width: 8),
+              Text('Add Seasonal Rule', style: AppTextStyles.titleLg),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('SEASON NAME',
+                    style: GoogleFonts.spaceGrotesk(
+                        fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey)),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: _seasonNameController,
+                  style: GoogleFonts.inter(fontSize: 12),
+                  decoration: const InputDecoration(
+                      hintText: 'e.g. Monsoon Discount, Peak Season'),
+                ),
+                const SizedBox(height: 16),
+                Text('PROPERTY',
+                    style: GoogleFonts.spaceGrotesk(
+                        fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey)),
+                const SizedBox(height: 6),
+                Consumer(
+                  builder: (context, ref, _) {
+                    final properties = ref.watch(resortsListProvider);
+                    if (properties.isEmpty) return const Text('No properties available');
+                    return DropdownButtonFormField<String>(
+                      value: _selectedPropertyId,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.stoneBg.withValues(alpha: 0.3),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: AppColors.lightBone),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      ),
+                      hint: Text('Select a property', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                      items: properties.map((p) {
+                        return DropdownMenuItem<String>(
+                          value: p.id,
+                          child: Text(p.name, style: const TextStyle(fontSize: 12)),
+                        );
+                      }).toList(),
+                      onChanged: (val) {
+                        setState(() => _selectedPropertyId = val);
+                        setDialogState(() {});
+                      },
+                    );
+                  },
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildSeasonDateField(
+                        'START DATE',
+                        _seasonStartDate,
+                        () => _pickSeasonDate(true, () => setDialogState(() {})),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildSeasonDateField(
+                        'END DATE',
+                        _seasonEndDate,
+                        () => _pickSeasonDate(false, () => setDialogState(() {})),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildSeasonNumberField(
+                        'WEEKDAY PRICE (₹)',
+                        _seasonWeekdayController,
+                        'e.g. 9600',
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildSeasonNumberField(
+                        'WEEKEND PRICE (₹)',
+                        _seasonWeekendController,
+                        'e.g. 12000',
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                _buildSeasonNumberField(
+                  'MULTIPLIER',
+                  _seasonMultiplierController,
+                  'e.g. 0.8 for discount, 1.5 for peak',
+                ),
+                if (_seasonFormError != null) ...[
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(6)),
+                    child: Text(_seasonFormError!,
+                        style: TextStyle(
+                            color: Colors.red.shade800, fontSize: 11)),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final name = _seasonNameController.text.trim();
+                final start = _seasonStartDate;
+                final end = _seasonEndDate;
+                final weekday =
+                    double.tryParse(_seasonWeekdayController.text.trim());
+                final weekend =
+                    double.tryParse(_seasonWeekendController.text.trim());
+                final multiplier =
+                    double.tryParse(_seasonMultiplierController.text.trim());
+
+                if (_selectedPropertyId == null) {
+                  setDialogState(() {
+                    _seasonFormError = 'Please select a property.';
+                  });
+                  return;
+                }
+
+                if (name.isEmpty || start.isEmpty || end.isEmpty) {
+                  setDialogState(() {
+                    _seasonFormError = 'Name, start date, and end date are required.';
+                  });
+                  return;
+                }
+
+                if (weekday == null || weekend == null) {
+                  setDialogState(() {
+                    _seasonFormError = 'Weekday and weekend prices are required.';
+                  });
+                  return;
+                }
+
+                final rule = PricingSeasonRule(
+                  id: 'SR-${DateTime.now().millisecondsSinceEpoch}',
+                  name: name,
+                  startDate: start,
+                  endDate: end,
+                  weekdayPrice: weekday,
+                  weekendPrice: weekend,
+                  multiplier: multiplier ?? 1.0,
+                  isActive: true,
+                  propertyId: _selectedPropertyId,
+                );
+
+                try {
+                  await ref.read(pricingRulesProvider.notifier).addRule(rule);
+                  if (ctx.mounted) {
+                    Navigator.pop(ctx);
+                    if (context.mounted) {
+                      SnackbarHelper.success(context, 'Seasonal rule "$name" added.');
+                    }
+                  }
+                } catch (e) {
+                  setDialogState(() {
+                    _seasonFormError = 'Failed to add rule: $e';
+                  });
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.mossGreen,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Add Rule'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSeasonDateField(String label, String value, VoidCallback onTap) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style: GoogleFonts.spaceGrotesk(
+                fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey)),
+        const SizedBox(height: 6),
+        InkWell(
+          onTap: onTap,
+          child: Container(
+            height: 40,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+              color: AppColors.stoneBg.withValues(alpha: 0.3),
+              borderRadius: AppRadius.mdBr,
+              border: Border.all(color: AppColors.lightBone),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    value.isEmpty ? 'Pick date' : value,
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      color: value.isEmpty
+                          ? Colors.grey
+                          : AppColors.charcoal,
+                      fontWeight:
+                          value.isEmpty ? FontWeight.normal : FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Icon(Icons.calendar_today,
+                    size: 14, color: AppColors.mossGreen),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSeasonNumberField(
+      String label, TextEditingController controller, String hint) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style: GoogleFonts.spaceGrotesk(
+                fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey)),
+        const SizedBox(height: 6),
+        SizedBox(
+          height: 40,
+          child: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            style: GoogleFonts.inter(fontSize: 12),
+            decoration: InputDecoration(hintText: hint),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildSeasonalRulesCard(List<PricingSeasonRule> pricingRules) {
     return Container(
       padding: const EdgeInsets.all(24.0),
@@ -2503,6 +2929,21 @@ class _AdminViewState extends ConsumerState<AdminView> {
         children: [
           Text('Seasonal Rule Modifiers', style: AppTextStyles.titleLg),
           const SizedBox(height: AppSpacing.sm),
+          ElevatedButton.icon(
+            onPressed: _showAddSeasonRuleDialog,
+            icon: const Icon(Icons.add, size: 16),
+            label: const Text('Add Rule',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.mossGreen,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 16, vertical: 10),
+              shape: RoundedRectangleBorder(
+                  borderRadius: AppRadius.mdBr),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             'Toggle or customize seasonal multipliers on target date limits.',
             style: AppTextStyles.bodyMd.copyWith(
@@ -2510,7 +2951,16 @@ class _AdminViewState extends ConsumerState<AdminView> {
             ),
           ),
           const SizedBox(height: 20),
-          ListView.separated(
+          if (pricingRules.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 40),
+              child: Center(
+                child: Text('No seasonal rules defined yet. Tap "Add Rule" to create one.',
+                    style: TextStyle(color: Colors.grey, fontSize: 12)),
+              ),
+            )
+          else
+            ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: pricingRules.length,
@@ -2920,7 +3370,7 @@ class _AdminViewState extends ConsumerState<AdminView> {
     );
   }
 
-  void _handleCreateCoupon() {
+  Future<void> _handleCreateCoupon() async {
     setState(() {
       _couponFormError = null;
     });
@@ -2950,21 +3400,26 @@ class _AdminViewState extends ConsumerState<AdminView> {
       isActive: true,
     );
 
-    ref.read(couponsProvider.notifier).addCoupon(newCoupon);
-    ref.read(notificationsProvider.notifier).addNotification(
-          'New Promotion Added',
-          'Created code $code offering dynamic savings on checkout.',
-          'system',
-        );
-
-    setState(() {
-      _couponCodeController.clear();
-      _couponDescController.clear();
-      _couponValue = 10;
-      _couponMinSub = 25000;
-    });
-
-    SnackbarHelper.success(context, 'Coupon added to registry successfully!');
+    try {
+      await ref.read(couponsProvider.notifier).addCoupon(newCoupon);
+      ref.read(notificationsProvider.notifier).addNotification(
+            'New Promotion Added',
+            'Created code $code offering dynamic savings on checkout.',
+            'system',
+          );
+      setState(() {
+        _couponCodeController.clear();
+        _couponDescController.clear();
+        _couponValue = 10;
+        _couponMinSub = 25000;
+      });
+      if (!context.mounted) return;
+      SnackbarHelper.success(context, 'Coupon added to registry successfully!');
+    } catch (e) {
+      setState(() {
+        _couponFormError = 'Failed to create coupon: $e';
+      });
+    }
   }
 
   Widget _buildCouponListCard(List<Coupon> coupons) {
@@ -3319,6 +3774,380 @@ class _AdminViewState extends ConsumerState<AdminView> {
       ),
     );
   }
+
+  Widget _buildAdminConciergeTab() {
+    return Consumer(
+      builder: (context, ref, _) {
+        final conciergeAsync = ref.watch(adminConciergeProvider);
+        final staffUsersAsync = ref.watch(adminStaffUsersProvider);
+        return Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(32),
+            border: Border.all(color: const Color(0xFFE6E2D3)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.room_service,
+                      color: AppColors.goldAccent, size: 24),
+                  const SizedBox(width: 12),
+                  Text('Concierge Desk',
+                      style: AppTextStyles.titleXl
+                          .copyWith(color: AppColors.mossGreen)),
+                  const Spacer(),
+                  _conciergeFilterChips(ref),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Expanded(
+                child: conciergeAsync.when(
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (e, _) => Center(
+                    child: Text('Error: $e',
+                        style: GoogleFonts.inter(color: Colors.red)),
+                  ),
+                  data: (requests) {
+                    if (requests.isEmpty) {
+                      return Center(
+                        child: Text('No concierge requests found.',
+                            style: GoogleFonts.inter(
+                                color: AppColors.charcoal
+                                    .withValues(alpha: 0.5))),
+                      );
+                    }
+                    final parsed =
+                        requests.map((r) => ConciergeRequest.fromJson(r)).toList();
+                    return ListView.separated(
+                      itemCount: parsed.length,
+                      separatorBuilder: (_, __) =>
+                          const Divider(height: 1, color: Color(0xFFE6E2D3)),
+                      itemBuilder: (context, index) =>
+                          _buildConciergeRequestCard(parsed[index], staffUsersAsync, ref),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _conciergeFilterChips(WidgetRef ref) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          _filterChip('All', () {
+            ref.read(adminConciergeProvider.notifier).load();
+          }),
+          const SizedBox(width: 8),
+          _filterChip('Pending', () {
+            ref.read(adminConciergeProvider.notifier).load(status: 'PENDING');
+          }),
+          const SizedBox(width: 8),
+          _filterChip('In Progress', () {
+            ref.read(adminConciergeProvider.notifier).load(status: 'IN_PROGRESS');
+          }),
+          const SizedBox(width: 8),
+          _filterChip('Completed', () {
+            ref.read(adminConciergeProvider.notifier).load(status: 'COMPLETED');
+          }),
+          const SizedBox(width: 8),
+          _filterChip('Cancelled', () {
+            ref.read(adminConciergeProvider.notifier).load(status: 'CANCELLED');
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _filterChip(String label, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.stoneBg,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+            color: AppColors.charcoal,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildConciergeRequestCard(ConciergeRequest request,
+      AsyncValue<List<Map<String, dynamic>>> staffUsersAsync, WidgetRef ref) {
+    return ExpansionTile(
+      tilePadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      title: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(request.requestType.displayName,
+                    style: GoogleFonts.inter(
+                        fontWeight: FontWeight.bold, fontSize: 13)),
+                const SizedBox(height: 2),
+                Text(request.description,
+                    style: GoogleFonts.inter(
+                        fontSize: 11,
+                        color: AppColors.charcoal.withValues(alpha: 0.6)),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          _statusBadge(request.status),
+          const SizedBox(width: 8),
+          if (request.assignedStaffName != null)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: AppColors.mossGreen.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(request.assignedStaffName!,
+                  style: GoogleFonts.inter(
+                      fontSize: 9, color: AppColors.mossGreen)),
+            ),
+        ],
+      ),
+      children: [
+        const Divider(),
+        _detailRow('Customer', request.assignedStaffName ?? 'N/A'),
+        _detailRow('Type', request.requestType.displayName),
+        _detailRow('Status', request.status.displayName),
+        if (request.preferredDateTime != null)
+          _detailRow('Preferred', request.preferredDateTime!),
+        _detailRow('Created', request.createdAt),
+        if (request.staffNotes != null && request.staffNotes!.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Staff Notes:',
+                    style: GoogleFonts.inter(
+                        fontWeight: FontWeight.bold, fontSize: 11)),
+                const SizedBox(height: 4),
+                Text(request.staffNotes!,
+                    style: GoogleFonts.inter(
+                        fontSize: 11,
+                        color: AppColors.charcoal.withValues(alpha: 0.7))),
+              ],
+            ),
+          ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            _actionButton('Accept', AppColors.mossGreen, () {
+              ref
+                  .read(adminConciergeProvider.notifier)
+                  .updateStatus(request.id, 'IN_PROGRESS');
+            }),
+            const SizedBox(width: 8),
+            _actionButton('Complete', Colors.green, () {
+              ref
+                  .read(adminConciergeProvider.notifier)
+                  .updateStatus(request.id, 'COMPLETED');
+            }),
+            const SizedBox(width: 8),
+            _actionButton('Cancel', Colors.red, () {
+              ref
+                  .read(adminConciergeProvider.notifier)
+                  .updateStatus(request.id, 'CANCELLED');
+            }),
+            const Spacer(),
+            staffUsersAsync.when(
+              data: (staff) {
+                if (staff.isEmpty) return const SizedBox.shrink();
+                return SizedBox(
+                  width: 160,
+                  height: 32,
+                  child: DropdownButtonFormField<String>(
+                    value: request.assignedStaffId,
+                    isDense: true,
+                    decoration: const InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                      border: OutlineInputBorder(),
+                      labelText: 'Assign Staff',
+                      labelStyle: TextStyle(fontSize: 10),
+                    ),
+                    items: staff.map((s) => DropdownMenuItem<String>(
+                          value: s['id'] as String,
+                          child: Text(s['name'] as String? ?? '',
+                              style: const TextStyle(fontSize: 11)),
+                        )).toList(),
+                    onChanged: (v) {
+                      if (v != null) {
+                        ref
+                            .read(adminConciergeProvider.notifier)
+                            .assignStaff(request.id, int.parse(v));
+                      }
+                    },
+                  ),
+                );
+              },
+              loading: () => const SizedBox(
+                  width: 80, height: 20, child: LinearProgressIndicator()),
+              error: (_, __) => const SizedBox.shrink(),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        _buildStaffNotesField(request, ref),
+      ],
+    );
+  }
+
+  Widget _buildStaffNotesField(ConciergeRequest request, WidgetRef ref) {
+    final controller = TextEditingController(text: request.staffNotes ?? '');
+    return Row(
+      children: [
+        Expanded(
+          child: SizedBox(
+            height: 36,
+            child: TextField(
+              controller: controller,
+              decoration: const InputDecoration(
+                hintText: 'Add staff notes...',
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                border: OutlineInputBorder(),
+                isDense: true,
+              ),
+              style: GoogleFonts.inter(fontSize: 11),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        SizedBox(
+          height: 36,
+          child: ElevatedButton(
+            onPressed: () {
+              if (controller.text.trim().isNotEmpty) {
+                ref
+                    .read(adminConciergeProvider.notifier)
+                    .updateNotes(request.id, controller.text.trim());
+              }
+            },
+            style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.mossGreen,
+                padding: const EdgeInsets.symmetric(horizontal: 12)),
+            child: const Text('Save',
+                style: TextStyle(fontSize: 11, color: Colors.white)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _detailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 80,
+            child: Text(label,
+                style: GoogleFonts.inter(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.charcoal.withValues(alpha: 0.6))),
+          ),
+          Expanded(
+            child: Text(value,
+                style: GoogleFonts.inter(
+                    fontSize: 11, color: AppColors.charcoal)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _actionButton(
+      String label, Color color, VoidCallback onPressed) {
+    return SizedBox(
+      height: 28,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color.withValues(alpha: 0.15),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+          ),
+        ),
+        child: Text(label,
+            style: GoogleFonts.inter(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: color)),
+      ),
+    );
+  }
+
+  Widget _statusBadge(ConciergeStatus status) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: _statusBgColor(status),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        status.displayName,
+        style: GoogleFonts.inter(
+          fontSize: 9,
+          fontWeight: FontWeight.bold,
+          color: _statusColor(status),
+        ),
+      ),
+    );
+  }
+
+  Color _statusColor(ConciergeStatus status) {
+    switch (status) {
+      case ConciergeStatus.pending:
+        return const Color(0xFFFF9800);
+      case ConciergeStatus.inProgress:
+        return const Color(0xFF2196F3);
+      case ConciergeStatus.completed:
+        return const Color(0xFF4CAF50);
+      case ConciergeStatus.cancelled:
+        return const Color(0xFF9E9E9E);
+    }
+  }
+
+  Color _statusBgColor(ConciergeStatus status) {
+    switch (status) {
+      case ConciergeStatus.pending:
+        return const Color(0xFFFFF3E0);
+      case ConciergeStatus.inProgress:
+        return const Color(0xFFE3F2FD);
+      case ConciergeStatus.completed:
+        return const Color(0xFFE8F5E9);
+      case ConciergeStatus.cancelled:
+        return const Color(0xFFF5F5F5);
+    }
+  }
 }
 
 // --- SalesChartPainter ---
@@ -3403,3 +4232,4 @@ class SalesChartPainter extends CustomPainter {
   bool shouldRepaint(covariant SalesChartPainter oldDelegate) =>
       oldDelegate.points != points;
 }
+

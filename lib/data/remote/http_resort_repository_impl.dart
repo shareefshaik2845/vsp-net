@@ -236,6 +236,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
       reason: _blockTypeFromBackend(json['blockType'] as String?),
       notes: json['reason'] as String?,
       blockedBy: json['propertyName'] as String? ?? '',
+      propertyId: json['propertyId'] as String?,
     );
   }
 
@@ -249,7 +250,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<void> addCalendarBlock(CalendarBlock block) async {
     await _dio.post('/admin/calendar/blocks', data: {
-      'propertyId': propertyId ?? '1',
+      'propertyId': block.propertyId ?? propertyId ?? '1',
       'startDate': block.startDate,
       'endDate': block.endDate,
       'reason': block.notes ?? block.reason,
@@ -393,6 +394,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
       weekendPrice: (json['weekendPrice'] as num?)?.toDouble() ?? 0,
       multiplier: (json['multiplier'] as num?)?.toDouble() ?? 1.0,
       isActive: json['isActive'] as bool? ?? true,
+      propertyId: json['propertyId'] as String?,
     );
   }
 
@@ -406,7 +408,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
   @override
   Future<void> addPricingRule(PricingSeasonRule rule) async {
     await _dio.post('/admin/pricing/rules', data: {
-      'propertyId': propertyId ?? '1',
+      'propertyId': rule.propertyId ?? propertyId ?? '1',
       'name': rule.name,
       'startDate': rule.startDate,
       'endDate': rule.endDate,
@@ -433,7 +435,7 @@ class HttpResortRepositoryImpl implements IResortRepository {
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
         await _dio.post('/admin/pricing/rules', data: {
-          'propertyId': propertyId ?? '1',
+          'propertyId': rule.propertyId ?? propertyId ?? '1',
           ...body,
         });
       } else {

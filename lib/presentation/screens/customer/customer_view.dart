@@ -349,6 +349,7 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
           _couponSuccess.isNotEmpty ? _couponCode.toUpperCase() : null,
       createdAt: DateTime.now().toIso8601String(),
       housekeepingNotes: _hkNotesController.text,
+      propertyId: _selectedResort.id,
     );
 
     try {
@@ -1025,63 +1026,136 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                         top: 20,
                         left: 20,
                         right: 76,
-                        child: Wrap(
-                          alignment: WrapAlignment.spaceBetween,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: [
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 14, vertical: 8),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.95),
-                                  borderRadius: BorderRadius.circular(30),
-                                  border: Border.all(
-                                      color: AppColors.goldAccent
-                                          .withValues(alpha: 0.5)),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(Icons.star,
-                                        color: AppColors.goldAccent, size: 12),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      resort.basePriceWeekday >= 15000
-                                          ? 'ELITE RESERVE'
-                                          : 'EXECUTIVE RETREAT',
-                                      style: GoogleFonts.spaceGrotesk(
-                                        color: AppColors.mossGreen,
-                                        fontSize: 9,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 1.0,
+                        child: LayoutBuilder(
+                          builder: (context, overlayConstraints) {
+                            final isOverlayNarrow =
+                                overlayConstraints.maxWidth < 260;
+                            if (isOverlayNarrow) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 6),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white
+                                            .withValues(alpha: 0.95),
+                                        borderRadius: BorderRadius.circular(30),
+                                        border: Border.all(
+                                            color: AppColors.goldAccent
+                                                .withValues(alpha: 0.5)),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Icon(Icons.star,
+                                              color: AppColors.goldAccent,
+                                              size: 10),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            resort.basePriceWeekday >= 15000
+                                                ? 'ELITE RESERVE'
+                                                : 'EXECUTIVE RETREAT',
+                                            style: GoogleFonts.spaceGrotesk(
+                                              color: AppColors.mossGreen,
+                                              fontSize: 8,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 1.0,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 6),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.mossGreen
+                                          .withValues(alpha: 0.85),
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                    child: Text(
+                                      '${resort.city}, ${resort.state}',
+                                      style: GoogleFonts.inter(
+                                        color: Colors.white,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                            return Wrap(
+                              alignment: WrapAlignment.spaceBetween,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 14, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          Colors.white.withValues(alpha: 0.95),
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(
+                                          color: AppColors.goldAccent
+                                              .withValues(alpha: 0.5)),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(Icons.star,
+                                            color: AppColors.goldAccent,
+                                            size: 12),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          resort.basePriceWeekday >= 15000
+                                              ? 'ELITE RESERVE'
+                                              : 'EXECUTIVE RETREAT',
+                                          style: GoogleFonts.spaceGrotesk(
+                                            color: AppColors.mossGreen,
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 1.0,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 14, vertical: 8),
-                              decoration: BoxDecoration(
-                                color:
-                                    AppColors.mossGreen.withValues(alpha: 0.85),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              child: Text(
-                                '${resort.city}, ${resort.state}',
-                                style: GoogleFonts.inter(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.mossGreen
+                                        .withValues(alpha: 0.85),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Text(
+                                    '${resort.city}, ${resort.state}',
+                                    style: GoogleFonts.inter(
+                                      color: Colors.white,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ],
+                              ],
+                            );
+                          },
                         ),
                       ),
                       Positioned(
@@ -1170,6 +1244,8 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                             fontWeight: FontWeight.bold,
                             color: AppColors.mossGreen,
                           ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: AppSpacing.sm),
                         Text(
@@ -1179,6 +1255,8 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                             color: AppColors.charcoal.withValues(alpha: 0.7),
                             height: 1.5,
                           ),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: AppSpacing.lg),
                         Wrap(
@@ -1322,7 +1400,6 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
     return Consumer(
       builder: (context, ref, _) {
         final conciergeAsync = ref.watch(customerConciergeProvider);
-        final requests = conciergeAsync.valueOrNull ?? [];
         return Container(
           width: double.infinity,
           padding: const EdgeInsets.all(24),
@@ -1335,121 +1412,167 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      const Icon(Icons.room_service,
-                          color: AppColors.goldAccent, size: 20),
-                      const SizedBox(width: 10),
-                      Text('Concierge Services',
-                          style: AppTextStyles.titleLg
-                              .copyWith(color: AppColors.mossGreen)),
-                    ],
-                  ),
-                  TextButton.icon(
-                    onPressed: () => _showConciergeForm(context),
-                    icon: const Icon(Icons.add, size: 16),
-                    label: Text('New Request',
-                        style: GoogleFonts.inter(
-                            fontSize: 11, fontWeight: FontWeight.bold)),
-                  ),
+                  const Icon(Icons.room_service,
+                      color: AppColors.goldAccent, size: 20),
+                  const SizedBox(width: 10),
+                  Text('Concierge Services',
+                      style: AppTextStyles.titleLg
+                          .copyWith(color: AppColors.mossGreen)),
                 ],
               ),
+              const SizedBox(height: AppSpacing.sm),
+              SizedBox(
+                width: double.infinity,
+                child: TextButton.icon(
+                  onPressed: () => _showConciergeForm(context),
+                  icon: const Icon(Icons.add, size: 16),
+                  label: Text('New Request',
+                      style: GoogleFonts.inter(
+                          fontSize: 11, fontWeight: FontWeight.bold)),
+                ),
+              ),
               const SizedBox(height: AppSpacing.lg),
-              if (requests.isEmpty)
-                Container(
+              conciergeAsync.when(
+                loading: () => const Center(
+                    child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(strokeWidth: 2)),
+                )),
+                error: (e, _) => Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: AppColors.stoneBg.withValues(alpha: 0.3),
+                    color: Colors.red.shade50,
                     borderRadius: AppRadius.lgBr,
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.spa_outlined,
-                          color: AppColors.goldAccent, size: 24),
-                      const SizedBox(width: 16),
+                      const Icon(Icons.error_outline,
+                          color: Colors.red, size: 20),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'No concierge requests yet. Tap "New Request" to arrange airport transfers, spa bookings, or special experiences.',
+                          'Could not load concierge requests.',
                           style: GoogleFonts.inter(
-                              fontSize: 12,
-                              color: AppColors.charcoal.withValues(alpha: 0.6)),
+                              fontSize: 12, color: Colors.red.shade700),
                         ),
                       ),
                     ],
                   ),
-                )
-              else
-                ...requests.take(3).map((r) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: AppColors.stoneBg.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
+                ),
+                data: (requests) {
+                  if (requests.isEmpty) {
+                    return Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: AppColors.stoneBg.withValues(alpha: 0.3),
+                        borderRadius: AppRadius.lgBr,
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.spa_outlined,
+                              color: AppColors.goldAccent, size: 24),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Text(
+                              'No concierge requests yet. Tap "New Request" to arrange airport transfers, spa bookings, or special experiences.',
+                              style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  color: AppColors.charcoal
+                                      .withValues(alpha: 0.6)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  final conciergeRequests = requests
+                      .map((r) => ConciergeRequest.fromJson(r))
+                      .toList();
+                  return Column(
+                    children: [
+                      ...conciergeRequests.take(3).map((r) => Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: AppColors.stoneBg.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    r['requestType'] as String? ?? '',
-                                    style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                        color: AppColors.charcoal),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          r.requestType.displayName,
+                                          style: GoogleFonts.inter(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
+                                              color: AppColors.charcoal),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          r.description,
+                                          style: GoogleFonts.inter(
+                                              fontSize: 11,
+                                              color: AppColors.charcoal
+                                                  .withValues(alpha: 0.6)),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        if (r.preferredDateTime != null)
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 4),
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.schedule,
+                                                    size: 10,
+                                                    color:
+                                                        AppColors.goldAccent),
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  _formatConciergeDateTime(
+                                                      r.preferredDateTime!),
+                                                  style: GoogleFonts.inter(
+                                                      fontSize: 9,
+                                                      color:
+                                                          AppColors.goldAccent),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                      ],
+                                    ),
                                   ),
-                                  Text(
-                                    r['description'] as String? ?? '',
-                                    style: GoogleFonts.inter(
-                                        fontSize: 11,
-                                        color: AppColors.charcoal
-                                            .withValues(alpha: 0.6)),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                  const SizedBox(width: 8),
+                                  _statusBadge(r.status),
                                 ],
                               ),
                             ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: (r['status'] as String? ?? '') ==
-                                        'COMPLETED'
-                                    ? Colors.green.shade50
-                                    : Colors.orange.shade50,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                r['status'] as String? ?? 'PENDING',
-                                style: GoogleFonts.inter(
-                                    fontSize: 8,
-                                    fontWeight: FontWeight.bold,
-                                    color: (r['status'] as String? ?? '') ==
-                                            'COMPLETED'
-                                        ? Colors.green.shade800
-                                        : Colors.orange.shade800),
-                              ),
-                            ),
-                          ],
+                          )),
+                      if (conciergeRequests.length > 3)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            '+${conciergeRequests.length - 3} more requests',
+                            style: GoogleFonts.inter(
+                                fontSize: 10,
+                                color: Colors.grey,
+                                fontStyle: FontStyle.italic),
+                          ),
                         ),
-                      ),
-                    )),
-              if (requests.length > 3)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text(
-                    '+${requests.length - 3} more requests',
-                    style: GoogleFonts.inter(
-                        fontSize: 10,
-                        color: Colors.grey,
-                        fontStyle: FontStyle.italic),
-                  ),
-                ),
+                    ],
+                  );
+                },
+              ),
             ],
           ),
         );
@@ -1457,46 +1580,225 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
     );
   }
 
-  void _showConciergeForm(BuildContext context) {
+  Color _statusColor(ConciergeStatus status) {
+    switch (status) {
+      case ConciergeStatus.pending:
+        return const Color(0xFFFF9800);
+      case ConciergeStatus.inProgress:
+        return const Color(0xFF2196F3);
+      case ConciergeStatus.completed:
+        return const Color(0xFF4CAF50);
+      case ConciergeStatus.cancelled:
+        return const Color(0xFF9E9E9E);
+    }
+  }
+
+  Color _statusBgColor(ConciergeStatus status) {
+    switch (status) {
+      case ConciergeStatus.pending:
+        return const Color(0xFFFFF3E0);
+      case ConciergeStatus.inProgress:
+        return const Color(0xFFE3F2FD);
+      case ConciergeStatus.completed:
+        return const Color(0xFFE8F5E9);
+      case ConciergeStatus.cancelled:
+        return const Color(0xFFF5F5F5);
+    }
+  }
+
+  Widget _statusBadge(ConciergeStatus status) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 90),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        decoration: BoxDecoration(
+          color: _statusBgColor(status),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          status.displayName,
+          style: GoogleFonts.inter(
+            fontSize: 8,
+            fontWeight: FontWeight.bold,
+            color: _statusColor(status),
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+  String _formatConciergeDateTime(String iso) {
+    try {
+      final dt = DateTime.parse(iso);
+      final day = dt.day;
+      final month = dt.month;
+      final year = dt.year;
+      final hour = dt.hour;
+      final minute = dt.minute.toString().padLeft(2, '0');
+      final period = hour >= 12 ? 'PM' : 'AM';
+      final h12 = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+      return '$day/$month/$year, $h12:$minute $period';
+    } catch (_) {
+      return iso;
+    }
+  }
+
+  void _showConciergeForm(BuildContext outerContext) {
     final descController = TextEditingController();
     String selectedType = 'TRANSPORT';
+    String? selectedBookingId;
+    DateTime? preferredDate;
+    TimeOfDay? preferredTime;
 
     showDialog(
-      context: context,
+      context: outerContext,
+      useSafeArea: false,
       builder: (ctx) {
         return StatefulBuilder(
-          builder: (context, setDialogState) {
+          builder: (_, setDialogState) {
+            final bookings = ref.watch(bookingsProvider);
+            final myBookings = bookings.where((b) =>
+                b.status == BookingStatus.confirmed ||
+                b.status == BookingStatus.checkedIn);
+
             return AlertDialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24)),
               title: Text('New Concierge Request',
                   style: GoogleFonts.playfairDisplay(
                       fontWeight: FontWeight.bold, color: AppColors.mossGreen)),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  DropdownButtonFormField<String>(
-                    value: selectedType,
-                    decoration:
-                        const InputDecoration(labelText: 'Request Type'),
-                    items: ['TRANSPORT', 'SPA', 'DINING', 'EXPERIENCE', 'OTHER']
-                        .map((t) => DropdownMenuItem(value: t, child: Text(t)))
-                        .toList(),
-                    onChanged: (v) {
-                      if (v != null) setDialogState(() => selectedType = v);
-                    },
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  TextField(
-                    controller: descController,
-                    maxLines: 3,
-                    decoration: const InputDecoration(
-                      labelText: 'Description',
-                      hintText: 'Describe your request...',
-                      border: OutlineInputBorder(),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    DropdownButtonFormField<String>(
+                      initialValue: selectedType,
+                      decoration:
+                          const InputDecoration(labelText: 'Request Type'),
+                      items: const [
+                        DropdownMenuItem(
+                            value: 'TRANSPORT',
+                            child: Text('Airport Transfer')),
+                        DropdownMenuItem(
+                            value: 'DINING', child: Text('Dining Reservation')),
+                        DropdownMenuItem(
+                            value: 'SPA', child: Text('Spa Booking')),
+                        DropdownMenuItem(
+                            value: 'ACTIVITY',
+                            child: Text('Activity / Experience')),
+                        DropdownMenuItem(
+                            value: 'OTHER', child: Text('Other Request')),
+                      ],
+                      onChanged: (v) {
+                        if (v != null) {
+                          setDialogState(() => selectedType = v);
+                        }
+                      },
                     ),
-                  ),
-                ],
+                    const SizedBox(height: AppSpacing.md),
+                    TextField(
+                      controller: descController,
+                      maxLines: 3,
+                      decoration: const InputDecoration(
+                        labelText: 'Description',
+                        hintText: 'Describe your request...',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    InkWell(
+                      onTap: () async {
+                        final date = await showDatePicker(
+                          context: ctx,
+                          initialDate: preferredDate ??
+                              DateTime.now().add(const Duration(days: 1)),
+                          firstDate: DateTime.now(),
+                          lastDate:
+                              DateTime.now().add(const Duration(days: 365)),
+                        );
+                        if (date != null) {
+                          final time = await showTimePicker(
+                            context: ctx,
+                            initialTime: preferredTime ??
+                                const TimeOfDay(hour: 10, minute: 0),
+                          );
+                          if (time != null) {
+                            setDialogState(() {
+                              preferredDate = date;
+                              preferredTime = time;
+                            });
+                          }
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 14),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.lightBone),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.schedule,
+                                size: 18, color: AppColors.mossGreen),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                preferredDate != null && preferredTime != null
+                                    ? '${preferredDate!.day}/${preferredDate!.month}/${preferredDate!.year} at ${preferredTime!.format(ctx)}'
+                                    : 'Select preferred date & time (optional)',
+                                style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  color: preferredDate != null
+                                      ? AppColors.charcoal
+                                      : AppColors.charcoal
+                                          .withValues(alpha: 0.4),
+                                ),
+                              ),
+                            ),
+                            if (preferredDate != null)
+                              GestureDetector(
+                                onTap: () => setDialogState(() {
+                                  preferredDate = null;
+                                  preferredTime = null;
+                                }),
+                                child: const Icon(Icons.close,
+                                    size: 16, color: Colors.grey),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if (myBookings.isNotEmpty) ...[
+                      const SizedBox(height: AppSpacing.md),
+                      DropdownButtonFormField<String>(
+                        initialValue: selectedBookingId,
+                        decoration: const InputDecoration(
+                          labelText: 'Link to Booking (optional)',
+                        ),
+                        items: [
+                          const DropdownMenuItem<String>(
+                            value: null,
+                            child: Text('None'),
+                          ),
+                          ...myBookings.map((b) => DropdownMenuItem<String>(
+                                value: b.id,
+                                child: Text(
+                                  '${b.id} — ${b.resortName}',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )),
+                        ],
+                        onChanged: (v) {
+                          setDialogState(() => selectedBookingId = v);
+                        },
+                      ),
+                    ],
+                  ],
+                ),
               ),
               actions: [
                 TextButton(
@@ -1508,14 +1810,31 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                 ElevatedButton(
                   onPressed: () async {
                     if (descController.text.trim().isEmpty) return;
+                    String? preferredDateTime;
+                    if (preferredDate != null && preferredTime != null) {
+                      final dt = DateTime(
+                        preferredDate!.year,
+                        preferredDate!.month,
+                        preferredDate!.day,
+                        preferredTime!.hour,
+                        preferredTime!.minute,
+                      );
+                      preferredDateTime = dt.toIso8601String();
+                    }
                     await ref
                         .read(customerConciergeProvider.notifier)
                         .createRequest(
-                            selectedType, descController.text.trim());
+                          selectedType,
+                          descController.text.trim(),
+                          bookingId: selectedBookingId,
+                          preferredDateTime: preferredDateTime,
+                        );
                     if (ctx.mounted) Navigator.pop(ctx);
                     descController.dispose();
-                    SnackbarHelper.success(
-                        context, 'Concierge request submitted!');
+                    if (outerContext.mounted) {
+                      SnackbarHelper.success(
+                          outerContext, 'Concierge request submitted!');
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.mossGreen),
@@ -1582,18 +1901,22 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
           ),
 
           // Right Side Actions (City Tag)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: AppColors.stoneBg,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              _selectedResort.city,
-              style: GoogleFonts.spaceGrotesk(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: AppColors.mossGreen,
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppColors.stoneBg,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                _selectedResort.city,
+                style: GoogleFonts.spaceGrotesk(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.mossGreen,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
@@ -1909,6 +2232,8 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                     fontSize: 14,
                     color: AppColors.charcoal.withValues(alpha: 0.8),
                     height: 1.6),
+                maxLines: 8,
+                overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 24),
               // Pricing Grid
@@ -2263,7 +2588,10 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
   Widget _priceBox(String label, String value, String suffix,
       {bool isWide = false}) {
     return Container(
-      width: isWide ? double.infinity : 160,
+      constraints: BoxConstraints(
+        minWidth: isWide ? double.infinity : 140,
+        maxWidth: isWide ? double.infinity : 200,
+      ),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -2279,21 +2607,25 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                   fontWeight: FontWeight.bold,
                   color: const Color(0xFF4A4A35).withValues(alpha: 0.6))),
           const SizedBox(height: AppSpacing.sm),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(value,
-                  style: GoogleFonts.playfairDisplay(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF4A3F2D))),
-              const SizedBox(width: 4),
-              Text(suffix,
-                  style: GoogleFonts.inter(
-                      fontSize: 12,
-                      color: const Color(0xFF4A4A35).withValues(alpha: 0.6))),
-            ],
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(value,
+                    style: GoogleFonts.playfairDisplay(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF4A3F2D))),
+                const SizedBox(width: 4),
+                Text(suffix,
+                    style: GoogleFonts.inter(
+                        fontSize: 12,
+                        color: const Color(0xFF4A4A35).withValues(alpha: 0.6))),
+              ],
+            ),
           ),
         ],
       ),
@@ -3133,7 +3465,6 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
   }
 
   Widget _dateInput(String label, String value, Function(String) onChanged) {
-    // Format YYYY-MM-DD to DD-MM-YYYY for display
     String displayValue = value;
     try {
       final parts = value.split('-');
@@ -3141,6 +3472,13 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
         displayValue = '${parts[2]}-${parts[1]}-${parts[0]}';
       }
     } catch (_) {}
+
+    final bool isCheckIn = label.contains('CHECK-IN');
+    final DateTime firstDate = isCheckIn
+        ? DateTime.now()
+        : (DateTime.tryParse(_selectedStartDate)
+                ?.add(const Duration(days: 1)) ??
+            DateTime.now().add(const Duration(days: 1)));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -3152,25 +3490,52 @@ class _CustomerViewState extends ConsumerState<CustomerView> {
                 letterSpacing: 1,
                 color: const Color(0xFF4A4A35).withValues(alpha: 0.6))),
         const SizedBox(height: 4),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border:
-                Border.all(color: AppColors.lightBone.withValues(alpha: 0.8)),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(displayValue,
-                  style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.charcoal)),
-              const Icon(Icons.calendar_today,
-                  size: 14, color: AppColors.charcoal),
-            ],
+        GestureDetector(
+          onTap: () async {
+            final parsed = DateTime.tryParse(value);
+            final DateTime? picked = await showDatePicker(
+              context: context,
+              initialDate: parsed ?? DateTime.now(),
+              firstDate: firstDate,
+              lastDate: DateTime(2035, 12, 31),
+              builder: (context, child) {
+                return Theme(
+                  data: Theme.of(context).copyWith(
+                    datePickerTheme: DatePickerThemeData(
+                      headerBackgroundColor: AppColors.mossGreen,
+                      headerForegroundColor: Colors.white,
+                      todayForegroundColor:
+                          WidgetStatePropertyAll(AppColors.mossGreen),
+                    ),
+                  ),
+                  child: child!,
+                );
+              },
+            );
+            if (picked != null) {
+              onChanged(picked.toIso8601String().split('T').first);
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border:
+                  Border.all(color: AppColors.lightBone.withValues(alpha: 0.8)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(displayValue,
+                    style: GoogleFonts.inter(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.charcoal)),
+                const Icon(Icons.calendar_today,
+                    size: 14, color: AppColors.charcoal),
+              ],
+            ),
           ),
         ),
       ],

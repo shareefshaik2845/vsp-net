@@ -139,4 +139,25 @@ class HttpStaffRepositoryImpl implements IStaffRepository {
     });
     return unwrapMap(_unwrap(response));
   }
+
+  // ── Concierge ──
+
+  @override
+  Future<List<Map<String, dynamic>>> fetchAssignedConciergeRequests({String? status}) async {
+    final params = <String, dynamic>{};
+    if (status != null) params['status'] = status;
+    final response = await _dio.get('/staff/concierge', queryParameters: params.isNotEmpty ? params : null);
+    final data = unwrapList(_unwrap(response));
+    return data.cast<Map<String, dynamic>>();
+  }
+
+  @override
+  Future<void> updateConciergeStatus(String id, String status) async {
+    await _dio.put('/staff/concierge/$id/status', data: {'status': status});
+  }
+
+  @override
+  Future<void> updateConciergeNotes(String id, String notes) async {
+    await _dio.put('/staff/concierge/$id/notes', data: {'notes': notes});
+  }
 }

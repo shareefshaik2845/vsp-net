@@ -92,6 +92,7 @@ class HttpCustomerRepositoryImpl implements ICustomerRepository {
   Booking _bookingFromJson(Map<String, dynamic> json) {
     return Booking(
       id: json['id'] as String? ?? '',
+      propertyId: json['propertyId'] as String?,
       resortName: json['propertyName'] as String? ?? '',
       guestName: json['guestName'] as String? ?? '',
       guestEmail: json['guestEmail'] as String? ?? '',
@@ -298,6 +299,11 @@ class HttpCustomerRepositoryImpl implements ICustomerRepository {
   }
 
   @override
+  Future<void> markAllNotificationsRead() async {
+    await _dio.put('/customer/notifications/read');
+  }
+
+  @override
   Future<List<Map<String, dynamic>>> fetchInvoices(
       {String? status, int page = 1, int pageSize = 20}) async {
     final params = <String, dynamic>{'page': page, 'pageSize': pageSize};
@@ -314,24 +320,37 @@ class HttpCustomerRepositoryImpl implements ICustomerRepository {
     return unwrapMap(_unwrap(response));
   }
 
-  static const _validConciergeTypes = [
-    'AIRPORT_TRANSFER',
-    'SPA_BOOKING',
-    'DINING_RESERVATION',
-    'HOUSEKEEPING',
-    'MAINTENANCE',
-    'SPECIAL_REQUEST',
-    'GENERAL',
-  ];
+  static const _conciergeAliases = {
+    'AIRPORT_TRANSFER': 'TRANSPORT',
+    'SPA_BOOKING': 'SPA',
+    'DINING_RESERVATION': 'DINING',
+    'HOUSEKEEPING': 'OTHER',
+    'MAINTENANCE': 'OTHER',
+    'SPECIAL_REQUEST': 'OTHER',
+    'GENERAL': 'OTHER',
+    'EXPERIENCE': 'ACTIVITY',
+  };
 
   @override
-  Future<void> sendConciergeMessage(String message, String source) async {
+  Future<void> sendConciergeMessage(
+    String message,
+    String source, {
+    String? bookingId,
+    String? preferredDateTime,
+  }) async {
     final normalized = source.trim().toUpperCase().replaceAll(' ', '_');
-    final requestType =
-        _validConciergeTypes.contains(normalized) ? normalized : 'GENERAL';
-    await _dio.post('/customer/concierge', data: {
+    final alias = _conciergeAliases[normalized];
+    final requestType = alias ?? (normalized);
+    final data = <String, dynamic>{
       'requestType': requestType,
       'description': message,
-    });
+    };
+    if (bookingId != null && bookingId.isNotEmpty) {
+      data['bookingId'] = bookingId;
+    }
+    if (preferredDateTime != null && preferredDateTime.isNotEmpty) {
+      data['preferredDateTime'] = preferredDateTime;
+    }
+    await _dio.post('/customer/concierge', data: data);
   }
 }

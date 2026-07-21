@@ -368,66 +368,253 @@
 
 ## PART 8: COMPLETE END-TO-END DEMO SCRIPT (15 Minutes)
 
-### Flow to demonstrate:
+### Demo Credentials
+
+| Role | Email | Password |
+|------|-------|----------|
+| Super Admin | `superadmin@vspnest.com` | `Admin@123` |
+| Admin | `admin@vspnest.com` | `Admin@123` |
+| Staff | `staff@vspnest.com` | `Staff@123` |
+| Accountant | `accountant@vspnest.com` | `Acc@123` |
+| Customer | `rahul@email.com` | `Guest@123` |
+
+---
+
+### Step-by-Step Walkthrough
+
+---
+
+#### Step 1 — Super Admin: Systems Overview (2 min)
+
+| Action | Expected Screen / Behavior | Validation |
+|--------|---------------------------|------------|
+| Open app → See Splash logo (2.5s) → Auto-navigate to Login | Dark emerald screen with "VSP NEST" gold logo | Brand animation plays once |
+| Enter `superadmin@vspnest.com` / `Admin@123` → Tap "Access Sanctuary Portal" | Loading spinner → Redirects to Super Admin dashboard | URL/route changes to `/super-admin` |
+| **Dashboard tab** (default): | 4 KPI cards visible: Total Revenue, Today's Collection, Occupancy %, Active Stays | Numbers should be populated (not zero) |
+| Hover/click revenue chart | Tooltip shows weekly revenue (e.g., "Wk 2 (Jul): ₹85,000 INR") | Curve shows upward trend |
+| **Users tab:** Click "User Management" | Table showing: `rahul@email.com` (Customer), `admin@vspnest.com` (Admin), `staff@vspnest.com` (Staff), `accountant@vspnest.com` (Accountant) | At least 5 rows visible |
+| **Roles tab:** Click "Roles & Permissions" | Matrix grid showing each role with toggle switches per resource (bookings, calendar, coupons, etc.) | Admin has bookings/coupons/pricing enabled; Staff only has rooms |
+
+**🎯 Demo talking point:** *"From this single console, you control every user, every permission, and see analytics across ALL your properties."*
+
+---
+
+#### Step 2 — Super Admin: Add a New Resort (1 min)
+
+| Action | Expected Screen / Behavior | Validation |
+|--------|---------------------------|------------|
+| Click **Properties** tab → "Add Resort" button | Modal form opens with fields: Name, Tagline, Description, Location, State, City, Base Price (Weekday/Weekend), Extra Guest Charge, Cleaning Fee | Empty form ready |
+| Fill fields: | | |
+| Name: `Vista Valley Retreat` | Text field populated | |
+| Tagline: `Premium Mountain Getaway` | Text field populated | |
+| Location: `Manali, Himachal Pradesh` | Text field populated | |
+| Description: `A luxury mountain resort with stunning valley views, infinity pool, and spa facilities. Perfect for family getaways and romantic escapes.` | Text area populated | |
+| Base Price Weekday: `12000` | Number field | |
+| Base Price Weekend: `15000` | Number field | |
+| Extra Guest Charge: `2000` | Number field | |
+| Cleaning Fee: `1500` | Number field | |
+| Tap **Save** | Modal closes → New resort card appears in the properties list | Card shows "Vista Valley Retreat" with location and price |
+| Tap **Role Switcher** (top of sidebar) → select **Customer** | Interface changes to Customer layout (5 bottom tabs) | Sidebar replaced by bottom nav |
+
+**🎯 Demo talking point:** *"Properties you create here instantly become bookable by customers across all channels."*
+
+---
+
+#### Step 3 — Admin: Configure Seasons, Coupons & Calendar (2 min)
+
+| Action | Expected Screen / Behavior | Validation |
+|--------|---------------------------|------------|
+| Tap Role Switcher → select **Admin** | Admin view loads with 7 tab ribbons: Analytics Board, Calendar Blocking, Booking Matrix, Tariffs, Coupons, OTA, Resort Operations | Header shows "Vista Valley Retreat Core Console" |
+| Click **Tariffs / Seasonality** tab | Two-column layout: Base Tariffs (left) + Seasonal Rules (right) | Both cards visible |
+| Base Tariffs — leave defaults visible | Shows: Weekday ₹12,000 / Weekend ₹15,000 / Extra Guest ₹2,000 / Cleaning ₹1,500 | Values match what Super Admin entered |
+| **Seasonal Rules section** — Click "Add Rule" if available or note existing rules | List of season rules if any exist | If empty, point out rules can be added |
+| Click **Coupons Editor** tab | Coupon form (left) + Coupon list (right) | |
+| Enter Coupon Code: `WELCOME20` | Text field | |
+| Select Type: `Percentage Discount` | Dropdown | |
+| Value: `20` | Number field | |
+| Expiry: Pick a date 90 days from now | Date picker | |
+| Usage Limit: `100` | Number field | |
+| Min Booking Value: `10000` | Number field | |
+| Tap **"Add Coupon to Registry"** | Coupon appears in right-side list with "ACTIVE" badge | New row: `WELCOME20` • `20% off...` • `Usage: 0/100` |
+| Click **Calendar Blocking** tab | Calendar block form (left) + Active blocks list (right) | |
+| Block Start: Pick `Dec 24, 2026` | Date picker | |
+| Block End: Pick `Dec 26, 2026` | Date picker | |
+| Reason: Select `holiday` | Radio button selected | |
+| Notes: `Christmas holiday — resort closed` | Text area | |
+| Tap **"Commit Date Isolation"** | New block appears in Active Blocks list | Shows "2026-12-24 to 2026-12-26 • HOLIDAY" |
+
+**🎯 Demo talking point:** *"Tariffs control dynamic pricing, coupons drive direct bookings, and calendar blocking prevents double-booking during blackout dates."*
+
+---
+
+#### Step 4 — Customer: Browse, Book & Pay (3 min)
+
+| Action | Expected Screen / Behavior | Validation |
+|--------|---------------------------|------------|
+| Role Switcher → select **Customer** | Customer view loads at **Explore** tab | Bottom nav shows: Explore, Saved, Trips, Profile |
+| Search bar — type `Vista Valley` | Resort cards filter in real-time | Only "Vista Valley Retreat" shown |
+| Tap **"Vista Valley Retreat"** card | Detail panel slides open with: full image, description, amenities list, gallery | All fields populated |
+| Scroll to **Booking Section** | Date pickers + Guest count + Coupon field visible | |
+| Check-in: Pick `Nov 15, 2026` | Date picker | |
+| Check-out: Pick `Nov 18, 2026` (3 nights) | Date picker | |
+| Guests: `2` | Number field | |
+| Live quote updates automatically: | | |
+| • Nightly breakdown (weekday vs weekend) | Text showing night counts | |
+| • Base Amount: `₹39,000` (2 weekdays × ₹12K + 1 weekend × ₹15K) | Calculated value | |
+| • Cleaning Fee: `₹1,500` | | |
+| • Tax (18%): `₹7,290` | | |
+| • **Total: `₹47,790`** | Prominent display | |
+| Enter Coupon: `WELCOME20` → Tap **Apply** | Discount appears: `-₹7,800` (20% off base) | Total reduces to `₹39,990` |
+| **Required Advance (30%): `₹11,997`** | Shows deposit amount | |
+| Tap **"Proceed to Checkout"** | Contact form slides in: Name, Email, Phone, Special Requests | Pre-filled or empty |
+| Name: `Rahul Sharma` | | |
+| Email: `rahul@email.com` | | |
+| Phone: `9876543210` | | |
+| Special Requests: `Early check-in preferred, ground floor room` | | |
+| Tap **"Complete Payment"** | Loading spinner → Success animation → Confirmation screen | Booking ID displayed (e.g., `B-1712345678901`) |
+
+**🎯 Demo talking point:** *"The entire booking flow — from browsing to paid confirmation — takes under 30 seconds. Dynamic pricing, coupons, and tax all calculated instantly."*
+
+---
+
+#### Step 5 — Customer: View Trip & Cancel (1 min)
+
+| Action | Expected Screen / Behavior | Validation |
+|--------|---------------------------|------------|
+| Tap **Trips** tab (bottom nav) | Dashboard shows "Upcoming Stays" tab active | Badge shows "(1)" count |
+| Booking card visible with: | | |
+| • Status badge: `CONFIRMED` (green) | | |
+| • Resort: `Vista Valley Retreat` | | |
+| • Dates: `2026-11-15 → 2026-11-18` | | |
+| • Amount: `₹39,990` | | |
+| Tap **"View Invoice"** | Modal shows: Subtotal, Discount, Tax, Total, Paid Amount, Balance, Status | All line items match checkout |
+| Close invoice | | |
+| Tap **"Cancel Stay"** (red button) | Bottom sheet slides up with: | |
+| • Cancellation policy summary (48hrs = 100% refund) | | |
+| • Estimated refund: `₹11,997` (full deposit) | | |
+| • Reason field | | |
+| Enter reason: `Change of travel plans` | | |
+| Tap **"Request Cancel"** | Loading → Booking status changes to `CANCELLED` (red) | Cancelled badge visible |
+
+**🎯 Demo talking point:** *"Cancellations flow automatically to the admin and accountant — no manual paperwork."*
+
+---
+
+#### Step 6 — Admin: See Cancellation in Booking Matrix (1 min)
+
+| Action | Expected Screen / Behavior | Validation |
+|--------|---------------------------|------------|
+| Role Switcher → select **Admin** | Admin Console loads | |
+| Click **Booking Matrix** tab | Table with all bookings and filter bar | |
+| Find `Rahul Sharma` booking | Row shows: | |
+| • Reference ID | | |
+| • Guest: `Rahul Sharma` • `9876543210` • `rahul@email.com` | | |
+| • Dates: `2026-11-15 to 2026-11-18` | | |
+| • Channel: `DIRECT` | | |
+| • Payment: `₹39,990` • `Paid: ₹11,997` • `REFUNDED` | | |
+| • Status: `CANCELLED` (red badge) | | |
+| Status change visible immediately | No refresh needed | |
+
+**🎯 Demo talking point:** *"The booking matrix is the admin's command center — all reservations, cancellations, and payments visible in one place."*
+
+---
+
+#### Step 7 — Accountant: Process Refund (1 min)
+
+| Action | Expected Screen / Behavior | Validation |
+|--------|---------------------------|------------|
+| Role Switcher → select **Accountant** | Accountant view loads with: Dashboard KPIs, Booking Ledger, Refunds Queue, Invoice Editor tabs | |
+| Click **Refunds Queue** tab | List showing pending refunds | |
+| Find `Rahul Sharma — Vista Valley Retreat` entry | Shows: Booking ID, Guest Name, Amount: `₹11,997`, Status: `PENDING` | |
+| Tap **"Process Refund"** | Loading → Row disappears from pending list | Refund processed |
+| Click **Booking Ledger** tab | Find the same booking → Payment Status shows `REFUNDED` | |
+
+**🎯 Demo talking point:** *"Accountant gets an automated refund request the moment a customer cancels. One click processes it."*
+
+---
+
+#### Step 8 — Staff: Daily Operations (1 min)
+
+| Action | Expected Screen / Behavior | Validation |
+|--------|---------------------------|------------|
+| Role Switcher → select **Staff** | Staff view loads with two toggle groups | |
+| Click **"Guest Transit Manifest"** toggle | Shows three sections: | |
+| • Arrivals Today (check-in) — if any guests checking in | List of names | |
+| • Departures Today (check-out) | List of names | |
+| • Currently Lodged — active checked-in guests | List of names | |
+| Click **"Housekeeping Status Board"** toggle | Room grid showing: Room name, Status (Clean/Dirty/Cleaning), Assigned Staff, Notes | |
+| Find a room → Tap status to toggle | Status cycles: Dirty → Cleaning → Clean | Visual indicator changes color |
+| Add notes: `Deep clean requested — VIP guest` | Notes field | |
+| Assign staff: Select from dropdown | Staff name assigned to room | |
+
+**🎯 Demo talking point:** *"Housekeeping status is real-time — admin sees the same board in their Resort Operations tab."*
+
+---
+
+#### Step 9 — Super Admin: Audit Trail & Notifications (1 min)
+
+| Action | Expected Screen / Behavior | Validation |
+|--------|---------------------------|------------|
+| Role Switcher → select **Super Admin** | Super Admin dashboard loads | |
+| Click **Audit Logs** tab | Chronological table of all actions performed in this demo | |
+| Filter by Action: `create` | Shows: Resort created, Booking made, Coupon created | |
+| Filter by Action: `cancel` | Shows booking cancellation entry | |
+| Filter by Action: `update` | Shows status changes, refund processing | |
+| Click **Notifications** tab | Notification list | |
+| Tap **"Broadcast Notification"** button | Form opens | |
+| Title: `Monsoon Package Launch!` | | |
+| Message: `New monsoon season discounts are now live — up to 30% off on all bookings through September.` | | |
+| Tap **Send** | Notification appears in list | All users will see it in their bell icon |
+
+**🎯 Demo talking point:** *"Every single action in the system is logged for compliance. You can always see who did what and when."*
+
+---
+
+#### Step 10 — Key Integrations Walkthrough (1 min)
+
+| Action | Expected Screen / Behavior | Validation |
+|--------|---------------------------|------------|
+| Stay as Super Admin → Click **Dashboard** | Analytics page | |
+| **Booking Sources pie chart** | Shows distribution: Direct Web, Airbnb, Booking.com, Agoda, MakeMyTrip, Goibibo | Color-coded segments |
+| **Resort Revenue Table** | Comparison table: each resort with total revenue, booking count, occupancy % | Vista Valley row shows latest data |
+| Super Admin → Role Switcher → browse each role briefly | Quick visual tour of all dashboards | Each role sees different UI |
+
+**🎯 Demo talking point:** *"This is the full lifecycle — from Super Admin creating a resort, to Admin setting prices, to Customer booking and cancelling, to Accountant processing the refund, to Staff managing housekeeping, and finally Super Admin auditing everything. All connected."*
+
+---
+
+### Flow Diagram
 
 ```
-Step 1 — Super Admin: Systems Overview (2 min)
-  Login as superadmin@vspnest.com
-  → Dashboard: Show revenue trends, booking sources (Pie chart: Direct 60%, 
-     Airbnb 25%, Booking.com 15%)
-  → Users: Show all registered users
-  → Roles: Show permission matrix
-
-Step 2 — Super Admin: Add a New Resort (1 min)
-  → Properties → "Add Resort"
-  → Fill: Name "Vista Valley Resort", Tagline "Premium Mountain Getaway",
-     Location "Manali, Himachal Pradesh", Base price ₹12,000
-  → Upload cover photo + gallery
-  → Save → Resort appears in Explore for all Customers
-
-Step 3 — Switch to Admin (1 min)
-  Super Admin uses role switcher → select "Admin"
-  → Properties → Select "Vista Valley Resort"
-  → Tariffs → Add seasonal rule: "Monsoon Discount" (June-Sep, 0.8x multiplier)
-  → Coupons → Create "WELCOME20" (20% off)
-  → Calendar → Block Dec 24-26 (Christmas unavailable)
-
-Step 4 — Switch to Customer: Browse & Book (3 min)
-  → Explore tab → See "Vista Valley Resort" in list
-  → Tap → See details, amenities, gallery
-  → Select dates (Nov 15-18, 3 nights)
-  → Price calculation shows: 2 weekday + 1 weekend night, 
-     base ₹36,000 + cleaning ₹1,500 + tax = ₹44,250
-  → Enter coupon "WELCOME20" → Apply → ₹7,200 off
-  → Fill contact details → "Complete Payment"
-  → Confirmation screen → Booking ID displayed
-
-Step 5 — Customer: View Trip & Cancel (1 min)
-  → Trips tab → See the new booking with "CONFIRMED" status
-  → "View Invoice" → Shows invoice breakdown
-  → "Cancel Stay" → Enter reason → "Request Cancel"
-  → Status changes to "CANCELLED"
-
-Step 6 — Switch to Admin: See the Cancellation (1 min)
-  → Booking Matrix → Booking shows "CANCELLED" status
-  → Resort Operations → Room availability updated
-
-Step 7 — Switch to Accountant: Process Refund (1 min)
-  → Refunds Queue → See new pending refund
-  → "Process Refund" → Mark as processed
-
-Step 8 — Switch to Staff: Daily Ops (1 min)
-  → Guest Transit → See today's arrivals/departures
-  → Housekeeping → Mark rooms as clean/dirty
-
-Step 9 — Super Admin: Audit Trail (1 min)
-  → Audit Logs → Show all actions performed in this demo
-     (user created, resort added, booking made, booking cancelled, 
-      refund processed)
-  → Notifications → Broadcast a system message
-
-Step 10 — Q&A (2 min)
+SUPER ADMIN ──→ Creates Resort ──→ Properties Hub
+     │                                    │
+     │  Role Switcher                     │
+     ├──→ ADMIN ──→ Sets tariffs, coupons, calendar blocks
+     │                  │
+     │        ┌─────────┴──────────┐
+     │        ▼                    ▼
+     │   CUSTOMER              BOOKING MATRIX
+     │   Browses → Books        (Admin sees it)
+     │   Pays → Cancels              │
+     │        │                      ▼
+     │        ▼              CANCELLED status
+     │   CUSTOMER               │
+     │   Sees refund            ▼
+     │                    ACCOUNTANT
+     │                    Processes refund
+     │                         │
+     │                         ▼
+     │                    STAFF
+     │                    Housekeeping updates
+     │                         │
+     └─────────────────────────┘
+                         │
+                         ▼
+                   AUDIT LOGS
+              (Super Admin reviews all)
 ```
+
+---
 
 ---
 

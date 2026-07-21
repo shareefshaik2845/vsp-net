@@ -15,7 +15,8 @@ class StaffView extends ConsumerStatefulWidget {
 }
 
 class _StaffViewState extends ConsumerState<StaffView> {
-  String _activeGroup = 'roster'; // roster, housekeeping
+  String _activeGroup = 'roster'; // roster, housekeeping, concierge
+  final Set<String> _expandedConciergeIds = {};
 
   // Dialog edit states
   String _editStatus = 'clean';
@@ -299,20 +300,35 @@ class _StaffViewState extends ConsumerState<StaffView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               isMobile
-                  ? Row(
+                  ? Column(
                       children: [
-                        Expanded(
-                          child: _buildGroupToggleButton('roster',
-                              Icons.people_outline, 'Guest Transit manifest',
-                              isMobile: true),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildGroupToggleButton('roster',
+                                  Icons.people_outline, 'Guest Transit manifest',
+                                  isMobile: true),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: _buildGroupToggleButton(
+                                  'housekeeping',
+                                  Icons.assignment_outlined,
+                                  'Housekeeping status board ($pendingCount Pending)',
+                                  isMobile: true),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: _buildGroupToggleButton(
-                              'housekeeping',
-                              Icons.assignment_outlined,
-                              'Housekeeping status board ($pendingCount Pending)',
-                              isMobile: true),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildGroupToggleButton('concierge',
+                                  Icons.room_service, 'Concierge Desk',
+                                  isMobile: true),
+                            ),
+                            const Expanded(child: SizedBox.shrink()),
+                          ],
                         ),
                       ],
                     )
@@ -331,13 +347,21 @@ class _StaffViewState extends ConsumerState<StaffView> {
                               'Housekeeping status board ($pendingCount Pending)',
                               isMobile: false),
                         ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _buildGroupToggleButton('concierge',
+                              Icons.room_service, 'Concierge Desk',
+                              isMobile: false),
+                        ),
                       ],
                     ),
               const SizedBox(height: 24),
               _activeGroup == 'roster'
                   ? _buildRosterView(
                       arrivalsToday, departuresToday, activeLodgers, isMobile)
-                  : _buildHousekeepingView(rooms, isMobile),
+                  : _activeGroup == 'concierge'
+                      ? _buildStaffConciergeView()
+                      : _buildHousekeepingView(rooms, isMobile),
             ],
           );
         },
@@ -359,7 +383,9 @@ class _StaffViewState extends ConsumerState<StaffView> {
                 _activeGroup == 'roster'
                     ? _buildRosterView(
                         arrivalsToday, departuresToday, activeLodgers, isMobile)
-                    : _buildHousekeepingView(rooms, isMobile),
+                    : _activeGroup == 'concierge'
+                        ? _buildStaffConciergeView()
+                        : _buildHousekeepingView(rooms, isMobile),
               ],
             ),
           );
@@ -711,41 +737,81 @@ class _StaffViewState extends ConsumerState<StaffView> {
                           color: AppColors.charcoal.withValues(alpha: 0.6),
                         ),
                       ),
-                      if (b.housekeepingNotes != null &&
-                          b.housekeepingNotes!.isNotEmpty) ...[
-                        const SizedBox(height: 8),
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                                color: Colors.green.shade100
-                                    .withValues(alpha: 0.6)),
-                            borderRadius: AppRadius.mdBr,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text('📣 ', style: TextStyle(fontSize: 12)),
-                              Expanded(
-                                child: Text(
-                                  'Prep notes: ${b.housekeepingNotes}',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 11,
-                                    color: Colors.green.shade900,
-                                    fontWeight: FontWeight.w500,
+                        if (b.housekeepingNotes != null &&
+                            b.housekeepingNotes!.isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color: Colors.green.shade100
+                                      .withValues(alpha: 0.6)),
+                              borderRadius: AppRadius.mdBr,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('📣 ', style: TextStyle(fontSize: 12)),
+                                Expanded(
+                                  child: Text(
+                                    'Prep notes: ${b.housekeepingNotes}',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 11,
+                                      color: Colors.green.shade900,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
+                        ],
+                        if (b.status == BookingStatus.confirmed ||
+                            b.status == BookingStatus.checkedIn) ...[
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                ref
+                                    .read(bookingsProvider.notifier)
+                                    .checkInBooking(b.id);
+                                ref
+                                    .read(notificationsProvider.notifier)
+                                    .addNotification(
+                                      'Guest Checked In',
+                                      '${b.guestName} checked in for ${b.id}.',
+                                      'booking',
+                                    );
+                              },
+                              icon: const Icon(Icons.login, size: 14),
+                              label: Text(
+                                b.status == BookingStatus.checkedIn
+                                    ? 'Already Checked In'
+                                    : 'Check In',
+                                style: GoogleFonts.inter(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: b.status == BookingStatus.checkedIn
+                                    ? Colors.grey.shade300
+                                    : Colors.green.shade600,
+                                foregroundColor: Colors.white,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
-                    ],
-                  ),
-                );
-              },
-            ),
+                    ),
+                  );
+                },
+              ),
         ],
       ),
     );
@@ -879,6 +945,38 @@ class _StaffViewState extends ConsumerState<StaffView> {
                           ),
                         ),
                       ),
+                      if (b.status == BookingStatus.checkedIn) ...[
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              ref
+                                  .read(bookingsProvider.notifier)
+                                  .checkOutBooking(b.id, 0);
+                              ref
+                                  .read(notificationsProvider.notifier)
+                                  .addNotification(
+                                    'Guest Checked Out',
+                                    '${b.guestName} checked out from ${b.id}.',
+                                    'booking',
+                                  );
+                            },
+                            icon: const Icon(Icons.logout, size: 14),
+                            label: Text('Check Out',
+                                style: GoogleFonts.inter(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold)),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.teal.shade600,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 );
@@ -970,6 +1068,36 @@ class _StaffViewState extends ConsumerState<StaffView> {
                       style: GoogleFonts.inter(
                         fontSize: 11,
                         color: Colors.white70,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          ref
+                              .read(bookingsProvider.notifier)
+                              .checkOutBooking(b.id, 0);
+                          ref
+                              .read(notificationsProvider.notifier)
+                              .addNotification(
+                                'Guest Checked Out',
+                                '${b.guestName} checked out from ${b.id}.',
+                                'booking',
+                              );
+                        },
+                        icon: const Icon(Icons.logout, size: 14),
+                        label: Text('Check Out',
+                            style: GoogleFonts.inter(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.goldAccent,
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
                       ),
                     ),
                   ],
@@ -1193,5 +1321,364 @@ class _StaffViewState extends ConsumerState<StaffView> {
         ),
       ],
     );
+  }
+
+  Widget _buildStaffConciergeView() {
+    return Consumer(
+      builder: (context, ref, _) {
+        final conciergeAsync = ref.watch(staffConciergeProvider);
+        return Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(32),
+            border: Border.all(color: const Color(0xFFE6E2D3)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.room_service,
+                      color: AppColors.goldAccent, size: 24),
+                  const SizedBox(width: 12),
+                  Text('My Concierge Requests',
+                      style: AppTextStyles.titleXl
+                          .copyWith(color: AppColors.mossGreen)),
+                  const Spacer(),
+                  _conciergeFilterChips(ref),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Expanded(
+                child: conciergeAsync.when(
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (e, _) => Center(
+                    child: Text('Error: $e',
+                        style: GoogleFonts.inter(color: Colors.red)),
+                  ),
+                  data: (requests) {
+                    if (requests.isEmpty) {
+                      return Center(
+                        child: Text('No assigned concierge requests.',
+                            style: GoogleFonts.inter(
+                                color: AppColors.charcoal
+                                    .withValues(alpha: 0.5))),
+                      );
+                    }
+                    final parsed =
+                        requests.map((r) => ConciergeRequest.fromJson(r)).toList();
+                    return ListView.separated(
+                      itemCount: parsed.length,
+                      separatorBuilder: (_, __) =>
+                          const Divider(height: 1, color: Color(0xFFE6E2D3)),
+                      itemBuilder: (context, index) =>
+                          _buildConciergeCard(parsed[index], ref),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _conciergeFilterChips(WidgetRef ref) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          _staffFilterChip('All', () {
+            ref.read(staffConciergeProvider.notifier).load();
+          }),
+          const SizedBox(width: 8),
+          _staffFilterChip('Pending', () {
+            ref.read(staffConciergeProvider.notifier).load(status: 'PENDING');
+          }),
+          const SizedBox(width: 8),
+          _staffFilterChip('In Progress', () {
+            ref.read(staffConciergeProvider.notifier).load(status: 'IN_PROGRESS');
+          }),
+          const SizedBox(width: 8),
+          _staffFilterChip('Completed', () {
+            ref.read(staffConciergeProvider.notifier).load(status: 'COMPLETED');
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _staffFilterChip(String label, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.stoneBg,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+            color: AppColors.charcoal,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildConciergeCard(ConciergeRequest request, WidgetRef ref) {
+    final expanded = _expandedConciergeIds.contains(request.id);
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE6E2D3)),
+      ),
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () {
+              setState(() {
+                if (expanded) {
+                  _expandedConciergeIds.remove(request.id);
+                } else {
+                  _expandedConciergeIds.add(request.id);
+                }
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(request.requestType.displayName,
+                            style: GoogleFonts.inter(
+                                fontWeight: FontWeight.bold, fontSize: 13)),
+                        const SizedBox(height: 2),
+                        Text(request.description,
+                            style: GoogleFonts.inter(
+                                fontSize: 11,
+                                color: AppColors.charcoal.withValues(alpha: 0.6)),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  _conciergeStatusBadge(request.status),
+                  const SizedBox(width: 8),
+                  Icon(
+                    expanded ? Icons.expand_less : Icons.expand_more,
+                    color: AppColors.charcoal.withValues(alpha: 0.4),
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (expanded) ...[
+            const Divider(height: 1, color: Color(0xFFE6E2D3)),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _conciergeDetailRow('Guest', request.userName ?? 'N/A'),
+                  _conciergeDetailRow('Type', request.requestType.displayName),
+                  _conciergeDetailRow('Status', request.status.displayName),
+                  if (request.preferredDateTime != null)
+                    _conciergeDetailRow('Preferred', request.preferredDateTime!),
+                  _conciergeDetailRow('Created', request.createdAt),
+                  if (request.staffNotes != null && request.staffNotes!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Staff Notes:',
+                              style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.bold, fontSize: 11)),
+                          const SizedBox(height: 4),
+                          Text(request.staffNotes!,
+                              style: GoogleFonts.inter(
+                                  fontSize: 11,
+                                  color: AppColors.charcoal.withValues(alpha: 0.7))),
+                        ],
+                      ),
+                    ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      if (request.status == ConciergeStatus.pending)
+                        _conciergeActionButton('Accept', const Color(0xFF2196F3), () {
+                          ref
+                              .read(staffConciergeProvider.notifier)
+                              .updateStatus(request.id, 'IN_PROGRESS');
+                        }),
+                      if (request.status == ConciergeStatus.inProgress) ...[
+                        _conciergeActionButton('Complete', const Color(0xFF4CAF50), () {
+                          ref
+                              .read(staffConciergeProvider.notifier)
+                              .updateStatus(request.id, 'COMPLETED');
+                        }),
+                        const SizedBox(width: 8),
+                        _conciergeActionButton('Cancel', const Color(0xFF9E9E9E), () {
+                          ref
+                              .read(staffConciergeProvider.notifier)
+                              .updateStatus(request.id, 'CANCELLED');
+                        }),
+                      ],
+                      const Spacer(),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  _buildStaffNotesSection(request, ref),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStaffNotesSection(ConciergeRequest request, WidgetRef ref) {
+    final controller = TextEditingController(text: request.staffNotes ?? '');
+    return Row(
+      children: [
+        Expanded(
+          child: SizedBox(
+            height: 36,
+            child: TextField(
+              controller: controller,
+              decoration: const InputDecoration(
+                hintText: 'Update notes...',
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                border: OutlineInputBorder(),
+                isDense: true,
+              ),
+              style: GoogleFonts.inter(fontSize: 11),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        SizedBox(
+          height: 36,
+          child: ElevatedButton(
+            onPressed: () {
+              if (controller.text.trim().isNotEmpty) {
+                ref
+                    .read(staffConciergeProvider.notifier)
+                    .updateNotes(request.id, controller.text.trim());
+              }
+            },
+            style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.mossGreen,
+                padding: const EdgeInsets.symmetric(horizontal: 12)),
+            child: const Text('Save',
+                style: TextStyle(fontSize: 11, color: Colors.white)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _conciergeDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 80,
+            child: Text(label,
+                style: GoogleFonts.inter(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.charcoal.withValues(alpha: 0.6))),
+          ),
+          Expanded(
+            child: Text(value,
+                style: GoogleFonts.inter(
+                    fontSize: 11, color: AppColors.charcoal)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _conciergeActionButton(
+      String label, Color color, VoidCallback onPressed) {
+    return SizedBox(
+      height: 28,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color.withValues(alpha: 0.15),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+          ),
+        ),
+        child: Text(label,
+            style: GoogleFonts.inter(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: color)),
+      ),
+    );
+  }
+
+  Widget _conciergeStatusBadge(ConciergeStatus status) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: _conciergeStatusBgColor(status),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        status.displayName,
+        style: GoogleFonts.inter(
+          fontSize: 9,
+          fontWeight: FontWeight.bold,
+          color: _conciergeStatusColor(status),
+        ),
+      ),
+    );
+  }
+
+  Color _conciergeStatusColor(ConciergeStatus status) {
+    switch (status) {
+      case ConciergeStatus.pending:
+        return const Color(0xFFFF9800);
+      case ConciergeStatus.inProgress:
+        return const Color(0xFF2196F3);
+      case ConciergeStatus.completed:
+        return const Color(0xFF4CAF50);
+      case ConciergeStatus.cancelled:
+        return const Color(0xFF9E9E9E);
+    }
+  }
+
+  Color _conciergeStatusBgColor(ConciergeStatus status) {
+    switch (status) {
+      case ConciergeStatus.pending:
+        return const Color(0xFFFFF3E0);
+      case ConciergeStatus.inProgress:
+        return const Color(0xFFE3F2FD);
+      case ConciergeStatus.completed:
+        return const Color(0xFFE8F5E9);
+      case ConciergeStatus.cancelled:
+        return const Color(0xFFF5F5F5);
+    }
   }
 }

@@ -17,4 +17,9 @@ abstract class IStaffRepository {
       {String? status, String? date});
   Future<void> updateTask(String id, String status, {String? notes});
   Future<Map<String, dynamic>> fetchTaskSummary(String propertyId);
+
+  // ── Concierge ──
+  Future<List<Map<String, dynamic>>> fetchAssignedConciergeRequests({String? status});
+  Future<void> updateConciergeStatus(String id, String status);
+  Future<void> updateConciergeNotes(String id, String notes);
 }
